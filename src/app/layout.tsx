@@ -3,9 +3,10 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "sonner";
+// import { Toaster } from "sonner";
 import ReduxProvider from "@/components/providers/ReduxProvider";
 import "./globals.css";
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReduxProvider>
           {children}
-          <Toaster position="top-right" richColors />
+          <Toaster  position="top-right" richColors />
         </ReduxProvider>
       </body>
     </html>

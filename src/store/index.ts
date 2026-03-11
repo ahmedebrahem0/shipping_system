@@ -1,10 +1,11 @@
 // store/index.ts
 // Combines all slices into one Redux store
 
-import { configureStore } from "@reduxjs/toolkit";
+// import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/store/slices/auth/authSlice";
 import uiReducer from "@/store/slices/ui/uiSlice";
 import { apiSlice } from "@/store/slices/api/apiSlice";
+import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
   reducer: {

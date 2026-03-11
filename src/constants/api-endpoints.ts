@@ -97,6 +97,3 @@ export const ENDPOINTS = {
   },
 
 } as const;
-
-
-NEXT_PUBLIC_API_URL=http://localhost:5050

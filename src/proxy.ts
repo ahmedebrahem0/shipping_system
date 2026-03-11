@@ -1,4 +1,4 @@
-// middleware.ts
+// proxy.ts
 // Protects routes - redirects to login if not authenticated
 
 import { NextResponse } from "next/server";
@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server";
 
 const publicRoutes = ["/login", "/forgot-password", "/verify-otp", "/reset-password"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 

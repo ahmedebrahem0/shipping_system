@@ -3,14 +3,16 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "@/store";
+import type { LoginRequest, LoginResponse } from "@/types/auth.types";
+import type { ApiResponse } from "@/types/api.types";
+import { ENDPOINTS } from "@/constants/api-endpoints";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  
+
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    
-    // بيحط الـ token تلقائياً في كل request
+
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
@@ -20,7 +22,6 @@ export const apiSlice = createApi({
     },
   }),
 
-  // هنا بنحدد الـ tags اللي هنستخدمها للـ cache invalidation
   tagTypes: [
     "Orders",
     "Merchants",
@@ -33,6 +34,15 @@ export const apiSlice = createApi({
     "Reports",
   ],
 
-  // الـ endpoints هتتعمل في كل feature لوحده
-  endpoints: () => ({}),
+  endpoints: (builder) => ({
+    login: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
+      query: (credentials) => ({
+        url: ENDPOINTS.AUTH.LOGIN,
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+  }),
 });
+
+export const { useLoginMutation } = apiSlice;

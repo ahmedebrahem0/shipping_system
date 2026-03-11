@@ -7,9 +7,7 @@ export interface LoginRequest {
 }
 
 // اللي بييجي من السيرفر (التوكن نفسه)
-export interface LoginResponse {
-  token: string;
-}
+export type LoginResponse = string;ng;
 
 // اللي جوه التوكن بعد ما نفكه
 export interface DecodedToken {
