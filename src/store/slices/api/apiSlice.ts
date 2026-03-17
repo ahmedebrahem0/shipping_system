@@ -8,6 +8,7 @@ import type { GovernmentCreateRequest, GovernmentEditRequest, GovernmentsData } 
 import type { CityCreateRequest, CityEditRequest, CitiesResponse } from "@/types/city.types";
 import type { ApiResponse } from "@/types/api.types";
 import type { MerchantCreateRequest, MerchantEditRequest, MerchantsResponse } from "@/types/merchant.types";
+import type { Delivery, DeliveryCreateRequest, DeliveryEditRequest } from "@/types/delivery.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -200,7 +201,46 @@ deleteMerchant: builder.mutation<void, number>({
   }),
   invalidatesTags: ["Merchants"],
 }),
+// Deliveries
+getDeliveries: builder.query<Delivery[], void>({
+  query: () => ({
+    url: ENDPOINTS.DELIVERIES.GET_ALL,
+  }),
+  providesTags: ["Deliveries"],
+}),
 
+getDeliveryById: builder.query<Delivery, number>({
+  query: (id) => ({
+    url: ENDPOINTS.DELIVERIES.GET_BY_ID(id),
+  }),
+  providesTags: ["Deliveries"],
+}),
+
+createDelivery: builder.mutation<void, DeliveryCreateRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.DELIVERIES.CREATE,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["Deliveries"],
+}),
+
+updateDelivery: builder.mutation<void, { id: number; data: DeliveryEditRequest }>({
+  query: ({ id, data }) => ({
+    url: ENDPOINTS.DELIVERIES.UPDATE(id),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Deliveries"],
+}),
+
+deleteDelivery: builder.mutation<void, number>({
+  query: (id) => ({
+    url: ENDPOINTS.DELIVERIES.DELETE(id),
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Deliveries"],
+}),
 })
 });
 
@@ -223,4 +263,9 @@ useGetMerchantByIdQuery,
 useCreateMerchantMutation,
 useUpdateMerchantMutation,
 useDeleteMerchantMutation,
+useGetDeliveriesQuery,
+useGetDeliveryByIdQuery,
+useCreateDeliveryMutation,
+useUpdateDeliveryMutation,
+useDeleteDeliveryMutation,
 } = apiSlice;

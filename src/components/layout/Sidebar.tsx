@@ -384,7 +384,7 @@ export default function Sidebar() {
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
               {section.section}
             </p>
-            <div className="space-y-1">
+            <div className="space-y-1 ">
               {section.items.map((item) =>
                 item.children ? (
                   <DropdownItem
@@ -397,7 +397,7 @@ export default function Sidebar() {
                     key={item.label}
                     href={item.href!}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
+                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all rounded-xl",
                       pathname === item.href
                         ? "bg-orange-500 text-white"
                         : "text-slate-400 hover:bg-white/10 hover:text-white"
@@ -440,23 +440,23 @@ function DropdownItem({
     <details open={isActive} className="group">
       <summary
         className={cn(
-          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all list-none",
+          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all list-none rounded-xl",
           isActive
             ? "bg-white/10 text-white"
             : "text-slate-400 hover:bg-white/10 hover:text-white"
         )}
       >
-        <item.icon className="w-4 h-4 flex-shrink-0" />
-        <span className="flex-1">{item.label}</span>
-        <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+        <item.icon className="w-4 h-4 flex-shrink-0 " />
+        <span className="flex-1 ">{item.label}</span>
+        <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 rounded-xl" />
       </summary>
-      <div className="mt-1 ml-4 space-y-1">
+      <div className="mt-1 ml-4 space-y-1 ">
         {item.children?.map((child) => (
           <Link
             key={child.label}
             href={child.href}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all",
+              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all rounded-xl",
               pathname === child.href
                 ? "bg-orange-500 text-white"
                 : "text-slate-400 hover:bg-white/10 hover:text-white"

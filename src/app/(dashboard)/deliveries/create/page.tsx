@@ -1,0 +1,34 @@
+// deliveries/create/page.tsx
+// Create new delivery agent page
+
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useDeliveries } from "@/features/deliveries/hooks/useDeliveries";
+import DeliveryForm from "@/features/deliveries/components/DeliveryForm";
+import PageHeader from "@/components/common/PageHeader";
+import { ROUTES } from "@/constants/routes";
+
+export default function CreateDeliveryPage() {
+  const router = useRouter();
+  const { handleCreate, isCreating } = useDeliveries();
+
+  return (
+    <div>
+      {/* Header */}
+      <PageHeader
+        title="Add New Delivery Agent"
+        description="Fill in the details to create a new delivery agent"
+      />
+
+      {/* Form */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-2xl">
+        <DeliveryForm
+          isLoading={isCreating}
+          onSubmit={handleCreate}
+          onCancel={() => router.push(ROUTES.DELIVERIES)}
+        />
+      </div>
+    </div>
+  );
+}
