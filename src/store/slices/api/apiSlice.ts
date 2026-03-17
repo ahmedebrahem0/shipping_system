@@ -159,7 +159,8 @@ export const apiSlice = createApi({
     }),
 
   // Merchants
-getMerchants: builder.query<MerchantsResponse, { page?: number; pageSize?: number; }>({
+// Merchants
+getMerchants: builder.query<MerchantsResponse, { page?: number; pageSize?: number; searchTxt?: string }>({
   query: (params) => ({
     url: ENDPOINTS.MERCHANTS.GET_ALL,
     params,

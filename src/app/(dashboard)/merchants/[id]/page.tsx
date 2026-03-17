@@ -24,6 +24,10 @@ export default function MerchantDetailsPage() {
 
   const merchant = data?.data;
 
+  const onSubmit = (values: unknown) => {
+    handleUpdate(Number(id), values, merchant);
+  };
+
   if (isLoading) return <Loader fullPage />;
   if (isError || !merchant) return <ErrorMessage />;
 
@@ -41,7 +45,7 @@ export default function MerchantDetailsPage() {
           <MerchantForm
             selectedMerchant={merchant}
             isLoading={isUpdating}
-            onSubmit={(values) => handleUpdate(Number(id), values)}
+            onSubmit={onSubmit}
             onCancel={() => router.push(ROUTES.MERCHANTS)}
           />
         </div>

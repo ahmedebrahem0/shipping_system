@@ -44,26 +44,46 @@ export default function MerchantForm({
     ) as never,
   });
 
-  useEffect(() => {
-    if (selectedMerchant) {
-      reset({
-        name: selectedMerchant.name,
-        email: selectedMerchant.email,
-        phone: selectedMerchant.phone,
-        address: selectedMerchant.address,
-        storeName: selectedMerchant.storeName,
-        government: selectedMerchant.government,
-        city: selectedMerchant.city,
-        pickupCost: selectedMerchant.pickupCost,
-        rejectedOrderPercentage: selectedMerchant.rejectedOrderPercentage,
-      });
-    } else {
-      reset({});
-    }
-  }, [selectedMerchant, reset]);
-
+//   useEffect(() => {
+//     if (selectedMerchant) {
+//       reset({
+//         name: selectedMerchant.name,
+//         email: selectedMerchant.email,
+//         phone: selectedMerchant.phone,
+//         address: selectedMerchant.address,
+//         storeName: selectedMerchant.storeName,
+//         government: selectedMerchant.government,
+//         city: selectedMerchant.city,
+//         pickupCost: selectedMerchant.pickupCost,
+//         rejectedOrderPercentage: selectedMerchant.rejectedOrderPercentage,
+//       });
+//     } else {
+//       reset({});
+//     }
+//   }, [selectedMerchant, reset]);
+useEffect(() => {
+  if (selectedMerchant) {
+    reset({
+      name: selectedMerchant.name,
+      email: selectedMerchant.email,
+      phone: selectedMerchant.phone,
+      address: selectedMerchant.address,
+      storeName: selectedMerchant.storeName,
+      government: selectedMerchant.government,
+      city: selectedMerchant.city,
+      pickupCost: selectedMerchant.pickupCost,
+      rejectedOrderPercentage: selectedMerchant.rejectedOrderPercentage,
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
+  }
+}, [selectedMerchant, reset]);
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form 
+  onSubmit={handleSubmit(onSubmit, (errors) => console.log("Form Errors:", errors))} 
+  className="space-y-4"
+>
 
       {/* Name */}
       <div className="space-y-1">
@@ -156,7 +176,57 @@ export default function MerchantForm({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
         />
       </div>
+{/* Password Section - Edit only */}
+{isEditing && (
+  <div className="border border-gray-200 rounded-lg p-4 space-y-4">
+    <p className="text-sm font-semibold text-gray-700">
+      Change Password <span className="text-gray-400 font-normal">(optional)</span>
+    </p>
 
+    {/* Current Password */}
+    <div className="space-y-1">
+      <label className="text-sm font-medium text-gray-700">Current Password</label>
+      <input
+        {...register("currentPassword" as never)}
+        type="password"
+        placeholder="Enter current password"
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+      />
+    </div>
+
+    {/* New Password */}
+    <div className="space-y-1">
+      <label className="text-sm font-medium text-gray-700">New Password</label>
+      <input
+        {...register("newPassword" as never)}
+        type="password"
+        placeholder="Enter new password"
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+      />
+      {(errors as never as { newPassword?: { message: string } }).newPassword && (
+        <p className="text-xs text-red-500">
+          {(errors as never as { newPassword?: { message: string } }).newPassword?.message}
+        </p>
+      )}
+    </div>
+
+    {/* Confirm New Password */}
+    <div className="space-y-1">
+      <label className="text-sm font-medium text-gray-700">Confirm New Password</label>
+      <input
+        {...register("confirmNewPassword" as never)}
+        type="password"
+        placeholder="Confirm new password"
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+      />
+      {(errors as never as { confirmNewPassword?: { message: string } }).confirmNewPassword && (
+        <p className="text-xs text-red-500">
+          {(errors as never as { confirmNewPassword?: { message: string } }).confirmNewPassword?.message}
+        </p>
+      )}
+    </div>
+  </div>
+)}
       {/* Government */}
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Government</label>
