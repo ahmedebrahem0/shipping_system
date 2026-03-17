@@ -14,6 +14,7 @@ import {
 } from "@/features/merchants/schema/merchant.schema";
 import { useGetBranchesQuery, useGetGovernmentsQuery } from "@/store/slices/api/apiSlice";
 import type { Merchant } from "@/types/merchant.types";
+import PasswordInput from "@/components/common/PasswordInput";
 
 interface MerchantFormProps {
   selectedMerchant?: Merchant | null;
@@ -111,35 +112,19 @@ useEffect(() => {
       {/* Password - Create only */}
       {!isEditing && (
         <>
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Password</label>
-            <input
-              {...register("password" as never)}
-              type="password"
-              placeholder="Enter password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
-            />
-            {(errors as never as { password?: { message: string } }).password && (
-              <p className="text-xs text-red-500">
-                {(errors as never as { password?: { message: string } }).password?.message}
-              </p>
-            )}
-          </div>
+          <PasswordInput
+            {...register("password" as never)}
+            label="Password"
+            placeholder="Enter password"
+            error={String((errors as never as { password?: { message: string } })?.password?.message || "")}
+          />
 
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Confirm Password</label>
-            <input
-              {...register("confirmPassword" as never)}
-              type="password"
-              placeholder="Confirm password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
-            />
-            {(errors as never as { confirmPassword?: { message: string } }).confirmPassword && (
-              <p className="text-xs text-red-500">
-                {(errors as never as { confirmPassword?: { message: string } }).confirmPassword?.message}
-              </p>
-            )}
-          </div>
+          <PasswordInput
+            {...register("confirmPassword" as never)}
+            label="Confirm Password"
+            placeholder="Confirm password"
+            error={String((errors as never as { confirmPassword?: { message: string } })?.confirmPassword?.message || "")}
+          />
         </>
       )}
 
@@ -176,57 +161,40 @@ useEffect(() => {
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
         />
       </div>
-{/* Password Section - Edit only */}
-{isEditing && (
-  <div className="border border-gray-200 rounded-lg p-4 space-y-4">
-    <p className="text-sm font-semibold text-gray-700">
-      Change Password <span className="text-gray-400 font-normal">(optional)</span>
-    </p>
+      
+      {/* Password Section - Edit only */}
+      {isEditing && (
+        <div className="border border-gray-200 rounded-lg p-4 space-y-4">
+          <p className="text-sm font-semibold text-gray-700">
+            Change Password <span className="text-gray-400 font-normal">(optional)</span>
+          </p>
 
-    {/* Current Password */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-700">Current Password</label>
-      <input
-        {...register("currentPassword" as never)}
-        type="password"
-        placeholder="Enter current password"
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
-      />
-    </div>
+          {/* Current Password */}
+          <PasswordInput
+            {...register("currentPassword" as never)}
+            label="Current Password"
+            placeholder="Enter current password"
+            error={String((errors as never as { currentPassword?: { message: string } })?.currentPassword?.message || "")}
+          />
 
-    {/* New Password */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-700">New Password</label>
-      <input
-        {...register("newPassword" as never)}
-        type="password"
-        placeholder="Enter new password"
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
-      />
-      {(errors as never as { newPassword?: { message: string } }).newPassword && (
-        <p className="text-xs text-red-500">
-          {(errors as never as { newPassword?: { message: string } }).newPassword?.message}
-        </p>
+          {/* New Password */}
+          <PasswordInput
+            {...register("newPassword" as never)}
+            label="New Password"
+            placeholder="Enter new password"
+            error={String((errors as never as { newPassword?: { message: string } })?.newPassword?.message || "")}
+          />
+
+          {/* Confirm New Password */}
+          <PasswordInput
+            {...register("confirmNewPassword" as never)}
+            label="Confirm New Password"
+            placeholder="Confirm new password"
+            error={String((errors as never as { confirmNewPassword?: { message: string } })?.confirmNewPassword?.message || "")}
+          />
+        </div>
       )}
-    </div>
 
-    {/* Confirm New Password */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-700">Confirm New Password</label>
-      <input
-        {...register("confirmNewPassword" as never)}
-        type="password"
-        placeholder="Confirm new password"
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
-      />
-      {(errors as never as { confirmNewPassword?: { message: string } }).confirmNewPassword && (
-        <p className="text-xs text-red-500">
-          {(errors as never as { confirmNewPassword?: { message: string } }).confirmNewPassword?.message}
-        </p>
-      )}
-    </div>
-  </div>
-)}
       {/* Government */}
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Government</label>

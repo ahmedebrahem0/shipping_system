@@ -34,7 +34,7 @@ export default function MerchantsPage() {
       {/* Header */}
       <PageHeader
         title="Merchants"
-        description={`${totalMerchants} merchants total`}
+        description={` merchants total ${totalMerchants}`}
         actionLabel="Add Merchant"
         actionIcon={Plus}
         onAction={() => router.push(ROUTES.MERCHANT_CREATE)}
