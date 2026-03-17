@@ -24,6 +24,13 @@ export const ROUTES = {
   DELIVERY_CREATE: "/deliveries/create",
   DELIVERY_DETAILS: (id: number) => `/deliveries/${id}`,
 
+  // Employees
+EMPLOYEES: "/employees",
+EMPLOYEE_CREATE: "/employees/create",
+SETTINGS: "/settings",
+ROLES: "/settings/roles",
+PERMISSIONS: "/settings/permissions",
+
   // Branches
   BRANCHES: "/branches",
   BRANCH_CREATE: "/branches/create",
@@ -39,5 +46,7 @@ export const ROUTES = {
 
   // Profile
   PROFILE: "/profile",
+
+
 
 } as const;

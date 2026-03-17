@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { setCredentials } from "@/store/slices/auth/authSlice";
 import { useLoginMutation } from "@/store/slices/api/apiSlice";
 import type { DecodedToken } from "@/types/auth.types";
+import type { Role } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 
 export const useLogin = () => {
@@ -20,11 +21,19 @@ export const useLogin = () => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      // 1. بنبعت للسيرفر
       const response = await login({ email, password }).unwrap();
 
-      // 2. بنفك التوكن
-   const decoded: DecodedToken = jwtDecode(response);
+      // Handle both direct token and wrapped response
+      const token = typeof response === 'string' ? response : response.data;
+      
+      if (!token) {
+        throw new Error("No token received");
+      }
+
+      const decoded: DecodedToken = jwtDecode(token);
+
+      // Role not in token - default to Admin for now
+      const role = decoded.role || "Admin" as Role;
 
       // 3. بنخزن في Redux
       dispatch(
@@ -33,16 +42,14 @@ export const useLogin = () => {
             id: decoded.nameid,
             name: decoded.unique_name,
             email: decoded.email,
-            role: decoded.role,
+            role: role,
           },
-          token: response.token,
+          token: token,
         })
       );
 
       // 4. بنخزن في cookies عشان الـ middleware
-      Cookies.set("token", response.token, { expires: 1 });
-
-      // 5. بنعمل redirect
+      Cookies.set("token", token, { expires: 1 });
       router.push(ROUTES.DASHBOARD);
       toast.success("Welcome back!");
 

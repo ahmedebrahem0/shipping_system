@@ -1,13 +1,20 @@
-import { format } from "date-fns";
-
 // Format date: Jan 15, 2024
 export function formatDate(date: string | Date): string {
-  return format(new Date(date), "MMM dd, yyyy");
+  const d = new Date(date);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
 // Format date with time: Jan 15, 2024 - 10:30 AM
 export function formatDateTime(date: string | Date): string {
-  return format(new Date(date), "MMM dd, yyyy - hh:mm a");
+  const d = new Date(date);
+  return d.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 }
 
 // Format currency: 1,500 EGP
