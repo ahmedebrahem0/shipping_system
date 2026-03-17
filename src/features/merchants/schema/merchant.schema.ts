@@ -112,6 +112,11 @@ export const merchantEditSchema = yup.object({
     .max(100)
     .optional(),
 
+  branches_Id: yup
+    .array()
+    .of(yup.number())
+    .optional(),
+
   currentPassword: yup.string().optional(),
   newPassword: yup
     .string()
