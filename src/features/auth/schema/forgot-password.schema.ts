@@ -1,8 +1,8 @@
-
-export default function forgotpassword.schema() {
+export default function ForgotPasswordPage() {
   return (
     <div>
-      forget
+      <h1>Forgot Password</h1>
+      <p>This page is under construction.</p>
     </div>
-  )
+  );
 }
