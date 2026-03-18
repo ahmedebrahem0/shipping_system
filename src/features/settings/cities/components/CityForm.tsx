@@ -31,7 +31,8 @@ export default function CityForm({
     reset,
     formState: { errors },
   } = useForm<CityFormValues>({
-    resolver: yupResolver(citySchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: yupResolver(citySchema) as any,
   });
 
   useEffect(() => {

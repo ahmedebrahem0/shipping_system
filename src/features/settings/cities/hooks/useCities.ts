@@ -26,7 +26,12 @@ export const useCities = () => {
 
   const handleCreate = async (values: CityFormValues) => {
     try {
-      await createCity(values).unwrap();
+      await createCity({
+        name: values.name,
+        government_Id: values.government_Id,
+        pickupShipping: values.pickupShipping ?? undefined,
+        standardShipping: values.standardShipping,
+      }).unwrap();
       toast.success("City created successfully");
       setIsFormOpen(false);
     } catch {
@@ -42,7 +47,13 @@ export const useCities = () => {
     try {
       await updateCity({
         id: selectedCity.id,
-        data: { ...values, isDeleted: false },
+        data: {
+          name: values.name,
+          government_Id: values.government_Id,
+          pickupShipping: values.pickupShipping ?? undefined,
+          standardShipping: values.standardShipping,
+          isDeleted: false,
+        },
       }).unwrap();
       toast.success("City updated successfully");
       setIsFormOpen(false);
