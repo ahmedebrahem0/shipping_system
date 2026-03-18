@@ -12,6 +12,7 @@ import GovernmentForm from "@/features/settings/governments/components/Governmen
 import CityTable from "@/features/settings/cities/components/CityTable";
 import CityForm from "@/features/settings/cities/components/CityForm";
 import PageHeader from "@/components/common/PageHeader";
+import Pagination from "@/components/common/Pagination";
 import Loader from "@/components/common/Loader";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -69,7 +70,7 @@ export default function GovernmentsAndCitiesPage() {
 
         {/* Governments Tab */}
         {activeTab === "governments" && (
-          <>
+          <div>
             {governments.isLoading ? (
               <Loader />
             ) : governments.isError ? (
@@ -80,18 +81,26 @@ export default function GovernmentsAndCitiesPage() {
                 description="Start by adding your first government."
               />
             ) : (
-              <GovernmentTable
-                governments={governments.governments}
-                onEdit={governments.openEdit}
-                onDelete={governments.openDelete}
-              />
+              <>
+                <GovernmentTable
+                  governments={governments.governments}
+                  onEdit={governments.openEdit}
+                  onDelete={governments.openDelete}
+                />
+                <Pagination
+                  currentPage={governments.page}
+                  totalCount={governments.totalGovernments}
+                  pageSize={10}
+                  onPageChange={governments.setPage}
+                />
+              </>
             )}
-          </>
+          </div>
         )}
 
         {/* Cities Tab */}
         {activeTab === "cities" && (
-          <>
+          <div>
             {cities.isLoading ? (
               <Loader />
             ) : cities.isError ? (
@@ -102,13 +111,21 @@ export default function GovernmentsAndCitiesPage() {
                 description="Start by adding your first city."
               />
             ) : (
-              <CityTable
-                cities={cities.cities}
-                onEdit={cities.openEdit}
-                onDelete={cities.openDelete}
-              />
+              <>
+                <CityTable
+                  cities={cities.cities}
+                  onEdit={cities.openEdit}
+                  onDelete={cities.openDelete}
+                />
+                <Pagination
+                  currentPage={cities.page}
+                  totalCount={cities.totalCities}
+                  pageSize={10}
+                  onPageChange={cities.setPage}
+                />
+              </>
             )}
-          </>
+          </div>
         )}
 
       </div>

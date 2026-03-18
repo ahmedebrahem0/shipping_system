@@ -26,6 +26,7 @@ export const ROUTES = {
 
   // Employees
 EMPLOYEES: "/employees",
+EMPLOYEE_DETAILS: (id: number) => `/employees/${id}`,
 EMPLOYEE_CREATE: "/employees/create",
 SETTINGS: "/settings",
 ROLES: "/settings/roles",

@@ -1,5 +1,5 @@
-// DeliveryForm.tsx
-// Form for creating and editing a delivery agent
+// EmployeeForm.tsx
+// Form for creating and editing an employee
 
 "use client";
 
@@ -7,63 +7,60 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  deliveryCreateSchema,
-  deliveryEditSchema,
-  type DeliveryCreateFormValues,
-  type DeliveryEditFormValues,
-} from "@/features/deliveries/schema/delivery.schema";
-import { useGetBranchesQuery, useGetGovernmentsQuery } from "@/store/slices/api/apiSlice";
+  employeeCreateSchema,
+  employeeEditSchema,
+  type EmployeeCreateFormValues,
+  type EmployeeEditFormValues,
+} from "@/features/employees/schema/employee.schema";
+import { useGetBranchesQuery } from "@/store/slices/api/apiSlice";
 import PasswordInput from "@/components/common/PasswordInput";
-import { DISCOUNT_TYPES } from "@/constants/shippingTypes";
-import type { Delivery } from "@/types/delivery.types";
+import { ROLES } from "@/constants/roles";
+import type { Employee } from "@/types/employee.types";
 
-interface DeliveryFormProps {
-  selectedDelivery?: Delivery | null;
+interface EmployeeFormProps {
+  selectedEmployee?: Employee | null;
   isLoading: boolean;
-  onSubmit: (values: DeliveryCreateFormValues | DeliveryEditFormValues) => void;
+  onSubmit: (values: EmployeeCreateFormValues | EmployeeEditFormValues) => void;
   onCancel: () => void;
 }
 
-export default function DeliveryForm({
-  selectedDelivery,
+export default function EmployeeForm({
+  selectedEmployee,
   isLoading,
   onSubmit,
   onCancel,
-}: DeliveryFormProps) {
-  const isEditing = !!selectedDelivery;
+}: EmployeeFormProps) {
+  const isEditing = !!selectedEmployee;
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
-  const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 100 });
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<DeliveryCreateFormValues | DeliveryEditFormValues>({
+  } = useForm<EmployeeCreateFormValues | EmployeeEditFormValues>({
     resolver: yupResolver(
-      isEditing ? deliveryEditSchema : deliveryCreateSchema
+      isEditing ? employeeEditSchema : employeeCreateSchema
     ) as never,
   });
 
   useEffect(() => {
-    if (selectedDelivery) {
+    if (selectedEmployee) {
       reset({
-        name: selectedDelivery.name,
-        email: selectedDelivery.email,
-        phone: selectedDelivery.phone,
+        name: selectedEmployee.name,
+        email: selectedEmployee.email ?? "",
         password: "",
-        address: selectedDelivery.address,
-        branchId: 0,
-        governmentsId: [],
-        discountType: selectedDelivery.discountType,
-        companyPercentage: selectedDelivery.companyPercentage,
-        isDeleted: selectedDelivery.isDeleted,
+        confirmPassword: "",
+        phone: selectedEmployee.phone ?? "",
+        address: selectedEmployee.address,
+        role: ROLES.EMPLOYEE,
+        branchId: selectedEmployee.branchId,
       });
     } else {
       reset({});
     }
-  }, [selectedDelivery, reset]);
+  }, [selectedEmployee, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -73,7 +70,7 @@ export default function DeliveryForm({
         <label className="text-sm font-medium text-gray-700">Full Name</label>
         <input
           {...register("name")}
-          placeholder="Enter agent name"
+          placeholder="Enter employee name"
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
         />
         {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
@@ -101,6 +98,16 @@ export default function DeliveryForm({
         />
       </div>
 
+      {/* Confirm Password */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-gray-700">Confirm Password</label>
+        <PasswordInput
+          {...register("confirmPassword")}
+          placeholder="Confirm password"
+          error={errors.confirmPassword?.message}
+        />
+      </div>
+
       {/* Phone */}
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Phone</label>
@@ -123,9 +130,28 @@ export default function DeliveryForm({
         {errors.address && <p className="text-xs text-red-500">{errors.address.message}</p>}
       </div>
 
+      {/* Role */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-gray-700">Role</label>
+        <select
+          {...register("role")}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+        >
+          <option value="">Select a role</option>
+          {Object.values(ROLES).map((role) => (
+            <option key={role} value={role}>
+              {role}
+            </option>
+          ))}
+        </select>
+        {errors.role && <p className="text-xs text-red-500">{errors.role.message}</p>}
+      </div>
+
       {/* Branch */}
       <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">Branch</label>
+        <label className="text-sm font-medium text-gray-700">
+          Branch <span className="text-gray-400">(optional)</span>
+        </label>
         <select
           {...register("branchId")}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
@@ -138,53 +164,6 @@ export default function DeliveryForm({
           ))}
         </select>
         {errors.branchId && <p className="text-xs text-red-500">{errors.branchId.message}</p>}
-      </div>
-
-      {/* Governments - Multi Select */}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">Governments</label>
-        <select
-          {...register("governmentsId")}
-          multiple
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white h-32"
-        >
-          {governmentsData?.governments?.map((gov) => (
-            <option key={gov.id} value={gov.id}>
-              {gov.name}
-            </option>
-          ))}
-        </select>
-        <p className="text-xs text-gray-400">Hold Ctrl to select multiple</p>
-        {errors.governmentsId && <p className="text-xs text-red-500">{errors.governmentsId.message}</p>}
-      </div>
-
-      {/* Discount Type */}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">Discount Type</label>
-        <select
-          {...register("discountType")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
-        >
-          <option value="">Select discount type</option>
-          {Object.values(DISCOUNT_TYPES).map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-        {errors.discountType && <p className="text-xs text-red-500">{errors.discountType.message}</p>}
-      </div>
-
-      {/* Company Percentage */}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">Company Percentage</label>
-        <input
-          {...register("companyPercentage")}
-          type="number"
-          placeholder="0"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
-        />
-        {errors.companyPercentage && <p className="text-xs text-red-500">{errors.companyPercentage.message}</p>}
       </div>
 
       {/* Actions */}

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useMerchants } from "@/features/merchants/hooks/useMerchants";
 import MerchantTable from "@/features/merchants/components/MerchantTable";
 import PageHeader from "@/components/common/PageHeader";
+import Pagination from "@/components/common/Pagination";
 import Loader from "@/components/common/Loader";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -27,6 +28,8 @@ export default function MerchantsPage() {
     handleDelete,
     openDelete,
     isDeleting,
+    page,
+    setPage,
   } = useMerchants();
 
   return (
@@ -52,10 +55,18 @@ export default function MerchantsPage() {
             description="Start by adding your first merchant."
           />
         ) : (
-          <MerchantTable
-            merchants={merchants}
-            onDelete={openDelete}
-          />
+          <>
+            <MerchantTable
+              merchants={merchants}
+              onDelete={openDelete}
+            />
+            <Pagination
+              currentPage={page}
+              totalCount={totalMerchants}
+              pageSize={10}
+              onPageChange={setPage}
+            />
+          </>
         )}
       </div>
 

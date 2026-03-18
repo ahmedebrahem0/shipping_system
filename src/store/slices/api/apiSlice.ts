@@ -7,8 +7,9 @@ import type { BranchCreateRequest, BranchEditRequest, BranchesData, Branch } fro
 import type { GovernmentCreateRequest, GovernmentEditRequest, GovernmentsData } from "@/types/government.types";
 import type { CityCreateRequest, CityEditRequest, CitiesResponse } from "@/types/city.types";
 import type { ApiResponse } from "@/types/api.types";
-import type { MerchantCreateRequest, MerchantEditRequest, MerchantsResponse } from "@/types/merchant.types";
+import type { MerchantCreateRequest, MerchantEditRequest, MerchantsResponse, MerchantResponse } from "@/types/merchant.types";
 import type { Delivery, DeliveryCreateRequest, DeliveryEditRequest } from "@/types/delivery.types";
+import type { EmployeesData, Employee, EmployeeCreateRequest, EmployeeEditRequest } from "@/types/employee.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -169,7 +170,7 @@ getMerchants: builder.query<MerchantsResponse, { page?: number; pageSize?: numbe
   providesTags: ["Merchants"],
 }),
 
-getMerchantById: builder.query<MerchantsResponse, number>({
+getMerchantById: builder.query<MerchantResponse, number>({
   query: (id) => ({
     url: ENDPOINTS.MERCHANTS.GET_BY_ID(id),
   }),
@@ -241,6 +242,55 @@ deleteDelivery: builder.mutation<void, number>({
   }),
   invalidatesTags: ["Deliveries"],
 }),
+
+// Employees
+getEmployees: builder.query<EmployeesData, { pageIndex?: number; pageSize?: number }>({
+  query: (params) => ({
+    url: ENDPOINTS.EMPLOYEES.GET_ALL,
+    params,
+  }),
+  providesTags: ["Employees"],
+}),
+
+getEmployeeById: builder.query<Employee, number>({
+  query: (id) => ({
+    url: ENDPOINTS.EMPLOYEES.GET_BY_ID(id),
+  }),
+  providesTags: ["Employees"],
+}),
+
+createEmployee: builder.mutation<void, EmployeeCreateRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.EMPLOYEES.CREATE,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["Employees"],
+}),
+
+updateEmployee: builder.mutation<void, { id: number; data: EmployeeEditRequest }>({
+  query: ({ id, data }) => ({
+    url: ENDPOINTS.EMPLOYEES.UPDATE(id),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Employees"],
+}),
+
+deleteEmployee: builder.mutation<void, number>({
+  query: (id) => ({
+    url: ENDPOINTS.EMPLOYEES.DELETE(id),
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Employees"],
+}),
+
+searchEmployees: builder.query<Employee[], string>({
+  query: (term) => ({
+    url: ENDPOINTS.EMPLOYEES.SEARCH_BY_NAME,
+    params: { term },
+  }),
+}),
 })
 });
 
@@ -264,8 +314,14 @@ useCreateMerchantMutation,
 useUpdateMerchantMutation,
 useDeleteMerchantMutation,
 useGetDeliveriesQuery,
-useGetDeliveryByIdQuery,
-useCreateDeliveryMutation,
-useUpdateDeliveryMutation,
-useDeleteDeliveryMutation,
+  useGetDeliveryByIdQuery,
+  useCreateDeliveryMutation,
+  useUpdateDeliveryMutation,
+  useDeleteDeliveryMutation,
+  useGetEmployeesQuery,
+  useGetEmployeeByIdQuery,
+  useCreateEmployeeMutation,
+  useUpdateEmployeeMutation,
+  useDeleteEmployeeMutation,
+  useSearchEmployeesQuery,
 } = apiSlice;

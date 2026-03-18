@@ -4,19 +4,37 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicRoutes = ["/login", "/forgot-password", "/verify-otp", "/reset-password"];
+const protectedRoutes = [
+  "/dashboard",
+  "/orders",
+  "/merchants",
+  "/employees",
+  "/branches",
+  "/deliveries",
+  "/settings",
+  "/reports",
+  "/profile",
+];
+
+const publicRoutes = ["/login", "/register", "/forgot-password", "/verify-otp", "/reset-password"];
 
 export function proxy(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
-  // لو مش عنده token وبيحاول يدخل صفحة محمية
-  if (!token && !publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  const isAuthenticated = !!token;
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+
+  // Redirect unauthenticated users from protected routes to login
+  if (isProtectedRoute && !isAuthenticated) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // لو عنده token وبيحاول يدخل login
-  if (token && publicRoutes.includes(pathname)) {
+  // Redirect authenticated users from public routes (like /login) to dashboard
+  if (isPublicRoute && isAuthenticated && pathname === "/login") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -24,5 +42,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };

@@ -9,6 +9,7 @@ interface PageHeaderProps {
   actionLabel?: string;
   actionIcon?: LucideIcon;
   onAction?: () => void;
+  className?: string;
 }
 
 export default function PageHeader({
@@ -17,9 +18,10 @@ export default function PageHeader({
   actionLabel,
   actionIcon: ActionIcon,
   onAction,
+  className = "",
 }: PageHeaderProps) {
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className={`flex items-center justify-between mb-6 ${className}`}>
       <div>
         <h1 className="text-xl font-bold text-gray-900">{title}</h1>
         {description && (

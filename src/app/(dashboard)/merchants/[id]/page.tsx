@@ -22,7 +22,7 @@ export default function MerchantDetailsPage() {
   const { data, isLoading, isError } = useGetMerchantByIdQuery(Number(id));
   const { handleUpdate, isUpdating } = useMerchants();
 
-  const merchant = data?.data;
+  const merchant = data?.merchant;
 
   const onSubmit = (values: unknown) => {
     handleUpdate(Number(id), values, merchant);

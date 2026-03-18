@@ -65,6 +65,7 @@ export const ENDPOINTS = {
     GET_ALL: `${BASE_URL}/api/Employee`,
     GET_BY_ID: (id: number) => `${BASE_URL}/api/Employee/${id}`,
     GET_BY_ROLE: `${BASE_URL}/api/Employee/GetEmployeesByRole`,
+    SEARCH_BY_NAME: `${BASE_URL}/api/Employee/SearchByName`,
     CREATE: `${BASE_URL}/api/Employee`,
     UPDATE: (id: number) => `${BASE_URL}/api/Employee/${id}`,
     DELETE: (id: number) => `${BASE_URL}/api/Employee/${id}`,

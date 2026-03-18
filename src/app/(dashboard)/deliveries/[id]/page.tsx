@@ -40,7 +40,7 @@ export default function DeliveryDetailsPage() {
           <DeliveryForm
             selectedDelivery={delivery}
             isLoading={isUpdating}
-            onSubmit={(values) => handleUpdate(Number(id), values)}
+            onSubmit={(values) => handleUpdate(Number(id), { ...values, isDeleted: false })}
             onCancel={() => router.push(ROUTES.DELIVERIES)}
           />
         </div>

@@ -21,6 +21,14 @@ export interface Merchant {
   branchsNames: string;
 }
 
+export interface MerchantResponse {
+  merchant: Merchant;
+  totalMerchants?: number;
+  page?: number;
+  pageSize?: number;
+  merchants?: Merchant[];
+}
+
 export interface MerchantsData {
   totalMerchants: number;
   page: number;

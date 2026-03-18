@@ -11,6 +11,7 @@ import { toast } from "sonner"; // استيراد sonner
 
 export function useMerchants() {
   const router = useRouter();
+  const [page, setPage] = useState(1);
   
   // Mutations
   const [createMerchant, { isLoading: isCreating }] = useCreateMerchantMutation();
@@ -148,13 +149,14 @@ export function useMerchants() {
   };
 
   // Queries
-  const { data, isLoading, isError } = useGetMerchantsQuery({ page: 1, pageSize: 100 });
+  const { data, isLoading, isError } = useGetMerchantsQuery({ page, pageSize: 10 });
   const merchants = data?.data?.merchants || [];
   const totalMerchants = data?.data?.totalMerchants || 0;
 
   return {
     merchants,
     totalMerchants,
+    page,
     isLoading,
     isError,
     handleCreate,
@@ -167,5 +169,6 @@ export function useMerchants() {
     isDeleteOpen,
     setIsDeleteOpen,
     selectedMerchant,
+    setPage,
   };
 }

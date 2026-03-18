@@ -8,6 +8,7 @@ import { useCities } from "@/features/settings/cities/hooks/useCities";
 import CityTable from "@/features/settings/cities/components/CityTable";
 import CityForm from "@/features/settings/cities/components/CityForm";
 import PageHeader from "@/components/common/PageHeader";
+import Pagination from "@/components/common/Pagination";
 import Loader from "@/components/common/Loader";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -17,6 +18,8 @@ export default function CitiesPage() {
   const {
     cities,
     totalCities,
+    page,
+    setPage,
     isLoading,
     isError,
     isFormOpen,
@@ -58,11 +61,19 @@ export default function CitiesPage() {
             description="Start by adding your first city."
           />
         ) : (
-          <CityTable
-            cities={cities}
-            onEdit={openEdit}
-            onDelete={openDelete}
-          />
+          <>
+            <CityTable
+              cities={cities}
+              onEdit={openEdit}
+              onDelete={openDelete}
+            />
+            <Pagination
+              currentPage={page}
+              totalCount={totalCities}
+              pageSize={10}
+              onPageChange={setPage}
+            />
+          </>
         )}
       </div>
 

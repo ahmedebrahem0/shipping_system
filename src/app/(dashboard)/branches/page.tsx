@@ -8,6 +8,7 @@ import { useBranches } from "@/features/branches/hooks/useBranches";
 import BranchTable from "@/features/branches/components/BranchTable";
 import BranchForm from "@/features/branches/components/BranchForm";
 import PageHeader from "@/components/common/PageHeader";
+import Pagination from "@/components/common/Pagination";
 import Loader from "@/components/common/Loader";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -17,6 +18,8 @@ export default function BranchesPage() {
   const {
     branches,
     totalBranches,
+    page,
+    setPage,
     isLoading,
     isError,
     isFormOpen,
@@ -59,11 +62,19 @@ export default function BranchesPage() {
             description="Start by adding your first branch."
           />
         ) : (
-          <BranchTable
-            branches={branches}
-            onEdit={openEdit}
-            onDelete={openDelete}
-          />
+          <>
+            <BranchTable
+              branches={branches}
+              onEdit={openEdit}
+              onDelete={openDelete}
+            />
+            <Pagination
+              currentPage={page}
+              totalCount={totalBranches}
+              pageSize={10}
+              onPageChange={setPage}
+            />
+          </>
         )}
       </div>
 

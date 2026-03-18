@@ -21,10 +21,10 @@ export const useLogin = () => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const response = await login({ email, password }).unwrap();
+      const response = await login({ email, password }).unwrap() as string;
 
       // Handle both direct token and wrapped response
-      const token = typeof response === 'string' ? response : response.data;
+      const token = typeof response === 'string' ? response : (response as { data: string }).data;
       
       if (!token) {
         throw new Error("No token received");
