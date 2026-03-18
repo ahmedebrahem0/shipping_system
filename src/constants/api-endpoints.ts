@@ -97,4 +97,8 @@ export const ENDPOINTS = {
     UPLOAD_IMAGE: (id: string) => `${BASE_URL}/api/Profile/${id}/upload-profile-image`,
   },
 
+  DASHBOARD: {
+    GET_STATS: `${BASE_URL}/api/Dashboard`,
+  },
+
 } as const;

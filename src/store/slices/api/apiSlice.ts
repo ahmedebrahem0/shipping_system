@@ -10,6 +10,8 @@ import type { ApiResponse } from "@/types/api.types";
 import type { MerchantCreateRequest, MerchantEditRequest, MerchantsResponse, MerchantResponse } from "@/types/merchant.types";
 import type { Delivery, DeliveryCreateRequest, DeliveryEditRequest } from "@/types/delivery.types";
 import type { EmployeesData, Employee, EmployeeCreateRequest, EmployeeEditRequest } from "@/types/employee.types";
+import type { DashboardStatsResponse } from "@/types/dashboard.types";
+import type { ShippingType, ShippingTypeCreateRequest, ShippingTypeEditRequest } from "@/types/shippingType.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -43,6 +45,7 @@ export const apiSlice = createApi({
     "Employees",
     "Settings",
     "Reports",
+    "ShippingTypes",
   ],
 
   endpoints: (builder) => ({
@@ -52,6 +55,13 @@ export const apiSlice = createApi({
         url: ENDPOINTS.AUTH.LOGIN,
         method: "POST",
         body: credentials,
+      }),
+    }),
+
+    // Dashboard
+    getDashboardStats: builder.query<DashboardStatsResponse, void>({
+      query: () => ({
+        url: ENDPOINTS.DASHBOARD.GET_STATS,
       }),
     }),
 
@@ -291,11 +301,45 @@ searchEmployees: builder.query<Employee[], string>({
     params: { term },
   }),
 }),
+// Shipping Types
+getShippingTypes: builder.query<ShippingType[], void>({
+  query: () => ({
+    url: ENDPOINTS.SHIPPING_TYPES.GET_ALL,
+  }),
+  providesTags: ["ShippingTypes"],
+}),
+
+createShippingType: builder.mutation<void, ShippingTypeCreateRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.SHIPPING_TYPES.CREATE,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["ShippingTypes"],
+}),
+
+updateShippingType: builder.mutation<void, { id: number; data: ShippingTypeEditRequest }>({
+  query: ({ id, data }) => ({
+    url: ENDPOINTS.SHIPPING_TYPES.UPDATE(id),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["ShippingTypes"],
+}),
+
+deleteShippingType: builder.mutation<void, number>({
+  query: (id) => ({
+    url: ENDPOINTS.SHIPPING_TYPES.DELETE(id),
+    method: "DELETE",
+  }),
+  invalidatesTags: ["ShippingTypes"],
+}),
 })
 });
 
 export const {
   useLoginMutation,
+  useGetDashboardStatsQuery,
   useGetBranchesQuery,
   useCreateBranchMutation,
   useUpdateBranchMutation,
@@ -324,4 +368,8 @@ useGetDeliveriesQuery,
   useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
   useSearchEmployeesQuery,
+  useGetShippingTypesQuery,
+useCreateShippingTypeMutation,
+useUpdateShippingTypeMutation,
+useDeleteShippingTypeMutation,
 } = apiSlice;
