@@ -11,11 +11,11 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // الكود الجديد لحل مشكلة الـ HTTP والـ HTTPS
+  // الكود ده هيخلي أي طلب بيبدأ بـ /api يروح للسيرفر بتاعك من غير مشكلة Mixed Content
   async rewrites() {
     return [
       {
-        source: "/api-proxy/:path*",
+        source: "/api/:path*",
         destination: "http://shippingiti.runasp.net/api/:path*",
       },
     ];
