@@ -6,15 +6,23 @@ const nextConfig: NextConfig = {
       {
         source: "/",
         destination: "/dashboard",
-        permanent: false, // Use true for permanent (301), false for temporary (302)
+        permanent: false,
+      },
+    ];
+  },
+
+  // الكود الجديد لحل مشكلة الـ HTTP والـ HTTPS
+  async rewrites() {
+    return [
+      {
+        source: "/api-proxy/:path*",
+        destination: "http://shippingiti.runasp.net/api/:path*",
       },
     ];
   },
 
   reactStrictMode: true,
-
   poweredByHeader: false,
-
   compress: true,
 };
 
