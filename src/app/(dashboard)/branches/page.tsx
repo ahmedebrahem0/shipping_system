@@ -42,7 +42,7 @@ export default function BranchesPage() {
     <div>
       {/* Header */}
       <PageHeader
-      className="bg-orange-500 text-white"
+      className=" text-white"
         title="Branches"
         description={`branches total ${totalBranches}`}
         actionLabel="Add Branch"

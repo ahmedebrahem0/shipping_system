@@ -82,8 +82,8 @@ const { data: searchResults, isLoading: isSearching } = useSearchEmployeesQuery(
   };
 
   return {
-    // Data
-    employees: data?.items ?? [],
+    // Data (filter out soft-deleted items)
+    employees: data?.items?.filter((emp) => !emp.isDeleted) ?? [],
     totalCount: data?.totalCount ?? 0,
     pageIndex,
     isLoading,

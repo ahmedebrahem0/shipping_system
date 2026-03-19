@@ -12,6 +12,7 @@ import type { Delivery, DeliveryCreateRequest, DeliveryEditRequest } from "@/typ
 import type { EmployeesData, Employee, EmployeeCreateRequest, EmployeeEditRequest } from "@/types/employee.types";
 import type { DashboardStatsResponse } from "@/types/dashboard.types";
 import type { ShippingType, ShippingTypeCreateRequest, ShippingTypeEditRequest } from "@/types/shippingType.types";
+import type { WeightPricingRequest } from "@/types/weightPricing.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -55,6 +56,30 @@ export const apiSlice = createApi({
         url: ENDPOINTS.AUTH.LOGIN,
         method: "POST",
         body: credentials,
+      }),
+    }),
+
+    forgotPassword: builder.mutation<{ message: string }, { email: string }>({
+      query: (data) => ({
+        url: ENDPOINTS.AUTH.FORGOT_PASSWORD,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    verifyOTP: builder.mutation<{ isValid: boolean; message: string }, { email: string; otp: string }>({
+      query: (data) => ({
+        url: ENDPOINTS.AUTH.VERIFY_OTP,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    resetPassword: builder.mutation<{ message: string }, { email: string; otp: string; newPassword: string }>({
+      query: (data) => ({
+        url: ENDPOINTS.AUTH.RESET_PASSWORD,
+        method: "POST",
+        body: data,
       }),
     }),
 
@@ -334,11 +359,30 @@ deleteShippingType: builder.mutation<void, number>({
   }),
   invalidatesTags: ["ShippingTypes"],
 }),
+// Weight Pricing
+createWeightPricing: builder.mutation<void, WeightPricingRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.WEIGHT_PRICING.CREATE,
+    method: "PUT",
+    body: data,
+  }),
+}),
+
+updateWeightPricing: builder.mutation<void, WeightPricingRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.WEIGHT_PRICING.UPDATE,
+    method: "PUT",
+    body: data,
+  }),
+}),
 })
 });
 
 export const {
   useLoginMutation,
+  useForgotPasswordMutation,
+  useVerifyOTPMutation,
+  useResetPasswordMutation,
   useGetDashboardStatsQuery,
   useGetBranchesQuery,
   useCreateBranchMutation,
@@ -372,4 +416,6 @@ useGetDeliveriesQuery,
 useCreateShippingTypeMutation,
 useUpdateShippingTypeMutation,
 useDeleteShippingTypeMutation,
+useCreateWeightPricingMutation,
+useUpdateWeightPricingMutation,
 } = apiSlice;

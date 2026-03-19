@@ -84,8 +84,8 @@ export const useGovernments = () => {
   };
 
   return {
-    // Data
-    governments: data?.governments ?? [],
+    // Data (filter out soft-deleted items)
+    governments: data?.governments?.filter((g) => !g.isDeleted) ?? [],
     totalGovernments: data?.totalGovernments ?? 0,
     page,
     isLoading,

@@ -150,7 +150,7 @@ export function useMerchants() {
 
   // Queries
   const { data, isLoading, isError } = useGetMerchantsQuery({ page, pageSize: 10 });
-  const merchants = data?.data?.merchants || [];
+  const merchants = data?.data?.merchants?.filter((m) => !m.isDeleted) || [];
   const totalMerchants = data?.data?.totalMerchants || 0;
 
   return {

@@ -95,8 +95,8 @@ export const useCities = () => {
   };
 
   return {
-    // Data
-    cities: data?.data?.cities ?? [],
+    // Data (filter out soft-deleted items)
+    cities: data?.data?.cities?.filter((city) => !city.isDeleted) ?? [],
     totalCities: data?.data?.totalCitiess ?? 0,
     page,
     isLoading,

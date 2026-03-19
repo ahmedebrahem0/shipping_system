@@ -47,7 +47,7 @@ export default function ShippingTypesPage() {
       {/* Header */}
       <PageHeader
         title="Shipping Types"
-        description={`${shippingTypes.length} shipping types total`}
+        description={`shipping types total ${shippingTypes.length} `}
         actionLabel="Add Shipping Type"
         actionIcon={Plus}
         onAction={openCreate}

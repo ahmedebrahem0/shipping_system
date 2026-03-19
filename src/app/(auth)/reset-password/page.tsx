@@ -1,9 +1,40 @@
-import React from 'react'
+import ResetPasswordForm from "@/features/auth/components/ResetPasswordForm";
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-2xl font-bold">Reset Password Page</h1>
+    <div className="min-h-screen flex">
+      <div className="hidden lg:flex flex-1 bg-[#1a1f36] flex-col justify-center px-12">
+        <div className="mb-8">
+          <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+            📦
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-3">Shipping System</h1>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            Create a new secure password for your account.
+          </p>
+        </div>
+        <div className="space-y-4">
+          {[
+            { icon: "🔒", title: "Strong Password", desc: "Use a mix of characters" },
+            { icon: "✨", title: "Easy Recovery", desc: "Forgot password? Use OTP" },
+            { icon: "🛡️", title: "Secure Access", desc: "Your data is protected" },
+          ].map((feature) => (
+            <div key={feature.title} className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-lg">
+                {feature.icon}
+              </div>
+              <div>
+                <p className="text-white text-sm font-semibold">{feature.title}</p>
+                <p className="text-slate-400 text-xs">{feature.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex-1 lg:max-w-md flex flex-col justify-center px-8 bg-white">
+        <ResetPasswordForm />
+      </div>
     </div>
-  )
+  );
 }

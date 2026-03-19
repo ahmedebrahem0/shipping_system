@@ -89,8 +89,8 @@ export const useBranches = () => {
   };
 
   return {
-    // Data
-    branches: data?.data?.branches ?? [],
+    // Data (filter out soft-deleted items)
+    branches: data?.data?.branches?.filter((b) => !b.isDeleted) ?? [],
     totalBranches: data?.data?.totalBranches ?? 0,
     page,
     isLoading,

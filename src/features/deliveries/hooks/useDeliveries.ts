@@ -70,8 +70,8 @@ export const useDeliveries = () => {
   };
 
   return {
-    // Data
-    deliveries: data ?? [],
+    // Data (filter out soft-deleted items)
+    deliveries: data?.filter((d) => !d.isDeleted) ?? [],
     isLoading,
     isError,
 

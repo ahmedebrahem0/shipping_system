@@ -83,8 +83,8 @@ export const useShippingTypes = () => {
   };
 
   return {
-    // Data
-    shippingTypes: data ?? [],
+    // Data (filter out soft-deleted items)
+    shippingTypes: data?.filter((st) => !st.isDeleted) ?? [],
     isLoading,
     isError,
 
