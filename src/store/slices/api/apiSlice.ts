@@ -13,6 +13,7 @@ import type { EmployeesData, Employee, EmployeeCreateRequest, EmployeeEditReques
 import type { DashboardStatsResponse } from "@/types/dashboard.types";
 import type { ShippingType, ShippingTypeCreateRequest, ShippingTypeEditRequest } from "@/types/shippingType.types";
 import type { WeightPricingRequest } from "@/types/weightPricing.types";
+import type { ProfileResponse } from "@/types/profile.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -47,6 +48,7 @@ export const apiSlice = createApi({
     "Settings",
     "Reports",
     "ShippingTypes",
+    "Profile",
   ],
 
   endpoints: (builder) => ({
@@ -375,6 +377,22 @@ updateWeightPricing: builder.mutation<void, WeightPricingRequest>({
     body: data,
   }),
 }),
+// Profile
+getProfile: builder.query<ProfileResponse, string>({
+  query: (id) => ({
+    url: ENDPOINTS.PROFILE.GET(id),
+  }),
+  providesTags: ["Profile"],
+}),
+
+uploadProfileImage: builder.mutation<void, { id: string; imageFile: FormData }>({
+  query: ({ id, imageFile }) => ({
+    url: ENDPOINTS.PROFILE.UPLOAD_IMAGE(id),
+    method: "POST",
+    body: imageFile,
+  }),
+  invalidatesTags: ["Profile"],
+}),
 })
 });
 
@@ -418,4 +436,6 @@ useUpdateShippingTypeMutation,
 useDeleteShippingTypeMutation,
 useCreateWeightPricingMutation,
 useUpdateWeightPricingMutation,
+useGetProfileQuery,
+useUploadProfileImageMutation,
 } = apiSlice;
