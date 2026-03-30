@@ -52,7 +52,7 @@ type MenuSection = {
 const adminMenu: MenuSection[] = [
   {
     key: "main",
-    section: "Main",
+    // section: "Main",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, href: ROUTES.DASHBOARD },
     ],

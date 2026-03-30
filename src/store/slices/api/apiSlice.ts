@@ -14,6 +14,9 @@ import type { DashboardStatsResponse } from "@/types/dashboard.types";
 import type { ShippingType, ShippingTypeCreateRequest, ShippingTypeEditRequest } from "@/types/shippingType.types";
 import type { WeightPricingRequest } from "@/types/weightPricing.types";
 import type { ProfileResponse } from "@/types/profile.types";
+import type { OrderReportResponse, OrderReportFilters } from "@/types/report.types";
+import type { SettingsResponse, SettingCreateRequest, SettingEditRequest } from "@/types/settings.types";
+import type {Role,Permission,CreateRoleRequest,UpdateRoleRequest,CreateRolePermissionRequest,UpdateRolePermissionRequest,} from "@/types/role.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -49,6 +52,11 @@ export const apiSlice = createApi({
     "Reports",
     "ShippingTypes",
     "Profile",
+    "Reports",
+    "Settings",
+    "Roles",
+"Permissions",
+"RolePermissions",
   ],
 
   endpoints: (builder) => ({
@@ -393,6 +401,107 @@ uploadProfileImage: builder.mutation<void, { id: string; imageFile: FormData }>(
   }),
   invalidatesTags: ["Profile"],
 }),
+// Reports
+getOrderReport: builder.query<OrderReportResponse, OrderReportFilters>({
+  query: (params) => ({
+    url: ENDPOINTS.REPORTS.GET,
+    params,
+  }),
+  providesTags: ["Reports"],
+}),
+// Settings
+  getSettings: builder.query<SettingsResponse, void>({
+  query: () => ({
+    url: ENDPOINTS.SETTINGS.GET,
+  }),
+  providesTags: ["Settings"],
+}),
+
+createSetting: builder.mutation<void, SettingCreateRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.SETTINGS.GET,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["Settings"],
+}),
+
+updateSetting: builder.mutation<void, { id: number; data: SettingEditRequest }>({
+  query: ({ id, data }) => ({
+    url: ENDPOINTS.SETTINGS.UPDATE(id),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Settings"],
+}),
+// Roles
+getRoles: builder.query<Role[], { includeDelted?: boolean }>({
+  query: (params) => ({
+    url: ENDPOINTS.ROLE.GET_ALL,
+    params,
+  }),
+  providesTags: ["Roles"],
+}),
+
+createRole: builder.mutation<void, CreateRoleRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.ROLE.CREATE,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["Roles"],
+}),
+
+updateRole: builder.mutation<void, { id: string; data: UpdateRoleRequest }>({
+  query: ({ id, data }) => ({
+    url: ENDPOINTS.ROLE.UPDATE(id),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Roles"],
+}),
+
+deleteRole: builder.mutation<void, string>({
+  query: (id) => ({
+    url: ENDPOINTS.ROLE.DELETE(id),
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Roles"],
+}),
+
+// Permissions
+getPermissions: builder.query<Permission[], void>({
+  query: () => ({
+    url: ENDPOINTS.PERMISSIONS.GET_ALL,
+  }),
+  providesTags: ["Permissions"],
+}),
+
+// Role Permissions
+getRolePermissions: builder.query<Role[], void>({
+  query: () => ({
+    url: ENDPOINTS.ROLE_PERMISSION.GET_ALL,
+  }),
+  providesTags: ["RolePermissions"],
+}),
+
+createRolePermission: builder.mutation<void, { roleId: string; permissionId: number; data: CreateRolePermissionRequest }>({
+  query: ({ roleId, permissionId, data }) => ({
+    url: ENDPOINTS.ROLE_PERMISSION.CREATE(roleId, permissionId),
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["RolePermissions", "Roles"],
+}),
+
+updateRolePermission: builder.mutation<void, { roleId: string; permissionId: number; data: UpdateRolePermissionRequest }>({
+  query: ({ roleId, permissionId, data }) => ({
+    url: ENDPOINTS.ROLE_PERMISSION.UPDATE(roleId, permissionId),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["RolePermissions", "Roles"],
+}),
 })
 });
 
@@ -438,4 +547,16 @@ useCreateWeightPricingMutation,
 useUpdateWeightPricingMutation,
 useGetProfileQuery,
 useUploadProfileImageMutation,
+  useGetOrderReportQuery,
+useGetSettingsQuery,
+useCreateSettingMutation,
+  useUpdateSettingMutation,
+useGetRolesQuery,
+useCreateRoleMutation,
+useUpdateRoleMutation,
+useDeleteRoleMutation,
+useGetPermissionsQuery,
+useGetRolePermissionsQuery,
+useCreateRolePermissionMutation,
+useUpdateRolePermissionMutation,
 } = apiSlice;
