@@ -101,4 +101,27 @@ export const ENDPOINTS = {
     GET_STATS: `${BASE_URL}/api/Dashboard`,
   },
 
+// ====================== Roles & Permissions ======================
+  ROLE: {
+   GET_ALL: `${BASE_URL}/api/Role`,
+  GET_BY_ID: (id: string) => `${BASE_URL}/api/Role/${id}`, 
+  SEARCH: `${BASE_URL}/api/Role/search`,                    
+  CREATE: `${BASE_URL}/api/Role`,
+  UPDATE: (id: string) => `${BASE_URL}/api/Role/${id}`,
+  DELETE: (id: string) => `${BASE_URL}/api/Role/${id}`,
+  ASSIGN: `${BASE_URL}/api/Role/AssignRole`, 
+  },
+
+  PERMISSIONS: {
+    GET_ALL: `${BASE_URL}/api/Permissions/all`,
+  },
+
+  ROLE_PERMISSION: {
+    GET_ALL: `${BASE_URL}/api/RolePermission/All`,
+    CREATE: (roleId: string, permissionId: number) => 
+      `${BASE_URL}/api/RolePermission/${roleId}/${permissionId}`,
+    UPDATE: (roleId: string, permissionId: number) => 
+      `${BASE_URL}/api/RolePermission/${roleId}/${permissionId}`,
+  },
+
 } as const;

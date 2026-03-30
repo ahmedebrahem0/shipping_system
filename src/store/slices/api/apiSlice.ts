@@ -435,7 +435,8 @@ updateSetting: builder.mutation<void, { id: number; data: SettingEditRequest }>(
   invalidatesTags: ["Settings"],
 }),
 // Roles
-getRoles: builder.query<Role[], { includeDelted?: boolean }>({
+getRoles: builder.query<Role[], { includeDeleted?: boolean }>({
+
   query: (params) => ({
     url: ENDPOINTS.ROLE.GET_ALL,
     params,

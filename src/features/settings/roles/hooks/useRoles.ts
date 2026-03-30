@@ -21,7 +21,7 @@ export const useRoles = () => {
 
   // ==================== Fetch ====================
   const { data: roles, isLoading: isLoadingRoles } = useGetRolesQuery({
-    includeDelted: false,
+    includeDeleted: false,
   });
 
   const { data: permissions, isLoading: isLoadingPermissions } = useGetPermissionsQuery();
