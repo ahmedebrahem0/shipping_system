@@ -27,6 +27,7 @@ export const useProfile = () => {
       const formData = new FormData();
       formData.append("imageFile", file);
       await uploadProfileImage({ id: user.id, imageFile: formData }).unwrap();
+      console.log("image",file)
       toast.success("Profile image updated successfully");
     } catch {
       toast.error("Failed to upload profile image");

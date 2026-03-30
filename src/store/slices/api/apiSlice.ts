@@ -401,6 +401,7 @@ uploadProfileImage: builder.mutation<void, { id: string; imageFile: FormData }>(
   }),
   invalidatesTags: ["Profile"],
 }),
+
 // Reports
 getOrderReport: builder.query<OrderReportResponse, OrderReportFilters>({
   query: (params) => ({
