@@ -124,4 +124,12 @@ export const ENDPOINTS = {
       `${BASE_URL}/api/RolePermission/${roleId}/${permissionId}`,
   },
 
+  PRODUCT: {
+    GET_ALL: `${BASE_URL}/api/Product`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Product/${id}`,
+    UPDATE:(id: number) => `${BASE_URL}/api/Product/${id}`,
+  CREATE: `${BASE_URL}/api/Product`,
+
+},
+
 } as const;

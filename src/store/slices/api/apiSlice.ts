@@ -17,6 +17,7 @@ import type { ProfileResponse } from "@/types/profile.types";
 import type { OrderReportResponse, OrderReportFilters } from "@/types/report.types";
 import type { SettingsResponse, SettingCreateRequest, SettingEditRequest } from "@/types/settings.types";
 import type {Role,Permission,CreateRoleRequest,UpdateRoleRequest,CreateRolePermissionRequest,UpdateRolePermissionRequest,} from "@/types/role.types";
+import type {OrdersResponse,OrderDetailsResponse,OrderCreateRequest,OrderEditRequest,OrderFilters, ProductRequest,} from "@/types/order.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 
 interface RootState {
@@ -504,10 +505,95 @@ updateRolePermission: builder.mutation<void, { roleId: string; permissionId: num
   }),
   invalidatesTags: ["RolePermissions", "Roles"],
 }),
+// Orders
+getOrders: builder.query<OrdersResponse, { status: string; filters?: OrderFilters }>({
+  query: ({ status, filters }) => ({
+    url: ENDPOINTS.ORDERS.GET_ALL(status),
+    params: filters,
+  }),
+  providesTags: ["Orders"],
+}),
+
+getOrderById: builder.query<OrderDetailsResponse, number>({
+  query: (id) => ({
+    url: ENDPOINTS.ORDERS.GET_BY_ID(id),
+  }),
+  providesTags: ["Orders"],
+}),
+
+getMerchantOrders: builder.query<OrdersResponse, { merchantId: number; status: string; filters?: OrderFilters }>({
+  query: ({ merchantId, status, filters }) => ({
+    url: ENDPOINTS.ORDERS.GET_BY_MERCHANT(merchantId, status),
+    params: filters,
+  }),
+  providesTags: ["Orders"],
+}),
+
+getDeliveryOrders: builder.query<OrdersResponse, { deliveryId: number; status: string; filters?: OrderFilters }>({
+  query: ({ deliveryId, status, filters }) => ({
+    url: ENDPOINTS.ORDERS.GET_BY_DELIVERY(deliveryId, status),
+    params: filters,
+  }),
+  providesTags: ["Orders"],
+}),
+
+createOrder: builder.mutation<void, OrderCreateRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.ORDERS.CREATE,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["Orders"],
+}),
+
+updateOrder: builder.mutation<void, { id: number; data: OrderEditRequest }>({
+  query: ({ id, data }) => ({
+    url: ENDPOINTS.ORDERS.UPDATE(id),
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Orders"],
+}),
+
+deleteOrder: builder.mutation<void, { orderId: number; userId?: string }>({
+  query: ({ orderId, userId }) => ({
+    url: ENDPOINTS.ORDERS.DELETE(orderId),
+    method: "DELETE",
+    params: userId ? { userId } : undefined,
+  }),
+  invalidatesTags: ["Orders"],
+}),
+
+changeOrderStatus: builder.mutation<void, { orderId: number; userId: string; newStatus: string; note?: string }>({
+  query: ({ orderId, userId, newStatus, note }) => ({
+    url: ENDPOINTS.ORDERS.CHANGE_STATUS(orderId, userId, newStatus),
+    method: "PUT",
+    params: note ? { note } : undefined,
+  }),
+  invalidatesTags: ["Orders"],
+}),
+
+assignDelivery: builder.mutation<void, { orderId: number; deliveryId: number }>({
+  query: ({ orderId, deliveryId }) => ({
+    url: ENDPOINTS.ORDERS.ASSIGN_DELIVERY(orderId, deliveryId),
+    method: "PUT",
+  }),
+  invalidatesTags: ["Orders"],
+}),
+// Products
+addProduct: builder.mutation<void, ProductRequest>({
+  query: (data) => ({
+    url: ENDPOINTS.PRODUCT.CREATE,
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["Orders"],
+}),
 })
 });
 
 export const {
+  useAddProductMutation,
   useLoginMutation,
   useForgotPasswordMutation,
   useVerifyOTPMutation,
@@ -561,4 +647,13 @@ useGetPermissionsQuery,
 useGetRolePermissionsQuery,
 useCreateRolePermissionMutation,
 useUpdateRolePermissionMutation,
+useGetOrdersQuery,
+useGetOrderByIdQuery,
+useGetMerchantOrdersQuery,
+useGetDeliveryOrdersQuery,
+useCreateOrderMutation,
+useUpdateOrderMutation,
+useDeleteOrderMutation,
+useChangeOrderStatusMutation,
+useAssignDeliveryMutation,
 } = apiSlice;
