@@ -5,7 +5,35 @@ import * as yup from "yup";
 
 const egyptianPhoneRegex = /^(?:\+20|0)?1[0-2,5]{1}[0-9]{8}$/;
 
-export const orderCreateSchema = yup.object({
+export interface OrderCreateProductFormValue {
+  name: string;
+  quantity: number;
+  itemWeight: number;
+}
+
+export interface OrderCreateFormValues {
+  merchant_Id: number;
+  branch_Id: number;
+  government_Id: number;
+  city_Id: number;
+  shippingType_Id: number;
+  orderType: string;
+  clientName: string;
+  clientPhone1: string;
+  clientPhone2?: string;
+  clientEmail?: string;
+  clientAddress: string;
+  deliverToVillage: boolean;
+  paymentType: string;
+  orderCost: number;
+  orderTotalWeight?: number;
+  merchantNotes?: string;
+  employeeNotes?: string;
+  deliveryNotes?: string;
+  products: OrderCreateProductFormValue[];
+}
+
+export const orderCreateSchema: yup.ObjectSchema<OrderCreateFormValues> = yup.object({
   merchant_Id: yup
     .number()
     .min(1, "Please select a merchant")
@@ -47,14 +75,14 @@ export const orderCreateSchema = yup.object({
 
   clientPhone2: yup
     .string()
+    .transform((value) => (value === "" ? undefined : value))
     .matches(egyptianPhoneRegex, "Please enter a valid Egyptian phone number")
-    .nullable()
     .optional(),
 
   clientEmail: yup
     .string()
+    .transform((value) => (value === "" ? undefined : value))
     .email("Please enter a valid email")
-    .nullable()
     .optional(),
 
   clientAddress: yup
@@ -77,25 +105,26 @@ export const orderCreateSchema = yup.object({
 
   orderTotalWeight: yup
     .number()
+    .transform((value, originalValue) => (originalValue === "" ? undefined : value))
     .min(0, "Weight must be a positive number")
     .optional(),
 
   merchantNotes: yup
     .string()
     .max(250)
-    .nullable()
+    .transform((value) => (value === "" ? undefined : value))
     .optional(),
 
   employeeNotes: yup
     .string()
     .max(250)
-    .nullable()
+    .transform((value) => (value === "" ? undefined : value))
     .optional(),
 
   deliveryNotes: yup
     .string()
     .max(250)
-    .nullable()
+    .transform((value) => (value === "" ? undefined : value))
     .optional(),
 
   products: yup
@@ -110,5 +139,3 @@ export const orderCreateSchema = yup.object({
     .min(1, "Please add at least one product")
     .required("Products are required"),
 });
-
-export type OrderCreateFormValues = yup.InferType<typeof orderCreateSchema>;

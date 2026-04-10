@@ -3,10 +3,11 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import {
   orderCreateSchema,
   type OrderCreateFormValues,
@@ -41,17 +42,38 @@ export default function OrderForm({
   const { data: merchantsData } = useGetMerchantsQuery({ pageSize: 100 });
   const { data: shippingTypes } = useGetShippingTypesQuery();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<OrderCreateFormValues>({
-    resolver: yupResolver(orderCreateSchema),
-    defaultValues: {
-      deliverToVillage: false,
-      products: [{ name: "", quantity: 1, itemWeight: 0.1 }],
-    },
-  });
+// ابحث عن الجزء ده وعدله
+const {
+  register,
+  handleSubmit,
+  setValue,
+  formState: { errors },
+} = useForm<OrderCreateFormValues>({
+  resolver: yupResolver(orderCreateSchema),
+  defaultValues: {
+    deliverToVillage: false,
+    products: [{ name: "", quantity: 1, itemWeight: 0.1 }],
+    // ضيف دول عشان الـ Backend ميعملش Crash
+    merchantNotes: "",
+    employeeNotes: "",
+    deliveryNotes: "",
+    clientPhone2: "",
+    clientEmail: "",
+    orderTotalWeight: 0,
+    merchant_Id: 0,
+    branch_Id: 0,
+    government_Id: 0,
+    city_Id: 0,
+    shippingType_Id: 0,
+  },
+});
+
+  useEffect(() => {
+    setValue("products", products, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }, [products, setValue]);
 
   // ==================== Products ====================
   const addProduct = () => {
@@ -63,8 +85,44 @@ export default function OrderForm({
     setProducts((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmitForm = (values: OrderCreateFormValues) => {
-    onSubmit({ ...values, products });
+const handleSubmitForm = (values: OrderCreateFormValues) => {
+    // 1. التحقق من وجود منتجات
+    if (products.length === 0) {
+      toast.error("Please add at least one product");
+      return;
+    }
+
+    // 2. التحقق من صحة بيانات كل منتج (Validation)
+    const isValid = products.every(
+      (product) =>
+        product.name.trim() !== "" &&
+        product.quantity > 0 &&
+        product.itemWeight > 0
+    );
+
+    if (!isValid) {
+      toast.error("Please fill in all product details");
+      return;
+    }
+
+    // 3. تجهيز البيانات النهائية وتنظيفها من أي قيم undefined أو null
+    const finalValues: OrderCreateFormValues = {
+      ...values,
+      products: products, // استخدام قائمة المنتجات من الـ state
+      // ضمان إرسال نصوص فارغة بدلاً من undefined للحقول الاختيارية
+      merchantNotes: values.merchantNotes || "",
+      employeeNotes: values.employeeNotes || "",
+      deliveryNotes: values.deliveryNotes || "",
+      clientPhone2: values.clientPhone2 || "",
+      clientEmail: values.clientEmail || "",
+      // التأكد من أن الأوزان والقيم الرقمية مبعوثة كـ Numbers
+      orderTotalWeight: Number(values.orderTotalWeight) || 0,
+      orderCost: Number(values.orderCost) || 0,
+    };
+
+    // 4. إرسال البيانات للـ Hook (useCreateOrder)
+    console.log("Submitting cleaned order data:", finalValues);
+    onSubmit(finalValues);
   };
 
   return (
@@ -80,7 +138,7 @@ export default function OrderForm({
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Merchant</label>
             <select
-              {...register("merchant_Id")}
+              {...register("merchant_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select merchant</option>
@@ -95,7 +153,7 @@ export default function OrderForm({
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Branch</label>
             <select
-              {...register("branch_Id")}
+              {...register("branch_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select branch</option>
@@ -110,7 +168,7 @@ export default function OrderForm({
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Government</label>
             <select
-              {...register("government_Id")}
+              {...register("government_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select government</option>
@@ -125,7 +183,7 @@ export default function OrderForm({
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">City</label>
             <select
-              {...register("city_Id")}
+              {...register("city_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select city</option>
@@ -140,7 +198,7 @@ export default function OrderForm({
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Shipping Type</label>
             <select
-              {...register("shippingType_Id")}
+              {...register("shippingType_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select shipping type</option>
@@ -189,7 +247,7 @@ export default function OrderForm({
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Order Cost (EGP)</label>
             <input
-              {...register("orderCost")}
+              {...register("orderCost", { valueAsNumber: true })}
               type="number"
               placeholder="0.00"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
@@ -203,7 +261,9 @@ export default function OrderForm({
               Total Weight (kg) <span className="text-gray-400">(optional)</span>
             </label>
             <input
-              {...register("orderTotalWeight")}
+              {...register("orderTotalWeight", {
+                setValueAs: (value) => (value === "" ? undefined : Number(value)),
+              })}
               type="number"
               placeholder="0.0"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"

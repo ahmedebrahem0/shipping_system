@@ -19,7 +19,7 @@ import type { SettingsResponse, SettingCreateRequest, SettingEditRequest } from 
 import type {Role,Permission,CreateRoleRequest,UpdateRoleRequest,CreateRolePermissionRequest,UpdateRolePermissionRequest,} from "@/types/role.types";
 import type {OrdersResponse,OrderDetailsResponse,OrderCreateRequest,OrderEditRequest,OrderFilters, ProductRequest,} from "@/types/order.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
-
+import type { Product } from "@/types/order.types";
 interface RootState {
   auth: {
     token: string | null;
@@ -589,11 +589,19 @@ addProduct: builder.mutation<void, ProductRequest>({
   }),
   invalidatesTags: ["Orders"],
 }),
+// Products
+getProducts: builder.query<Product[], void>({
+  query: () => ({
+    url: ENDPOINTS.PRODUCT.GET_ALL,
+  }),
+  providesTags: ["Orders"],
+}),
 })
 });
 
 export const {
   useAddProductMutation,
+  useGetProductsQuery,
   useLoginMutation,
   useForgotPasswordMutation,
   useVerifyOTPMutation,

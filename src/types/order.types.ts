@@ -101,11 +101,11 @@ export interface OrderCreateRequest {
   deliverToVillage: boolean;
   paymentType: string;
   orderCost: number;
-  orderTotalWeight?: number;
-  merchantNotes?: string;
-  employeeNotes?: string;
-  deliveryNotes?: string;
-  products: Product[];
+  orderTotalWeight: number;
+  merchantNotes: string;
+  employeeNotes: string;
+  deliveryNotes: string;
+  products: ProductCreateRequest[];
 }
 
 export type OrderEditRequest = OrderCreateRequest;
