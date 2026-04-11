@@ -210,7 +210,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">Merchant</label>
             <select
               {...register("merchant_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
               disabled={!selectedBranch_Id}
             >
               <option value={0}>
@@ -228,7 +228,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">Branch</label>
             <select
               {...register("branch_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
             >
               <option value={0}>Select branch</option>
               {activeBranches.map((b) => (
@@ -243,7 +243,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">Government</label>
             <select
               {...register("government_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
             >
               <option value={0}>Select government</option>
               {activeGovernments.map((g) => (
@@ -258,7 +258,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">City</label>
             <select
               {...register("city_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
               disabled={!selectedGovernment_Id}
             >
               <option value={0}>
@@ -276,7 +276,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">Shipping Type</label>
             <select
               {...register("shippingType_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
             >
               <option value={0}>Select shipping type</option>
               {shippingTypes?.map((s) => (
@@ -291,7 +291,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">Order Type</label>
             <select
               {...register("orderType")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
             >
               <option value="">Select order type</option>
               {Object.values(ORDER_TYPES).map((type) => (
@@ -308,7 +308,7 @@ export default function OrderForm({
             <label className="text-sm font-medium text-gray-700">Payment Type</label>
             <select
               {...register("paymentType")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
             >
               <option value="">Select payment type</option>
               {Object.values(PAYMENT_TYPES).map((type) => (
@@ -327,7 +327,7 @@ export default function OrderForm({
               {...register("orderCost", { valueAsNumber: true })}
               type="number"
               placeholder="0.00"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
             {errors.orderCost && <p className="text-xs text-red-500">{errors.orderCost.message}</p>}
           </div>
@@ -343,7 +343,7 @@ export default function OrderForm({
               })}
               type="number"
               placeholder="0.0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
           </div>
 
@@ -353,7 +353,7 @@ export default function OrderForm({
               {...register("deliverToVillage")}
               type="checkbox"
               id="deliverToVillage"
-              className="w-4 h-4 accent-orange-500"
+              className="w-4 h-4 accent-primary-500"
             />
             <label htmlFor="deliverToVillage" className="text-sm font-medium text-gray-700 cursor-pointer">
               Deliver to Village (extra cost)
@@ -375,7 +375,7 @@ export default function OrderForm({
             <input
               {...register("clientName")}
               placeholder="Enter client name"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
             {errors.clientName && <p className="text-xs text-red-500">{errors.clientName.message}</p>}
           </div>
@@ -386,7 +386,7 @@ export default function OrderForm({
             <input
               {...register("clientPhone1")}
               placeholder="01XXXXXXXXX"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
             {errors.clientPhone1 && <p className="text-xs text-red-500">{errors.clientPhone1.message}</p>}
           </div>
@@ -399,7 +399,7 @@ export default function OrderForm({
             <input
               {...register("clientPhone2")}
               placeholder="01XXXXXXXXX"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
           </div>
 
@@ -412,7 +412,7 @@ export default function OrderForm({
               {...register("clientEmail")}
               type="email"
               placeholder="client@email.com"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
           </div>
 
@@ -422,7 +422,7 @@ export default function OrderForm({
             <input
               {...register("clientAddress")}
               placeholder="Enter full address"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
             {errors.clientAddress && <p className="text-xs text-red-500">{errors.clientAddress.message}</p>}
           </div>
@@ -437,7 +437,7 @@ export default function OrderForm({
           <button
             type="button"
             onClick={addProduct}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-white text-xs font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary-600 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Product
@@ -453,7 +453,7 @@ export default function OrderForm({
               onChange={(e) => setProducts((prev) =>
                 prev.map((p, i) => i === index ? { ...p, name: e.target.value } : p)
               )}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
             <input
               type="number"
@@ -462,7 +462,7 @@ export default function OrderForm({
               onChange={(e) => setProducts((prev) =>
                 prev.map((p, i) => i === index ? { ...p, quantity: Number(e.target.value) } : p)
               )}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
             />
             <div className="flex gap-2">
               <input
@@ -472,7 +472,7 @@ export default function OrderForm({
                 onChange={(e) => setProducts((prev) =>
                   prev.map((p, i) => i === index ? { ...p, itemWeight: Number(e.target.value) } : p)
                 )}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
               />
               <button
                 type="button"
@@ -502,7 +502,7 @@ export default function OrderForm({
               {...register("merchantNotes")}
               placeholder="Optional..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
             />
           </div>
           <div className="space-y-1">
@@ -511,7 +511,7 @@ export default function OrderForm({
               {...register("employeeNotes")}
               placeholder="Optional..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
             />
           </div>
           <div className="space-y-1">
@@ -520,7 +520,7 @@ export default function OrderForm({
               {...register("deliveryNotes")}
               placeholder="Optional..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
             />
           </div>
         </div>
@@ -538,7 +538,7 @@ export default function OrderForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2.5 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Creating..." : "Create Order"}
         </button>

@@ -132,7 +132,7 @@ export default function VerifyOTPForm() {
             value={digit}
             onChange={(e) => handleInputChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            className="w-12 h-14 text-center text-xl font-bold border-2 border-gray-300 rounded-lg outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
+            className="w-12 h-14 text-center text-xl font-bold border-2 border-gray-300 rounded-lg outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all"
             style={{ caretColor: "transparent" }}
           />
         ))}
@@ -144,7 +144,7 @@ export default function VerifyOTPForm() {
       <button
         type="submit"
         disabled={isLoading || otpDigits.join("").length !== 6}
-        className="w-full py-3 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full py-3 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
@@ -164,7 +164,7 @@ export default function VerifyOTPForm() {
           <button
             type="button"
             onClick={onResend}
-            className="text-sm text-orange-500 font-semibold hover:underline"
+            className="text-sm text-primary-500 font-semibold hover:underline"
           >
             Resend OTP
           </button>
@@ -177,7 +177,7 @@ export default function VerifyOTPForm() {
 
       <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
         <ArrowLeft className="w-4 h-4" />
-        <Link href="/login" className="text-orange-500 font-semibold hover:underline">
+        <Link href="/login" className="text-primary-500 font-semibold hover:underline">
           Back to login
         </Link>
       </div>

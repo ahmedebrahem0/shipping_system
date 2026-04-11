@@ -67,10 +67,13 @@ const adminMenu: MenuSection[] = [
         href: null,
         children: [
           { label: "All Orders", icon: Package, href: ROUTES.ORDERS },
-          { label: "New Orders", icon: Package, href: `${ROUTES.ORDERS}?status=New` },
-          { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
-          { label: "Delivered", icon: Package, href: `${ROUTES.ORDERS}?status=Delivered` },
-          { label: "Rejected", icon: Package, href: `${ROUTES.ORDERS}?status=Rejected` },
+          // { label: "New Orders", icon: Package, href: `${ROUTES.ORDERS}?status=New` },
+          // { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
+          // { label: "Delivered", icon: Package, href: `${ROUTES.ORDERS}?status=Delivered` },
+          // { label: "Rejected", icon: Package, href: `${ROUTES.ORDERS}?status=Rejected` },
+          // { label: "Add Orders" ,icon: Package, href: `${}?status=Delivered` },
+          { label: "Add Orders" ,icon: Package, href: `${ROUTES.ORDER_CREATE}` },
+          
         ],
       },
     ],
@@ -177,6 +180,7 @@ const employeeMenu: MenuSection[] = [
           { label: "New Orders", icon: Package, href: `${ROUTES.ORDERS}?status=New` },
           { label: "In Distribution", icon: Package, href: `${ROUTES.ORDERS}?status=DeliveredToAgent` },
           { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
+
         ],
       },
     ],
@@ -350,13 +354,13 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-full bg-[#1a1f36] text-white transition-all duration-300 z-40 flex flex-col",
-        isSidebarOpen ? "w-60" : "w-0 overflow-hidden"
+        "fixed top-0 left-0 h-full bg-gray-900 text-white transition-all duration-300 z-40 flex flex-col",
+        isSidebarOpen ? "w-64" : "w-0 overflow-hidden"
       )}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10 flex-shrink-0">
-        <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
           <Package className="w-4 h-4 text-white" />
         </div>
         <span className="font-bold text-lg">ShipPro</span>
@@ -365,21 +369,19 @@ export default function Sidebar() {
       {/* User Info */}
       <div className="px-5 py-4 border-b border-white/10 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
             {user.name?.charAt(0).toUpperCase()}
           </div>
           <div className="overflow-hidden">
             <p className="text-sm font-semibold truncate">{user.name}</p>
-            <p className="text-xs text-orange-400">{user.role}</p>
+            <p className="text-xs text-primary-foreground/70">{user.role}</p>
           </div>
         </div>
       </div>
 
+
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4 [scrollbar-width:thin] [scrollbar-color:#ff6b00_transparent] 
-                [&::-webkit-scrollbar]:w-1.5 
-                [&::-webkit-scrollbar-thumb]:bg-[#ff6b00] 
-                [&::-webkit-scrollbar-thumb]:rounded-full">
+      <nav className="sidebar-nav flex-1 overflow-y-auto px-3 py-4 space-y-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(199 89% 48%) transparent' }}>
         {menu.map((section) => (
           <div key={section.key}>
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
@@ -398,9 +400,9 @@ export default function Sidebar() {
                     key={item.label}
                     href={item.href!}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all rounded-xl",
+                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                       pathname === item.href
-                        ? "bg-orange-500 text-white"
+                        ? "bg-primary text-white"
                         : "text-slate-400 hover:bg-white/10 hover:text-white"
                     )}
                   >
@@ -457,9 +459,9 @@ function DropdownItem({
             key={child.label}
             href={child.href}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all rounded-xl",
+              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all",
               pathname === child.href
-                ? "bg-orange-500 text-white"
+                ? "bg-primary text-white"
                 : "text-slate-400 hover:bg-white/10 hover:text-white"
             )}
           >

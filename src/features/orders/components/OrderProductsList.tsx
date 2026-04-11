@@ -96,7 +96,7 @@ export default function OrderProductsList({
             <button
               type="button"
               onClick={addProductRow}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-white text-xs font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary-600 transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               Add Product
@@ -112,14 +112,14 @@ export default function OrderProductsList({
                     placeholder="Product name"
                     value={product.name}
                     onChange={(e) => updateNewProduct(index, "name", e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
                   />
                   <input
                     type="number"
                     placeholder="Qty"
                     value={product.quantity}
                     onChange={(e) => updateNewProduct(index, "quantity", Number(e.target.value))}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
                   />
                   <div className="flex gap-2">
                     <input
@@ -127,7 +127,7 @@ export default function OrderProductsList({
                       placeholder="Weight"
                       value={product.itemWeight}
                       onChange={(e) => updateNewProduct(index, "itemWeight", Number(e.target.value))}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
                     />
                     <button
                       type="button"
@@ -144,7 +144,7 @@ export default function OrderProductsList({
                 type="button"
                 onClick={handleSaveProducts}
                 disabled={isLoading}
-                className="w-full py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 transition-colors"
+                className="w-full py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 transition-colors"
               >
                 {isLoading ? "Saving..." : "Save New Products"}
               </button>

@@ -55,7 +55,7 @@ export default function ShippingTypeForm({
         <input
           {...register("type")}
           placeholder="e.g. Express, Standard"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.type && <p className="text-xs text-red-500">{errors.type.message}</p>}
       </div>
@@ -69,7 +69,7 @@ export default function ShippingTypeForm({
           {...register("description")}
           placeholder="Enter description"
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 resize-none"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
         />
         {errors.description && <p className="text-xs text-red-500">{errors.description.message}</p>}
       </div>
@@ -81,7 +81,7 @@ export default function ShippingTypeForm({
           {...register("cost")}
           type="number"
           placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.cost && <p className="text-xs text-red-500">{errors.cost.message}</p>}
       </div>
@@ -98,7 +98,7 @@ export default function ShippingTypeForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : selectedShippingType ? "Update" : "Create"}
         </button>

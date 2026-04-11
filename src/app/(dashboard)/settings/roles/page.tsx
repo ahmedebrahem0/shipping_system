@@ -108,7 +108,7 @@ export default function RolesPage() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 placeholder="e.g. Supervisor, Accountant, Viewer..."
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#ff6b00] text-sm"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[primary] text-sm"
               />
             </div>
 
@@ -122,7 +122,7 @@ export default function RolesPage() {
               <button
                 onClick={handleSubmit}
                 disabled={!inputValue.trim() || isCreating || isUpdating}
-                className="px-5 py-2 text-sm font-semibold bg-[#ff6b00] text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+                className="px-5 py-2 text-sm font-semibold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
                 {selectedRole ? "Update Role" : "Create Role"}
               </button>

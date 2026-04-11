@@ -47,7 +47,7 @@ console.log("deliveriesData",deliveriesData?.length)
       label: "Total Orders",
       value: (deliveriesData?.length?? 0).toLocaleString() ?? "-",
       icon: Package,
-      color: "bg-orange-100 text-orange-600",
+      color: "bg-primary-100 text-primary-600",
       href: ROUTES.ORDERS,
     },
     {
@@ -119,7 +119,7 @@ console.log("deliveriesData",deliveriesData?.length)
           </p>
           <Link
             href={ROUTES.ORDERS}
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-600 transition-colors"
           >
             <Package className="w-4 h-4" />
             View Orders
@@ -136,7 +136,7 @@ console.log("deliveriesData",deliveriesData?.length)
           </p>
           <Link
             href={ROUTES.ORDERS}
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-600 transition-colors"
           >
             <Truck className="w-4 h-4" />
             View My Orders

@@ -25,14 +25,14 @@ export default function PageHeader({
       <div>
         <h1 className="text-xl font-bold text-gray-900">{title}</h1>
         {description && (
-          <p className="text-sm text-[#ff6b00] mt-0.5">{description}</p>
+          <p className="text-sm text-[primary] mt-0.5">{description}</p>
         )}
       </div>
 
       {actionLabel && onAction && (
         <button
           onClick={onAction}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-600 transition-colors"
         >
           {ActionIcon && <ActionIcon className="w-4 h-4" />}
           {actionLabel}

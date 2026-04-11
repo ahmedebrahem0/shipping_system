@@ -77,7 +77,7 @@ export default function ProfilePage() {
           <div className="flex items-start gap-8">
             {/* Profile Image */}
             <div className="relative flex-shrink-0">
-              <div className="w-32 h-32 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden border-4 border-white/20">
+              <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center overflow-hidden border-4 border-white/20">
                 {isUploading ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
@@ -105,7 +105,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleImageClick}
                 disabled={isUploading}
-                className="absolute bottom-0 right-0 w-10 h-10 bg-[#ff6b00] rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors shadow-lg disabled:opacity-50"
+                className="absolute bottom-0 right-0 w-10 h-10 bg-[primary] rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors shadow-lg disabled:opacity-50"
               >
                 <Camera className="w-5 h-5 text-white" />
               </button>
@@ -122,7 +122,7 @@ export default function ProfilePage() {
             {/* User Info */}
             <div className="flex-1 pt-2">
               <h2 className="text-2xl font-bold text-white">{userName}</h2>
-              <p className="text-orange-400 text-sm mt-1">{profile.roles.join(", ")}</p>
+              <p className="text-primary-400 text-sm mt-1">{profile.roles.join(", ")}</p>
               <p className="text-slate-400 text-xs mt-1">Member since {profile.createdDate}</p>
             </div>
           </div>
@@ -130,12 +130,12 @@ export default function ProfilePage() {
 
         {/* Preview Actions */}
         {previewUrl && (
-          <div className="bg-orange-50 px-8 py-4 flex items-center justify-between border-b border-orange-100">
+          <div className="bg-primary-50 px-8 py-4 flex items-center justify-between border-b border-primary-100">
             <div className="flex items-center gap-3">
               <img
                 src={previewUrl}
                 alt="Preview"
-                className="w-12 h-12 rounded-full object-cover border-2 border-orange-200"
+                className="w-12 h-12 rounded-full object-cover border-2 border-primary-200"
               />
               <div>
                 <p className="text-sm font-medium text-gray-900">New profile picture</p>
@@ -160,8 +160,8 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Email */}
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Mail className="w-5 h-5 text-orange-500" />
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Mail className="w-5 h-5 text-primary-500" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Email</p>
@@ -171,8 +171,8 @@ export default function ProfilePage() {
 
             {/* Phone */}
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Phone className="w-5 h-5 text-orange-500" />
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Phone className="w-5 h-5 text-primary-500" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Phone</p>
@@ -182,8 +182,8 @@ export default function ProfilePage() {
 
             {/* Address */}
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <MapPin className="w-5 h-5 text-orange-500" />
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-5 h-5 text-primary-500" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Address</p>
@@ -193,8 +193,8 @@ export default function ProfilePage() {
 
             {/* Role */}
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Shield className="w-5 h-5 text-orange-500" />
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Shield className="w-5 h-5 text-primary-500" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Role</p>
@@ -204,8 +204,8 @@ export default function ProfilePage() {
 
             {/* Member Since */}
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Calendar className="w-5 h-5 text-orange-500" />
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Calendar className="w-5 h-5 text-primary-500" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Member Since</p>

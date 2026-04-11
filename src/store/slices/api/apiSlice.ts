@@ -506,12 +506,18 @@ updateRolePermission: builder.mutation<void, { roleId: string; permissionId: num
   invalidatesTags: ["RolePermissions", "Roles"],
 }),
 // Orders
-getOrders: builder.query<OrdersResponse, { status: string; filters?: OrderFilters }>({
+getOrders: builder.query<OrdersResponse, { status?: string; filters?: OrderFilters }>({
   query: ({ status, filters }) => ({
-    url: ENDPOINTS.ORDERS.GET_ALL(status),
+    url: ENDPOINTS.ORDERS.GET_ALL(status || ""),
     params: filters,
   }),
   providesTags: ["Orders"],
+  transformErrorResponse: (response) => {
+    if (response.status === 404) {
+      return { data: { data: { orders: [], totalOrders: 0 } } };
+    }
+    return response;
+  },
 }),
 
 getOrderById: builder.query<OrderDetailsResponse, number>({
@@ -521,20 +527,32 @@ getOrderById: builder.query<OrderDetailsResponse, number>({
   providesTags: ["Orders"],
 }),
 
-getMerchantOrders: builder.query<OrdersResponse, { merchantId: number; status: string; filters?: OrderFilters }>({
+getMerchantOrders: builder.query<OrdersResponse, { merchantId: number; status?: string; filters?: OrderFilters }>({
   query: ({ merchantId, status, filters }) => ({
-    url: ENDPOINTS.ORDERS.GET_BY_MERCHANT(merchantId, status),
+    url: ENDPOINTS.ORDERS.GET_BY_MERCHANT(merchantId, status || ""),
     params: filters,
   }),
   providesTags: ["Orders"],
+  transformErrorResponse: (response) => {
+    if (response.status === 404) {
+      return { data: { data: { orders: [], totalOrders: 0 } } };
+    }
+    return response;
+  },
 }),
 
-getDeliveryOrders: builder.query<OrdersResponse, { deliveryId: number; status: string; filters?: OrderFilters }>({
+getDeliveryOrders: builder.query<OrdersResponse, { deliveryId: number; status?: string; filters?: OrderFilters }>({
   query: ({ deliveryId, status, filters }) => ({
-    url: ENDPOINTS.ORDERS.GET_BY_DELIVERY(deliveryId, status),
+    url: ENDPOINTS.ORDERS.GET_BY_DELIVERY(deliveryId, status || ""),
     params: filters,
   }),
   providesTags: ["Orders"],
+  transformErrorResponse: (response) => {
+    if (response.status === 404) {
+      return { data: { data: { orders: [], totalOrders: 0 } } };
+    }
+    return response;
+  },
 }),
 
 createOrder: builder.mutation<void, OrderCreateRequest>({

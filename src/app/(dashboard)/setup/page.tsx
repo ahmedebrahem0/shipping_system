@@ -139,14 +139,14 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto animate-fade-in">
       <PageHeader
         title="System Setup Wizard"
         description="Follow the steps to set up your shipping system"
       />
 
       {/* Stepper */}
-      <div className="mt-6 bg-white rounded-xl border border-gray-200 p-4">
+      <div className="mt-6 card">
         <div className="flex items-center justify-between">
           {SETUP_STEPS.map((step, index) => {
             const Icon = STEP_ICONS[step.id];
@@ -163,9 +163,9 @@ export default function SetupPage() {
                   disabled={!isClickable}
                   className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
                     isActive
-                      ? "bg-orange-50 text-orange-600"
+                      ? "bg-primary/10 text-primary"
                       : isCompleted
-                      ? "bg-green-50 text-green-600"
+                      ? "bg-emerald-50 text-emerald-600"
                       : isClickable
                       ? "text-gray-500 hover:bg-gray-50"
                       : "text-gray-300 cursor-not-allowed"
@@ -181,7 +181,7 @@ export default function SetupPage() {
                 {index < SETUP_STEPS.length - 1 && (
                   <ChevronRight
                     className={`w-5 h-5 mx-2 ${
-                      currentStepIndex > index ? "text-green-500" : "text-gray-300"
+                      currentStepIndex > index ? "text-emerald-500" : "text-gray-300"
                     }`}
                   />
                 )}
@@ -192,11 +192,11 @@ export default function SetupPage() {
       </div>
 
       {/* Content Area */}
-      <div className="mt-6 bg-white rounded-xl border border-gray-200 p-6">
+      <div className="mt-6 card">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <StepIcon className="w-5 h-5 text-orange-600" />
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <StepIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-gray-900">
@@ -240,7 +240,7 @@ export default function SetupPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {currentStepData[currentStep].map((item: unknown) => (
-                      <tr key={(item as { id: number }).id} className="hover:bg-gray-50">
+                      <tr key={(item as { id: number }).id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-4 py-3 font-medium text-gray-900">
                           {(item as { name: string }).name}
                         </td>
@@ -256,7 +256,7 @@ export default function SetupPage() {
                         <td className="px-4 py-3 text-right">
                           <button
                             onClick={() => setIsFormOpen(true)}
-                            className="text-orange-600 hover:text-orange-700 text-sm font-medium"
+                            className="text-primary hover:text-primary/80 text-sm font-medium"
                           >
                             Add Another
                           </button>
@@ -273,7 +273,7 @@ export default function SetupPage() {
                 </p>
                 <button
                   onClick={() => setIsFormOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"
+                  className="btn btn-primary"
                 >
                   <Plus className="w-4 h-4" />
                   Add {currentStepInfo?.title.replace(/s$/, "")}
@@ -289,7 +289,7 @@ export default function SetupPage() {
         <button
           onClick={goPrevStep}
           disabled={currentStepIndex === 0}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-4 h-4" />
           Previous
@@ -298,7 +298,7 @@ export default function SetupPage() {
         <button
           onClick={goNextStep}
           disabled={!canProceed || currentStepIndex === SETUP_STEPS.length - 1}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Continue
           <ChevronRight className="w-4 h-4" />
@@ -312,7 +312,7 @@ export default function SetupPage() {
             className="absolute inset-0 bg-black/50"
             onClick={() => setIsFormOpen(false)}
           />
-          <div className="relative bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="relative card w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto animate-fade-in">
             <h2 className="text-lg font-bold text-gray-900 mb-4">
               Add {currentStepInfo?.title.replace(/s$/, "")}
             </h2>

@@ -87,7 +87,7 @@ export default function RejectOrderModal({
               onClick={() => setSelectedStatus(status)}
               className={`w-full text-left px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 selectedStatus === status
-                  ? "border-orange-500 bg-orange-50 text-orange-700 font-medium"
+                  ? "border-primary-500 bg-primary-50 text-primary-700 font-medium"
                   : "border-gray-200 hover:border-gray-300 text-gray-700"
               }`}
             >
@@ -106,7 +106,7 @@ export default function RejectOrderModal({
             onChange={(e) => setNote(e.target.value)}
             placeholder="Add a note..."
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 resize-none"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
           />
         </div>
 
@@ -121,7 +121,7 @@ export default function RejectOrderModal({
           <button
             onClick={() => selectedStatus && onChangeStatus(selectedStatus, note)}
             disabled={!selectedStatus || isLoading}
-            className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? "Saving..." : "Confirm"}
           </button>

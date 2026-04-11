@@ -101,7 +101,7 @@ useEffect(() => {
         <input
           {...register("name")}
           placeholder="Enter merchant name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.name && <p className="text-xs text-red-500">{String(errors.name.message)}</p>}
       </div>
@@ -113,7 +113,7 @@ useEffect(() => {
           {...register("email")}
           type="email"
           placeholder="Enter email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.email && <p className="text-xs text-red-500">{String(errors.email.message)}</p>}
       </div>
@@ -143,7 +143,7 @@ useEffect(() => {
         <input
           {...register("phone")}
           placeholder="01XXXXXXXXX"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.phone && <p className="text-xs text-red-500">{String(errors.phone.message)}</p>}
       </div>
@@ -154,7 +154,7 @@ useEffect(() => {
         <input
           {...register("address")}
           placeholder="Enter address"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.address && <p className="text-xs text-red-500">{String(errors.address.message)}</p>}
       </div>
@@ -167,7 +167,7 @@ useEffect(() => {
         <input
           {...register("storeName")}
           placeholder="Enter store name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
       </div>
       
@@ -209,7 +209,7 @@ useEffect(() => {
         <label className="text-sm font-medium text-gray-700">Government</label>
         <select
           {...register("government")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
         >
           <option value="">Select a government</option>
           {governmentsData?.governments?.map((gov) => (
@@ -227,7 +227,7 @@ useEffect(() => {
         <input
           {...register("city")}
           placeholder="Enter city"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.city && <p className="text-xs text-red-500">{String(errors.city.message)}</p>}
       </div>
@@ -239,7 +239,7 @@ useEffect(() => {
           {...register("pickupCost")}
           type="number"
           placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.pickupCost && <p className="text-xs text-red-500">{String(errors.pickupCost.message)}</p>}
       </div>
@@ -253,7 +253,7 @@ useEffect(() => {
           {...register("rejectedOrderPercentage")}
           type="number"
           placeholder="0"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
       </div>
 
@@ -262,7 +262,7 @@ useEffect(() => {
         <label className="text-sm font-medium text-gray-700">Branch</label>
         <select
           {...register("branches_Id" as never)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
         >
           <option value="">Select a branch</option>
           {branchesData?.data?.branches?.map((branch) => (
@@ -285,7 +285,7 @@ useEffect(() => {
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : isEditing ? "Update" : "Create"}
         </button>

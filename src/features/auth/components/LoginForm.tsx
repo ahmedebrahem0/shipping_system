@@ -44,7 +44,7 @@ export default function LoginForm() {
           {...register("email")}
           type="email"
           placeholder="Enter your email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.email && (
           <p className="text-xs text-red-500">{errors.email.message}</p>
@@ -63,7 +63,7 @@ export default function LoginForm() {
       {...register("password")}
       type={showPassword ? "text" : "password"}
       placeholder="Enter your password"
-      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
     />
 
     <button
@@ -84,7 +84,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? "Logging in..." : "Login"}
       </button>

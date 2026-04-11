@@ -80,7 +80,7 @@ export default function EmployeeDetailsPage() {
           <div className="mt-6 pt-6 border-t border-gray-200">
             <button
               onClick={() => router.push(`${ROUTES.EMPLOYEE_DETAILS(Number(id))}?edit=true`)}
-              className="px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+              className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-600 transition-colors"
             >
               Edit Employee
             </button>

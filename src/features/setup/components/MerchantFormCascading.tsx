@@ -179,7 +179,7 @@ export default function MerchantFormCascading({
         <input
           {...register("name")}
           placeholder="Enter merchant name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.name && <p className="text-xs text-red-500">{getErrorMsg(errors.name)}</p>}
       </div>
@@ -191,7 +191,7 @@ export default function MerchantFormCascading({
           {...register("email")}
           type="email"
           placeholder="Enter email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.email && <p className="text-xs text-red-500">{String(errors.email?.message)}</p>}
       </div>
@@ -203,7 +203,7 @@ export default function MerchantFormCascading({
           {...register("password")}
           type="password"
           placeholder="Enter password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.password && <p className="text-xs text-red-500">{getErrorMsg(errors.password)}</p>}
       </div>
@@ -215,7 +215,7 @@ export default function MerchantFormCascading({
           {...register("confirmPassword")}
           type="password"
           placeholder="Confirm password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.confirmPassword && (
           <p className="text-xs text-red-500">{getErrorMsg(errors.confirmPassword)}</p>
@@ -228,7 +228,7 @@ export default function MerchantFormCascading({
         <input
           {...register("phone")}
           placeholder="01XXXXXXXXX"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.phone && <p className="text-xs text-red-500">{getErrorMsg(errors.phone)}</p>}
       </div>
@@ -239,7 +239,7 @@ export default function MerchantFormCascading({
         <input
           {...register("address")}
           placeholder="Enter address"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.address && <p className="text-xs text-red-500">{getErrorMsg(errors.address)}</p>}
       </div>
@@ -252,7 +252,7 @@ export default function MerchantFormCascading({
         <input
           {...register("storeName")}
           placeholder="Enter store name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
       </div>
 
@@ -282,7 +282,7 @@ export default function MerchantFormCascading({
                 }}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 checked={(watch("branches_Id") || []).includes(branch.id)}
-                className="w-4 h-4 accent-orange-500"
+                className="w-4 h-4 accent-primary-500"
               />
               <span className="text-sm">{branch.name}</span>
             </label>
@@ -297,7 +297,7 @@ export default function MerchantFormCascading({
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Government</label>
         <select
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
           onChange={handleGovernmentChange}
           value={selectedGovernment}
           disabled={selectedBranches.length === 0}
@@ -321,7 +321,7 @@ export default function MerchantFormCascading({
         <label className="text-sm font-medium text-gray-700">City</label>
         <select
           {...register("city")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
           disabled={!selectedGovernment}
         >
           <option value="">
@@ -343,7 +343,7 @@ export default function MerchantFormCascading({
           {...register("pickupCost", { valueAsNumber: true })}
           type="number"
           placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.pickupCost && (
           <p className="text-xs text-red-500">{getErrorMsg(errors.pickupCost)}</p>
@@ -359,7 +359,7 @@ export default function MerchantFormCascading({
           {...register("rejectedOrderPercentage", { valueAsNumber: true })}
           type="number"
           placeholder="0"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
       </div>
 
@@ -375,7 +375,7 @@ export default function MerchantFormCascading({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : "Create"}
         </button>

@@ -5,7 +5,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex">
       <div className="hidden lg:flex flex-1 bg-[#1a1f36] flex-col justify-center px-12">
         <div className="mb-8">
-          <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white text-2xl mb-6">
             📦
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">Shipping System</h1>

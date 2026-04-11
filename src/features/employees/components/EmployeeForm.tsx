@@ -71,7 +71,7 @@ export default function EmployeeForm({
         <input
           {...register("name")}
           placeholder="Enter employee name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
       </div>
@@ -83,7 +83,7 @@ export default function EmployeeForm({
           {...register("email")}
           type="email"
           placeholder="Enter email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
       </div>
@@ -114,7 +114,7 @@ export default function EmployeeForm({
         <input
           {...register("phone")}
           placeholder="01XXXXXXXXX"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
       </div>
@@ -125,7 +125,7 @@ export default function EmployeeForm({
         <input
           {...register("address")}
           placeholder="Enter address"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.address && <p className="text-xs text-red-500">{errors.address.message}</p>}
       </div>
@@ -135,7 +135,7 @@ export default function EmployeeForm({
         <label className="text-sm font-medium text-gray-700">Role</label>
         <select
           {...register("role")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
         >
           <option value="">Select a role</option>
           {Object.values(ROLES).map((role) => (
@@ -154,7 +154,7 @@ export default function EmployeeForm({
         </label>
         <select
           {...register("branchId")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
         >
           <option value={0}>Select a branch</option>
           {branchesData?.data?.branches?.map((branch) => (
@@ -178,7 +178,7 @@ export default function EmployeeForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : isEditing ? "Update" : "Create"}
         </button>

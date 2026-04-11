@@ -53,7 +53,7 @@ export default function BranchForm({
         <input
           {...register("name")}
           placeholder="Enter branch name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.name && (
           <p className="text-xs text-red-500">{errors.name.message}</p>
@@ -66,7 +66,7 @@ export default function BranchForm({
         <input
           {...register("mobile")}
           placeholder="01XXXXXXXXX"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.mobile && (
           <p className="text-xs text-red-500">{errors.mobile.message}</p>
@@ -79,7 +79,7 @@ export default function BranchForm({
         <input
           {...register("location")}
           placeholder="Enter branch location"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.location && (
           <p className="text-xs text-red-500">{errors.location.message}</p>
@@ -98,7 +98,7 @@ export default function BranchForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : selectedBranch ? "Update" : "Create"}
         </button>

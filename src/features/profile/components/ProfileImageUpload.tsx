@@ -95,10 +95,10 @@ export default function ProfileImageUpload() {
       <div className="flex flex-col items-center">
         {/* Current Image / Preview */}
         <div className="relative mb-4">
-          <div className="w-32 h-32 rounded-full bg-orange-100 flex items-center justify-center overflow-hidden border-4 border-orange-200">
+          <div className="w-32 h-32 rounded-full bg-primary-100 flex items-center justify-center overflow-hidden border-4 border-primary-200">
             {isUploading ? (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : previewUrl ? (
               <img
@@ -113,7 +113,7 @@ export default function ProfileImageUpload() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-orange-500 text-4xl font-bold">
+              <span className="text-primary-500 text-4xl font-bold">
                 {userName.charAt(0).toUpperCase()}
               </span>
             )}
@@ -123,7 +123,7 @@ export default function ProfileImageUpload() {
           {!previewUrl && !isUploading && (
             <button
               onClick={handleClick}
-              className="absolute bottom-0 right-0 w-10 h-10 bg-[#ff6b00] rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors shadow-lg"
+              className="absolute bottom-0 right-0 w-10 h-10 bg-[primary] rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors shadow-lg"
             >
               <Camera className="w-5 h-5 text-white" />
             </button>
@@ -144,7 +144,7 @@ export default function ProfileImageUpload() {
           <div className="flex gap-3">
             <button
               onClick={handleUpload}
-              className="flex items-center gap-2 px-4 py-2 bg-[#ff6b00] text-white rounded-lg hover:bg-orange-600 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[primary] text-white rounded-lg hover:bg-primary-600 transition-colors"
             >
               <Upload className="w-4 h-4" />
               Upload

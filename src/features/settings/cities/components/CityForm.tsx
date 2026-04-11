@@ -62,7 +62,7 @@ export default function CityForm({
         <input
           {...register("name")}
           placeholder="Enter city name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.name && (
           <p className="text-xs text-red-500">{errors.name.message}</p>
@@ -74,7 +74,7 @@ export default function CityForm({
         <label className="text-sm font-medium text-gray-700">Government</label>
         <select
           {...register("government_Id")}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
         >
           <option value={0}>Select a government</option>
           {governmentsData?.governments
@@ -99,7 +99,7 @@ export default function CityForm({
           {...register("pickupShipping")}
           type="number"
           placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.pickupShipping && (
           <p className="text-xs text-red-500">{errors.pickupShipping.message}</p>
@@ -113,7 +113,7 @@ export default function CityForm({
           {...register("standardShipping")}
           type="number"
           placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
         {errors.standardShipping && (
           <p className="text-xs text-red-500">{errors.standardShipping.message}</p>
@@ -132,7 +132,7 @@ export default function CityForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "Saving..." : selectedCity ? "Update" : "Create"}
         </button>

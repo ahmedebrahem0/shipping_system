@@ -33,9 +33,9 @@ const handleSelect = (email: string, password: string) => {
             key={role.label}
             type="button"
             onClick={() => handleSelect(role.email, role.password)}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-lg text-sm hover:border-orange-400 hover:bg-orange-50 transition-all"
+            className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-lg text-sm hover:border-primary-400 hover:bg-primary-50 transition-all"
           >
-            <role.icon className="w-4 h-4 text-orange-500" />
+            <role.icon className="w-4 h-4 text-primary-500" />
             <span className="text-gray-600 font-medium">{role.label}</span>
           </button>
         ))}

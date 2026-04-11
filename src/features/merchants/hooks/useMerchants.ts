@@ -55,6 +55,7 @@ export function useMerchants() {
 
     // Fallback
     toast.error("Something went wrong. Please try again.", { position: "top-center" });
+    console.log("err",errorData)
   };
 
   // 1. دالة تنظيف وتنسيق البيانات (The Payload Fix)

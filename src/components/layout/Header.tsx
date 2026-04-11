@@ -25,7 +25,7 @@ export default function Header() {
   };
 
   return (
-    <header className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-30">
+    <header className="h-14 bg-white/80 backdrop-blur border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-30 transition-all">
 
       {/* Left - Sidebar Toggle */}
       <button
@@ -37,24 +37,21 @@ export default function Header() {
 
       {/* Right - User Info + Logout */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 hover:bg-gray-100   transition-colors rounded-xl bg-[#efefef]">
-          <button
+        <button
           onClick={() => router.push(ROUTES.PROFILE)}
-          className="flex items-center gap-2 hover:bg-gray-100  px-2 py-1 transition-colors rounded-xl g-[#efefef]"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-all"
         >
-          <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center">
+          <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center">
             <User className="w-4 h-4 text-white" />
           </div>
           <span className="text-sm font-medium text-gray-700">{user?.name}</span>
         </button>
-        </div>
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 bg-red-100 rounded transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 bg-red-50 rounded-lg transition-all"
         >
           <LogOut className="w-4 h-4" />
-          Logout
         </button>
       </div>
 

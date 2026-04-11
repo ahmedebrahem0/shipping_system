@@ -56,7 +56,7 @@ export default function EmployeesPage() {
           placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 rounded-md"
+          className="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 rounded-md"
         />
       </div>
 

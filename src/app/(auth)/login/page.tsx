@@ -10,7 +10,7 @@ export default function LoginPage() {
       {/* Left Side - Branding */}
       <div className="hidden lg:flex flex-1 bg-[#1a1f36] flex-col justify-center px-12">
         <div className="mb-8">
-          <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white text-2xl mb-6">
             📦
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">
@@ -52,7 +52,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-gray-500 mt-4">
           Forgot your password?{" "}
-          <a href="/forgot-password" className="text-orange-500 font-semibold hover:underline">
+          <a href="/forgot-password" className="text-primary-500 font-semibold hover:underline">
             Reset it here
           </a>
         </p>

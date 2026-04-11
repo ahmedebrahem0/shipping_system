@@ -19,14 +19,14 @@ export default function Loader({ size = "md", fullPage = false }: LoaderProps) {
   if (fullPage) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white/80 z-50">
-        <Loader2 className={cn("animate-spin text-orange-500", sizes[size])} />
+        <Loader2 className={cn("animate-spin text-primary-500", sizes[size])} />
       </div>
     );
   }
 
   return (
     <div className="flex items-center justify-center py-10">
-      <Loader2 className={cn("animate-spin text-orange-500", sizes[size])} />
+      <Loader2 className={cn("animate-spin text-primary-500", sizes[size])} />
     </div>
   );
 }

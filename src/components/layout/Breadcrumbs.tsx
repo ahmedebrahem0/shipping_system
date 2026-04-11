@@ -20,7 +20,7 @@ export default function Breadcrumbs() {
 
   return (
     <nav className="flex items-center gap-1 text-sm text-gray-500">
-      <Link href="/dashboard" className="hover:text-orange-500 transition-colors">
+      <Link href="/dashboard" className="hover:text-primary-500 transition-colors">
         <Home className="w-4 h-4" />
       </Link>
 
@@ -32,7 +32,7 @@ export default function Breadcrumbs() {
           ) : (
             <Link
               href={segment.href}
-              className="hover:text-orange-500 transition-colors"
+              className="hover:text-primary-500 transition-colors"
             >
               {segment.label}
             </Link>

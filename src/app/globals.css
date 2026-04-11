@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+:root {
+  --background: 210 40% 96%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --border: 214 31% 91%;
+  --input: 214 31% 91%;
+
+  --ring: 199 89% 48%;
+
+  --primary: 199 89% 48%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 215 25% 17%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+
+  --accent: 210 40% 96%;
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --radius: 0.75rem;
+}
+
 @theme {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -22,6 +52,33 @@
   --radius-lg: var(--radius);
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Scrollbar styles */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 9999px;
+}
+
 /* Base styles */
 body {
   @apply bg-background text-foreground;
@@ -29,4 +86,48 @@ body {
 
 * {
   @apply border-border;
+}
+
+/* Button base styles */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 font-medium rounded-md transition-all;
+}
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.btn-outline {
+  @apply border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground;
+}
+
+.btn-ghost {
+  @apply hover:bg-accent hover:text-accent-foreground;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white rounded-xl border border-gray-200 shadow-sm p-6 md:p-8;
+}
+
+.card-header {
+  @apply border-b pb-6 mb-6;
+}
+
+/* Input styles */
+.input {
+  @apply h-9 px-3 rounded-md border border-input focus-visible:ring-[3px] focus-visible:ring-primary/20 focus-visible:outline-none;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-emerald-100 text-emerald-700;
+}
+
+.badge-danger {
+  @apply bg-red-100 text-red-700;
 }

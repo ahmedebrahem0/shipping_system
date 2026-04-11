@@ -40,14 +40,14 @@ export default function ReportsPage() {
             placeholder="Search..."
             value={filters.searchTxt}
             onChange={(e) => handleFilterChange("searchTxt", e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
           />
 
           {/* Status */}
           <select
             value={filters.orderStatus}
             onChange={(e) => handleFilterChange("orderStatus", e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
           >
             <option value="">All Statuses</option>
             {Object.values(ORDER_STATUSES).map((status) => (
@@ -62,7 +62,7 @@ export default function ReportsPage() {
             type="date"
             value={filters.startDate}
             onChange={(e) => handleFilterChange("startDate", e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
           />
 
           {/* End Date */}
@@ -70,7 +70,7 @@ export default function ReportsPage() {
             type="date"
             value={filters.endDate}
             onChange={(e) => handleFilterChange("endDate", e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
           />
 
         </div>

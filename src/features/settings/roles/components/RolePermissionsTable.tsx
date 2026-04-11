@@ -50,7 +50,7 @@ export default function RolePermissionsTable() {
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
       <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
         <h2 className="text-lg font-semibold text-gray-900">
-          Permissions for <span className="text-[#ff6b00]">{selectedRole.name}</span>
+          Permissions for <span className="text-[primary]">{selectedRole.name}</span>
         </h2>
       </div>
 
@@ -83,7 +83,7 @@ export default function RolePermissionsTable() {
                       type="checkbox"
                       checked={currentPerm?.canView ?? false}
                       onChange={(e) => handleCheckboxChange(permission.id, "canView", e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-[#ff6b00] focus:ring-[#ff6b00]"
+                      className="w-4 h-4 rounded border-gray-300 text-[primary] focus:ring-[primary]"
                     />
                   </td>
 
@@ -93,7 +93,7 @@ export default function RolePermissionsTable() {
                       type="checkbox"
                       checked={currentPerm?.canAdd ?? false}
                       onChange={(e) => handleCheckboxChange(permission.id, "canAdd", e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-[#ff6b00] focus:ring-[#ff6b00]"
+                      className="w-4 h-4 rounded border-gray-300 text-[primary] focus:ring-[primary]"
                     />
                   </td>
 
@@ -103,7 +103,7 @@ export default function RolePermissionsTable() {
                       type="checkbox"
                       checked={currentPerm?.canEdit ?? false}
                       onChange={(e) => handleCheckboxChange(permission.id, "canEdit", e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-[#ff6b00] focus:ring-[#ff6b00]"
+                      className="w-4 h-4 rounded border-gray-300 text-[primary] focus:ring-[primary]"
                     />
                   </td>
 
@@ -113,7 +113,7 @@ export default function RolePermissionsTable() {
                       type="checkbox"
                       checked={currentPerm?.canDelete ?? false}
                       onChange={(e) => handleCheckboxChange(permission.id, "canDelete", e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-[#ff6b00] focus:ring-[#ff6b00]"
+                      className="w-4 h-4 rounded border-gray-300 text-[primary] focus:ring-[primary]"
                     />
                   </td>
                 </tr>

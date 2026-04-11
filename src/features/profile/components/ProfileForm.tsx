@@ -40,7 +40,7 @@ export default function ProfileForm() {
 
         {/* Avatar */}
         <div className="relative flex-shrink-0">
-          <div className="w-20 h-20 rounded-full bg-orange-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
+          <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
             {imageUrl ? (
               <img
                 src={imageUrl}
@@ -54,7 +54,7 @@ export default function ProfileForm() {
           <button
             onClick={handleImageClick}
             disabled={isUploading}
-            className="absolute bottom-0 right-0 w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors disabled:opacity-50"
+            className="absolute bottom-0 right-0 w-7 h-7 bg-primary rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors disabled:opacity-50"
           >
             <Camera className="w-3.5 h-3.5 text-white" />
           </button>
@@ -70,7 +70,7 @@ export default function ProfileForm() {
         {/* Info */}
         <div>
           <h2 className="text-xl font-bold text-white">{profile.userName}</h2>
-          <p className="text-orange-400 text-sm mt-1">{profile.roles.join(", ")}</p>
+          <p className="text-primary-400 text-sm mt-1">{profile.roles.join(", ")}</p>
           <p className="text-slate-400 text-xs mt-1">Member since {profile.createdDate}</p>
         </div>
 
@@ -82,8 +82,8 @@ export default function ProfileForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Mail className="w-4 h-4 text-orange-500" />
+            <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Mail className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <p className="text-xs text-gray-400">Email</p>
@@ -92,8 +92,8 @@ export default function ProfileForm() {
           </div>
 
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Phone className="w-4 h-4 text-orange-500" />
+            <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Phone className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <p className="text-xs text-gray-400">Phone</p>
@@ -102,8 +102,8 @@ export default function ProfileForm() {
           </div>
 
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <MapPin className="w-4 h-4 text-orange-500" />
+            <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <p className="text-xs text-gray-400">Address</p>
@@ -112,8 +112,8 @@ export default function ProfileForm() {
           </div>
 
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Shield className="w-4 h-4 text-orange-500" />
+            <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Shield className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <p className="text-xs text-gray-400">Role</p>
@@ -122,8 +122,8 @@ export default function ProfileForm() {
           </div>
 
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Calendar className="w-4 h-4 text-orange-500" />
+            <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Calendar className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <p className="text-xs text-gray-400">Member Since</p>
