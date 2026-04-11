@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash2 } from "lucide-react";
@@ -42,31 +42,102 @@ export default function OrderForm({
   const { data: merchantsData } = useGetMerchantsQuery({ pageSize: 100 });
   const { data: shippingTypes } = useGetShippingTypesQuery();
 
-// ابحث عن الجزء ده وعدله
-const {
-  register,
-  handleSubmit,
-  setValue,
-  formState: { errors },
-} = useForm<OrderCreateFormValues>({
-  resolver: yupResolver(orderCreateSchema),
-  defaultValues: {
-    deliverToVillage: false,
-    products: [{ name: "", quantity: 1, itemWeight: 0.1 }],
-    // ضيف دول عشان الـ Backend ميعملش Crash
-    merchantNotes: "",
-    employeeNotes: "",
-    deliveryNotes: "",
-    clientPhone2: "",
-    clientEmail: "",
-    orderTotalWeight: 0,
-    merchant_Id: 0,
-    branch_Id: 0,
-    government_Id: 0,
-    city_Id: 0,
-    shippingType_Id: 0,
-  },
-});
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<OrderCreateFormValues>({
+    resolver: yupResolver(orderCreateSchema),
+    defaultValues: {
+      deliverToVillage: false,
+      products: [{ name: "", quantity: 1, itemWeight: 0.1 }],
+      // ضيف دول عشان الـ Backend ميعملش Crash
+      merchantNotes: "",
+      employeeNotes: "",
+      deliveryNotes: "",
+      clientPhone2: "",
+      clientEmail: "",
+      orderTotalWeight: 0,
+      merchant_Id: 0,
+      branch_Id: 0,
+      government_Id: 0,
+      city_Id: 0,
+      shippingType_Id: 0,
+    },
+  });
+
+  const [selectedBranch_Id, selectedMerchant_Id, selectedGovernment_Id, city_Id] = watch(["branch_Id", "merchant_Id", "government_Id", "city_Id"]);
+
+  const activeBranches = useMemo(
+    () => branchesData?.data?.branches?.filter((b) => !b.isDeleted) || [],
+    [branchesData?.data?.branches]
+  );
+
+  const selectedBranch = activeBranches.find((b) => b.id === selectedBranch_Id);
+  const selectedBranchName = selectedBranch?.name?.toLowerCase() || "";
+
+  const activeMerchants = useMemo(
+    () =>
+      merchantsData?.data?.merchants?.filter((m) => {
+        if (m.isDeleted) return false;
+        if (!selectedBranchName) return true;
+        const branchNames = m.branchsNames?.toLowerCase() || "";
+        return branchNames.includes(selectedBranchName);
+      }) || [],
+    [merchantsData?.data?.merchants, selectedBranchName]
+  );
+
+  const activeGovernments = useMemo(
+    () =>
+      governmentsData?.governments?.filter(
+        (g) => !g.isDeleted && g.branch_Id === selectedBranch_Id
+      ) || [],
+    [governmentsData?.governments, selectedBranch_Id]
+  );
+
+  const selectedGovernment = activeGovernments.find(
+    (g) => g.id === selectedGovernment_Id
+  );
+
+  const filteredCities = useMemo(() => {
+    if (!selectedGovernment || !selectedGovernment_Id) {
+      return citiesData?.data?.cities?.filter((c) => !c.isDeleted) || [];
+    }
+    return (
+      citiesData?.data?.cities?.filter(
+        (c) => !c.isDeleted && c.governmentName === selectedGovernment.name
+      ) || []
+    );
+  }, [citiesData?.data?.cities, selectedGovernment, selectedGovernment_Id]);
+
+  useEffect(() => {
+    if (!selectedGovernment_Id && city_Id !== 0) {
+      setValue("city_Id", 0);
+    }
+  }, [selectedGovernment_Id, city_Id, setValue]);
+
+  useEffect(() => {
+    if (!selectedBranch_Id && (selectedGovernment_Id !== 0 || city_Id !== 0 || selectedMerchant_Id !== 0)) {
+      setValue("government_Id", 0);
+      setValue("city_Id", 0);
+      setValue("merchant_Id", 0);
+    }
+  }, [selectedBranch_Id, selectedGovernment_Id, city_Id, selectedMerchant_Id, setValue]);
+
+  useEffect(() => {
+    if (selectedMerchant_Id && !activeMerchants.some((m) => m.id === selectedMerchant_Id)) {
+      setValue("merchant_Id", 0);
+    }
+  }, [selectedMerchant_Id, activeMerchants, setValue]);
+
+  useEffect(() => {
+    if (selectedGovernment_Id && !activeGovernments.some((g) => g.id === selectedGovernment_Id)) {
+      setValue("government_Id", 0);
+      setValue("city_Id", 0);
+    }
+  }, [selectedGovernment_Id, activeGovernments, setValue]);
 
   useEffect(() => {
     setValue("products", products, {
@@ -85,7 +156,7 @@ const {
     setProducts((prev) => prev.filter((_, i) => i !== index));
   };
 
-const handleSubmitForm = (values: OrderCreateFormValues) => {
+  const handleSubmitForm = (values: OrderCreateFormValues) => {
     // 1. التحقق من وجود منتجات
     if (products.length === 0) {
       toast.error("Please add at least one product");
@@ -140,9 +211,12 @@ const handleSubmitForm = (values: OrderCreateFormValues) => {
             <select
               {...register("merchant_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              disabled={!selectedBranch_Id}
             >
-              <option value={0}>Select merchant</option>
-              {merchantsData?.data?.merchants?.map((m) => (
+              <option value={0}>
+                {selectedBranch_Id ? "Select merchant" : "Select branch first"}
+              </option>
+              {activeMerchants.map((m) => (
                 <option key={m.id} value={m.id}>{m.name} - {m.storeName}</option>
               ))}
             </select>
@@ -157,7 +231,7 @@ const handleSubmitForm = (values: OrderCreateFormValues) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select branch</option>
-              {branchesData?.data?.branches?.map((b) => (
+              {activeBranches.map((b) => (
                 <option key={b.id} value={b.id}>{b.name}</option>
               ))}
             </select>
@@ -172,7 +246,7 @@ const handleSubmitForm = (values: OrderCreateFormValues) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
             >
               <option value={0}>Select government</option>
-              {governmentsData?.governments?.map((g) => (
+              {activeGovernments.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
               ))}
             </select>
@@ -185,9 +259,12 @@ const handleSubmitForm = (values: OrderCreateFormValues) => {
             <select
               {...register("city_Id", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
+              disabled={!selectedGovernment_Id}
             >
-              <option value={0}>Select city</option>
-              {citiesData?.data?.cities?.map((c) => (
+              <option value={0}>
+                {selectedGovernment_Id ? "Select city" : "Select government first"}
+              </option>
+              {filteredCities.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>

@@ -19,6 +19,7 @@ export interface Merchant {
   pickupCost: number;
   rejectedOrderPercentage: number;
   branchsNames: string;
+  branches_Id?: number[];
 }
 
 export interface MerchantResponse {
