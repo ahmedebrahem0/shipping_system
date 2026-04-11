@@ -69,7 +69,7 @@ export default function CityForm({
         )}
       </div>
 
-      {/* Government */}
+      {/* Government - Only show active governments */}
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Government</label>
         <select
@@ -77,11 +77,13 @@ export default function CityForm({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
         >
           <option value={0}>Select a government</option>
-          {governmentsData?.governments?.map((gov) => (
-            <option key={gov.id} value={gov.id}>
-              {gov.name}
-            </option>
-          ))}
+          {governmentsData?.governments
+            ?.filter((gov) => !gov.isDeleted)
+            .map((gov) => (
+              <option key={gov.id} value={gov.id}>
+                {gov.name}
+              </option>
+            ))}
         </select>
         {errors.government_Id && (
           <p className="text-xs text-red-500">{errors.government_Id.message}</p>

@@ -42,6 +42,9 @@ PERMISSIONS: "/settings/permissions",
   SHIPPING_TYPES: "/settings/shipping-types",
   PRICING: "/settings/pricing",
 
+  // Setup
+  SETUP: "/setup",
+
   // Reports
   REPORTS: "/reports",
 

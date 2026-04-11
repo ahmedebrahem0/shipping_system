@@ -61,7 +61,7 @@ export default function GovernmentForm({
         )}
       </div>
 
-      {/* Branch */}
+      {/* Branch - Only show active branches */}
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Branch</label>
         <select
@@ -69,11 +69,13 @@ export default function GovernmentForm({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 bg-white"
         >
           <option value={0}>Select a branch</option>
-          {branchesData?.data?.branches?.map((branch) => (
-            <option key={branch.id} value={branch.id}>
-              {branch.name}
-            </option>
-          ))}
+          {branchesData?.data?.branches
+            ?.filter((branch) => !branch.isDeleted)
+            .map((branch) => (
+              <option key={branch.id} value={branch.id}>
+                {branch.name}
+              </option>
+            ))}
         </select>
         {errors.branch_Id && (
           <p className="text-xs text-red-500">{errors.branch_Id.message}</p>

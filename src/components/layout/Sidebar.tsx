@@ -44,7 +44,7 @@ type MenuItem = {
 
 type MenuSection = {
   key: string;
-  section: string;
+  section?: string;
   items: MenuItem[];
 };
 
@@ -52,7 +52,7 @@ type MenuSection = {
 const adminMenu: MenuSection[] = [
   {
     key: "main",
-    // section: "Main",
+    section: "Main",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, href: ROUTES.DASHBOARD },
     ],
@@ -134,6 +134,7 @@ const adminMenu: MenuSection[] = [
         icon: Settings,
         href: null,
         children: [
+          { label: "Setup Wizard", icon: PackageOpen, href: ROUTES.SETUP },
           { label: "Governments & Cities", icon: MapPin, href: ROUTES.GOVERNMENTS },
           { label: "Branches", icon: GitBranch, href: ROUTES.BRANCHES },
           { label: "Shipping Types", icon: PackageOpen, href: ROUTES.SHIPPING_TYPES },
