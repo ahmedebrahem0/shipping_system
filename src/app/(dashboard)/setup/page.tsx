@@ -381,7 +381,8 @@ export default function SetupPage() {
                       city: values.city,
                       pickupCost: values.pickupCost,
                       rejectedOrderPercentage: values.rejectedOrderPercentage,
-                      branches_Id: values.branches_Id, // Already an array
+                      branches_Id: values.branches_Id,
+                      specialShippingRates: values.specialShippingRates || [],
                     });
                   } catch (error) {
                     console.error("❌ Failed to create merchant:", error);

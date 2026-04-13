@@ -11,6 +11,7 @@ export const ENDPOINTS = {
 
   ORDERS: {
     GET_ALL: (status: string) => status ? `${BASE_URL}/api/Order/${status}/all` : `${BASE_URL}/api/Order/all`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Order/${id}`,
     GET_BY_MERCHANT: (merchantId: number, status: string) => status ? `${BASE_URL}/api/Order/Merchant/${merchantId}/${status}/all` : `${BASE_URL}/api/Order/Merchant/${merchantId}/all`,
     GET_BY_DELIVERY: (deliveryId: number, status: string) => status ? `${BASE_URL}/api/Order/Delivery/${deliveryId}/${status}/all` : `${BASE_URL}/api/Order/Delivery/${deliveryId}/all`,
     CREATE: `${BASE_URL}/api/Order`,

@@ -16,12 +16,30 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
-
+const baseToastStyle = {
+  borderRadius: "18px",
+  padding: "16px 18px",
+  background: "rgba(255,255,255,0.92)",
+  backdropFilter: "blur(8px)",
+  WebkitBackdropFilter: "blur(8px)",
+  border: "1px solid rgba(226, 232, 240, 0.9)",
+  boxShadow: "0 20px 60px rgba(15, 23, 42, 0.18)",
+  minWidth: "320px",
+  maxWidth: "420px",
+  width: "100%",
+};
   const handleLogout = () => {
     dispatch(logout());
     Cookies.remove("token");
     router.push(ROUTES.LOGIN);
-    toast.success("Logged out successfully");
+    toast.success("Logged out successfully", {
+  description: "Your session has been securely terminated.",
+  duration: 3000,
+  style: {
+    ...baseToastStyle,
+    border: "1px solid rgba(16, 185, 129, 0.25)",
+  },
+});
   };
 
   return (

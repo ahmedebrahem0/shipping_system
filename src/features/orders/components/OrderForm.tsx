@@ -1,17 +1,15 @@
-// OrderForm.tsx
-// Form for creating a new order with products
-
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormRegister, type FieldPath } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Package, ChevronDown, User, MapPin, ShoppingBag, Phone, Mail, DollarSign, Weight, ListTree } from "lucide-react";
 import { toast } from "sonner";
 import {
   orderCreateSchema,
   type OrderCreateFormValues,
 } from "@/features/orders/schema/order-create.schema";
+import { cn } from "@/lib/utils/cn";
 import {
   useGetBranchesQuery,
   useGetGovernmentsQuery,
@@ -27,14 +25,134 @@ interface OrderFormProps {
   onCancel: () => void;
 }
 
-export default function OrderForm({
-  isLoading,
-  onSubmit,
-  onCancel,
-}: OrderFormProps) {
-  const [products, setProducts] = useState([
-    { name: "", quantity: 1, itemWeight: 0.1 },
-  ]);
+const selectWrapper = "group space-y-2";
+const selectContainer = `
+  relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/80
+  shadow-[0_8px_30px_rgba(15,23,42,0.06)] transition-all duration-200
+  hover:border-slate-300 hover:shadow-[0_14px_34px_rgba(15,23,42,0.09)]
+  focus-within:border-primary/50 focus-within:shadow-[0_0_0_4px_rgba(59,130,246,0.12),0_18px_36px_rgba(15,23,42,0.1)]
+`;
+const selectBase = `
+  w-full appearance-none bg-transparent text-sm font-medium text-slate-800
+  transition-all duration-200 ease-out cursor-pointer
+  px-4 py-3.5 pr-16
+  focus:outline-none
+  disabled:cursor-not-allowed disabled:text-slate-400 disabled:opacity-70
+`;
+const optionBase = "text-sm font-medium text-slate-700 py-2.5 px-3";
+const placeholderOption = "text-sm font-medium text-slate-400 italic";
+const inputBase = "w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none disabled:bg-gray-50 disabled:text-gray-400";
+const labelBase = "block text-[11px] font-bold text-slate-500 uppercase tracking-[0.18em] ml-1";
+const notesFields: Array<"merchantNotes" | "employeeNotes" | "deliveryNotes"> = [
+  "merchantNotes",
+  "employeeNotes",
+  "deliveryNotes",
+];
+
+function EnhancedSelect({
+  register,
+  name,
+  label,
+  options,
+  disabled = false,
+  placeholder,
+  valueAsNumber = false,
+}: {
+  register: UseFormRegister<OrderCreateFormValues>;
+  name: FieldPath<OrderCreateFormValues>;
+  label?: string;
+  options: { value: number; label: string }[];
+  disabled?: boolean;
+  placeholder?: string;
+  valueAsNumber?: boolean;
+}) {
+  return (
+    <div className={selectWrapper}>
+      {label && <label className={labelBase}>{label}</label>}
+      <div className={cn(selectContainer, disabled && "border-slate-100 from-slate-50 to-slate-100 shadow-none")}>
+        <select
+          {...register(name, { valueAsNumber })}
+          disabled={disabled}
+          className={selectBase}
+        >
+          <option value={0} className={placeholderOption}>{placeholder || "Select an option"}</option>
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value} className={optionBase}>{opt.label}</option>
+          ))}
+        </select>
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-y-2 right-2 flex w-11 items-center justify-center rounded-xl border border-slate-200/80 bg-white/90 shadow-sm transition-all duration-200",
+            disabled
+              ? "border-slate-100 bg-slate-100 text-slate-300"
+              : "text-slate-400 group-hover:text-primary group-focus-within:border-primary/30 group-focus-within:text-primary"
+          )}
+        >
+          <ChevronDown
+            className={cn(
+              "transition-transform duration-200",
+              !disabled && "group-focus-within:rotate-180"
+            )}
+            size={18}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StringSelect({
+  register,
+  name,
+  label,
+  options,
+  disabled = false,
+  placeholder,
+}: {
+  register: UseFormRegister<OrderCreateFormValues>;
+  name: FieldPath<OrderCreateFormValues>;
+  label?: string;
+  options: { value: string; label: string }[];
+  disabled?: boolean;
+  placeholder?: string;
+}) {
+  return (
+    <div className={selectWrapper}>
+      {label && <label className={labelBase}>{label}</label>}
+      <div className={cn(selectContainer, disabled && "border-slate-100 from-slate-50 to-slate-100 shadow-none")}>
+        <select
+          {...register(name)}
+          disabled={disabled}
+          className={selectBase}
+        >
+          <option value="" className={placeholderOption}>{placeholder || "Select an option"}</option>
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value} className={optionBase}>{opt.label}</option>
+          ))}
+        </select>
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-y-2 right-2 flex w-11 items-center justify-center rounded-xl border border-slate-200/80 bg-white/90 shadow-sm transition-all duration-200",
+            disabled
+              ? "border-slate-100 bg-slate-100 text-slate-300"
+              : "text-slate-400 group-hover:text-primary group-focus-within:border-primary/30 group-focus-within:text-primary"
+          )}
+        >
+          <ChevronDown
+            className={cn(
+              "transition-transform duration-200",
+              !disabled && "group-focus-within:rotate-180"
+            )}
+            size={18}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormProps) {
+  const [products, setProducts] = useState([{ name: "", quantity: 1, itemWeight: 0.1 }]);
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 10000 });
   const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 10000 });
@@ -42,13 +160,7 @@ export default function OrderForm({
   const { data: merchantsData } = useGetMerchantsQuery({ pageSize: 10000 });
   const { data: shippingTypes } = useGetShippingTypesQuery();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<OrderCreateFormValues>({
+  const { register, handleSubmit, setValue, watch } = useForm<OrderCreateFormValues>({
     resolver: yupResolver(orderCreateSchema),
     defaultValues: {
       deliverToVillage: false,
@@ -64,496 +176,227 @@ export default function OrderForm({
       government_Id: 0,
       city_Id: 0,
       shippingType_Id: 0,
+      orderType: "",
+      paymentType: "",
     },
   });
 
-  const [selectedBranch_Id, selectedMerchant_Id, selectedGovernment_Id] = watch(["branch_Id", "merchant_Id", "government_Id"]);
+  const [selectedBranch_Id, , selectedGovernment_Id] = watch(["branch_Id", "merchant_Id", "government_Id"]);
 
-  const activeBranches = useMemo(
-    () => branchesData?.data?.branches?.filter((b) => !b.isDeleted) || [],
-    [branchesData?.data?.branches]
-  );
+  const activeBranches = useMemo(() => branchesData?.data?.branches?.filter((b) => !b.isDeleted) || [], [branchesData]);
+  const selectedBranchName = useMemo(() => activeBranches.find((b) => b.id === selectedBranch_Id)?.name?.toLowerCase() || "", [activeBranches, selectedBranch_Id]);
 
-  const selectedBranch = activeBranches.find((b) => b.id === selectedBranch_Id);
-  const selectedBranchName = selectedBranch?.name?.toLowerCase() || "";
+  const activeMerchants = useMemo(() => merchantsData?.data?.merchants?.filter((m) => {
+    if (m.isDeleted) return false;
+    if (!selectedBranchName) return true;
+    return (m.branchsNames?.toLowerCase() || "").includes(selectedBranchName);
+  }) || [], [merchantsData, selectedBranchName]);
 
-  const activeMerchants = useMemo(
-    () =>
-      merchantsData?.data?.merchants?.filter((m) => {
-        if (m.isDeleted) return false;
-        if (!selectedBranchName) return true;
-        const branchNames = m.branchsNames?.toLowerCase() || "";
-        return branchNames.includes(selectedBranchName);
-      }) || [],
-    [merchantsData?.data?.merchants, selectedBranchName]
-  );
-
-  const activeGovernments = useMemo(
-    () =>
-      governmentsData?.governments?.filter(
-        (g) => !g.isDeleted && g.branch_Id === selectedBranch_Id
-      ) || [],
-    [governmentsData?.governments, selectedBranch_Id]
-  );
+  const activeGovernments = useMemo(() => governmentsData?.governments?.filter((g) => !g.isDeleted && g.branch_Id === selectedBranch_Id) || [], [governmentsData, selectedBranch_Id]);
 
   const filteredCities = useMemo(() => {
-  if (!selectedGovernment_Id) return [];
+    if (!selectedGovernment_Id) return [];
+    const selectedGov = governmentsData?.governments?.find((g) => g.id === selectedGovernment_Id);
+    return citiesData?.data?.cities?.filter((c) => !c.isDeleted && c.governmentName === selectedGov?.name) || [];
+  }, [citiesData, governmentsData, selectedGovernment_Id]);
 
-  const selectedGov = governmentsData?.governments?.find(
-    (g) => g.id === selectedGovernment_Id && !g.isDeleted
-  );
-
-  if (!selectedGov) return [];
-
-  return (
-    citiesData?.data?.cities?.filter(
-      (c) => !c.isDeleted && c.governmentName === selectedGov.name
-    ) || []
-  );
-}, [citiesData, governmentsData, selectedGovernment_Id]);
-  
-  const currentCity_Id = watch("city_Id");
-
-  useEffect(() => {
-    if (!selectedGovernment_Id && currentCity_Id !== 0) {
-      setValue("city_Id", 0);
-    }
-  }, [selectedGovernment_Id, currentCity_Id, setValue]);
-
-  useEffect(() => {
-    if (!selectedBranch_Id && (selectedGovernment_Id !== 0 || currentCity_Id !== 0 || selectedMerchant_Id !== 0)) {
-      setValue("government_Id", 0);
-      setValue("city_Id", 0);
-      setValue("merchant_Id", 0);
-    }
-  }, [selectedBranch_Id, selectedGovernment_Id, currentCity_Id, selectedMerchant_Id, setValue]);
-
-  useEffect(() => {
-    if (selectedMerchant_Id && !activeMerchants.some((m) => m.id === selectedMerchant_Id)) {
-      setValue("merchant_Id", 0);
-    }
-  }, [selectedMerchant_Id, activeMerchants, setValue]);
-
-  useEffect(() => {
-    if (selectedGovernment_Id) {
-      const exists = governmentsData?.governments?.some(
-        (g) => g.id === selectedGovernment_Id && !g.isDeleted
-      );
-      if (!exists) {
-        setValue("government_Id", 0);
-        setValue("city_Id", 0);
-      }
-    }
-  }, [selectedGovernment_Id, governmentsData, setValue]);
-
-  useEffect(() => {
-    setValue("products", products, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  }, [products, setValue]);
-
-  // ==================== Products ====================
-  const addProduct = () => {
-    setProducts((prev) => [...prev, { name: "", quantity: 1, itemWeight: 0.1 }]);
-  };
-
-  const removeProduct = (index: number) => {
-    if (products.length === 1) return;
-    setProducts((prev) => prev.filter((_, i) => i !== index));
-  };
+  useEffect(() => { setValue("products", products, { shouldValidate: true }); }, [products, setValue]);
+  useEffect(() => { if (!selectedBranch_Id) { setValue("government_Id", 0); setValue("city_Id", 0); setValue("merchant_Id", 0); } }, [selectedBranch_Id, setValue]);
 
   const handleSubmitForm = (values: OrderCreateFormValues) => {
-    console.log("Raw form values on submit:", values);
-    // 1. التحقق من وجود منتجات
-    if (products.length === 0) {
-      toast.error("Please add at least one product");
-      return;
-    }
-
-    // 2. التحقق من صحة بيانات كل منتج (Validation)
-    const isValid = products.every(
-      (product) =>
-        product.name.trim() !== "" &&
-        product.quantity > 0 &&
-        product.itemWeight > 0
-    );
-
-    if (!isValid) {
-      toast.error("Please fill in all product details");
-      return;
-    }
-
-    // 3. تجهيز البيانات النهائية وتنظيفها من أي قيم undefined أو null
-    const finalValues: OrderCreateFormValues = {
-      ...values,
-      products: products, // استخدام قائمة المنتجات من الـ state
-      // ضمان إرسال نصوص فارغة بدلاً من undefined للحقول الاختيارية
-      merchantNotes: values.merchantNotes || "",
-      employeeNotes: values.employeeNotes || "",
-      deliveryNotes: values.deliveryNotes || "",
-      clientPhone2: values.clientPhone2 || "",
-      clientEmail: values.clientEmail || "",
-      // التأكد من أن الأوزان والقيم الرقمية مبعوثة كـ Numbers
-      orderTotalWeight: Number(values.orderTotalWeight) || 0,
-      orderCost: Number(values.orderCost) || 0,
-    };
-
-    // 4. إرسال البيانات للـ Hook (useCreateOrder)
-    console.log("Submitting cleaned order data:", finalValues);
-    onSubmit(finalValues);
+    if (products.some(p => p.name.trim() === "")) return toast.error("Please fill all product names");
+    onSubmit({ ...values, products, orderCost: Number(values.orderCost), orderTotalWeight: Number(values.orderTotalWeight) || 0 });
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleSubmitForm)} className="max-w-6xl mx-auto space-y-6 pb-20">
 
-      {/* ── Order Information ── */}
-      <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-        <h3 className="text-sm font-bold text-gray-900">Order Information</h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-          {/* Merchant */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Merchant</label>
-            <select
-              {...register("merchant_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-              disabled={!selectedBranch_Id}
-            >
-              <option value={0}>
-                {selectedBranch_Id ? "Select merchant" : "Select branch first"}
-              </option>
-              {activeMerchants.map((m) => (
-                <option key={m.id} value={m.id}>{m.name} - {m.storeName}</option>
-              ))}
-            </select>
-            {errors.merchant_Id && <p className="text-xs text-red-500">{errors.merchant_Id.message}</p>}
-          </div>
-
-          {/* Branch */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Branch</label>
-            <select
-              {...register("branch_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-            >
-              <option value={0}>Select branch</option>
-              {activeBranches.map((b) => (
-                <option key={b.id} value={b.id}>{b.name}</option>
-              ))}
-            </select>
-            {errors.branch_Id && <p className="text-xs text-red-500">{errors.branch_Id.message}</p>}
-          </div>
-
-          {/* Government */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Government</label>
-            <select
-              {...register("government_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-            >
-              <option value={0}>Select government</option>
-              {activeGovernments.map((g) => (
-                <option key={g.id} value={g.id}>{g.name}</option>
-              ))}
-            </select>
-            {errors.government_Id && <p className="text-xs text-red-500">{errors.government_Id.message}</p>}
-          </div>
-
-          {/* City */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">City</label>
-            <select
-              {...register("city_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-              disabled={!selectedGovernment_Id}
-            >
-              <option value={0}>
-                {selectedGovernment_Id ? "Select city" : "Select government first"}
-              </option>
-              {filteredCities.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-            {errors.city_Id && <p className="text-xs text-red-500">{errors.city_Id.message}</p>}
-          </div>
-
-          {/* Shipping Type */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Shipping Type</label>
-            <select
-              {...register("shippingType_Id", { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-            >
-              <option value={0}>Select shipping type</option>
-              {shippingTypes?.map((s) => (
-                <option key={s.id} value={s.id}>{s.type} - {s.cost} EGP</option>
-                
-              ))}
-              
-            </select>
-            {errors.shippingType_Id && <p className="text-xs text-red-500">{errors.shippingType_Id.message}</p>}
-          </div>
-
-          {/* Order Type */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Order Type</label>
-            <select
-              {...register("orderType")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-            >
-              <option value="">Select order type</option>
-              {Object.values(ORDER_TYPES).map((type) => (
-                <option key={type} value={type}>
-                  {ORDER_TYPE_LABELS[type]}
-                </option>
-              ))}
-            </select>
-            {errors.orderType && <p className="text-xs text-red-500">{errors.orderType.message}</p>}
-          </div>
-
-          {/* Payment Type */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Payment Type</label>
-            <select
-              {...register("paymentType")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
-            >
-              <option value="">Select payment type</option>
-              {Object.values(PAYMENT_TYPES).map((type) => (
-                <option key={type} value={type}>
-                  {PAYMENT_TYPE_LABELS[type]}
-                </option>
-              ))}
-            </select>
-            {errors.paymentType && <p className="text-xs text-red-500">{errors.paymentType.message}</p>}
-          </div>
-
-          {/* Order Cost */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Order Cost (EGP)</label>
-            <input
-              {...register("orderCost", { valueAsNumber: true })}
-              type="number"
-              placeholder="0.00"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-            {errors.orderCost && <p className="text-xs text-red-500">{errors.orderCost.message}</p>}
-          </div>
-
-          {/* Order Total Weight */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">
-              Total Weight (kg) <span className="text-gray-400">(optional)</span>
-            </label>
-            <input
-              {...register("orderTotalWeight", {
-                setValueAs: (value) => (value === "" ? undefined : Number(value)),
-              })}
-              type="number"
-              placeholder="0.0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-          </div>
-
-          {/* Deliver To Village */}
-          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
-            <input
-              {...register("deliverToVillage")}
-              type="checkbox"
-              id="deliverToVillage"
-              className="w-4 h-4 accent-primary-500"
-            />
-            <label htmlFor="deliverToVillage" className="text-sm font-medium text-gray-700 cursor-pointer">
-              Deliver to Village (extra cost)
-            </label>
-          </div>
-
+      {/* 1. MERCHANT & BRANCH SECTION */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
+          <div className="p-2 bg-primary/10 rounded-lg text-primary"><Package size={18} /></div>
+          <h3 className="text-md font-bold text-gray-800">Branch & Merchant Selection</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <EnhancedSelect
+            register={register}
+            name="branch_Id"
+            label="Select Branch"
+            options={activeBranches.map(b => ({ value: b.id, label: b.name }))}
+            valueAsNumber
+            placeholder="Choose Branch"
+          />
+          <EnhancedSelect
+            register={register}
+            name="merchant_Id"
+            label="Merchant"
+            options={activeMerchants.map(m => ({ value: m.id, label: `${m.name} • ${m.storeName}` }))}
+            valueAsNumber
+            disabled={!selectedBranch_Id}
+            placeholder={selectedBranch_Id ? "Choose Merchant" : "Select Branch First"}
+          />
+          <EnhancedSelect
+            register={register}
+            name="shippingType_Id"
+            label="Shipping Method"
+            options={shippingTypes?.filter(s => !s.isDeleted).map(s => ({ value: s.id, label: `${s.type} • ${s.cost.toFixed(0)} EGP` })) || []}
+            valueAsNumber
+            placeholder="Select Shipping Type"
+          />
         </div>
       </div>
 
-      {/* ── Client Information ── */}
-      <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-        <h3 className="text-sm font-bold text-gray-900">Client Information</h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-          {/* Client Name */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Client Name</label>
-            <input
-              {...register("clientName")}
-              placeholder="Enter client name"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-            {errors.clientName && <p className="text-xs text-red-500">{errors.clientName.message}</p>}
-          </div>
-
-          {/* Client Phone 1 */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Phone 1</label>
-            <input
-              {...register("clientPhone1")}
-              placeholder="01XXXXXXXXX"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-            {errors.clientPhone1 && <p className="text-xs text-red-500">{errors.clientPhone1.message}</p>}
-          </div>
-
-          {/* Client Phone 2 */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">
-              Phone 2 <span className="text-gray-400">(optional)</span>
-            </label>
-            <input
-              {...register("clientPhone2")}
-              placeholder="01XXXXXXXXX"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-          </div>
-
-          {/* Client Email */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">
-              Email <span className="text-gray-400">(optional)</span>
-            </label>
-            <input
-              {...register("clientEmail")}
-              type="email"
-              placeholder="client@email.com"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-          </div>
-
-          {/* Client Address */}
-          <div className="space-y-1 sm:col-span-2">
-            <label className="text-sm font-medium text-gray-700">Client Address</label>
-            <input
-              {...register("clientAddress")}
-              placeholder="Enter full address"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-            />
-            {errors.clientAddress && <p className="text-xs text-red-500">{errors.clientAddress.message}</p>}
-          </div>
-
+      {/* 3. GEOGRAPHY SECTION */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
+          <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><MapPin size={18} /></div>
+          <h3 className="text-md font-bold text-gray-800">Shipping Destination</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <EnhancedSelect
+            register={register}
+            name="government_Id"
+            label="Government"
+            options={activeGovernments.map(g => ({ value: g.id, label: g.name }))}
+            valueAsNumber
+            disabled={!selectedBranch_Id}
+            placeholder={selectedBranch_Id ? "Choose Government" : "Select Branch First"}
+          />
+          <EnhancedSelect
+            register={register}
+            name="city_Id"
+            label="City"
+            options={filteredCities.map(c => ({ value: c.id, label: c.name }))}
+            valueAsNumber
+            disabled={!selectedGovernment_Id}
+            placeholder={selectedGovernment_Id ? "Choose City" : "Select Government First"}
+          />
+        </div>
+        <div className="mt-4 p-4 bg-gray-50 rounded-xl flex items-center gap-3 border border-gray-100">
+          <input type="checkbox" {...register("deliverToVillage")} id="village" className="w-5 h-5 accent-primary rounded cursor-pointer" />
+          <label htmlFor="village" className="text-sm font-semibold text-gray-600 cursor-pointer">Special Delivery to Village (Check if applicable)</label>
         </div>
       </div>
 
-      {/* ── Products ── */}
-      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-gray-900">Products</h3>
-          <button
-            type="button"
-            onClick={addProduct}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary-600 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Add Product
-          </button>
+      {/* 2. ORDER TYPE & PAYMENT SECTION */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
+          <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><ListTree size={18} /></div>
+          <h3 className="text-md font-bold text-gray-800">Order & Payment Configuration</h3>
         </div>
-
-        {products.map((product, index) => (
-          <div key={index} className="grid grid-cols-3 gap-2 items-center">
-            <input
-              type="text"
-              placeholder="Product name"
-              value={product.name}
-              onChange={(e) => setProducts((prev) =>
-                prev.map((p, i) => i === index ? { ...p, name: e.target.value } : p)
-              )}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          <div className="md:col-span-2">
+            <StringSelect
+              register={register}
+              name="orderType"
+              label="Order Type"
+              options={Object.values(ORDER_TYPES).map(t => ({ value: t, label: ORDER_TYPE_LABELS[t] }))}
+              placeholder="Choose Order Type"
             />
-            <input
-              type="number"
-              placeholder="Qty"
-              value={product.quantity}
-              onChange={(e) => setProducts((prev) =>
-                prev.map((p, i) => i === index ? { ...p, quantity: Number(e.target.value) } : p)
-              )}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
+          </div>
+          <div className="md:col-span-2">
+            <StringSelect
+              register={register}
+              name="paymentType"
+              label="Payment Method"
+              options={Object.values(PAYMENT_TYPES).map(t => ({ value: t, label: PAYMENT_TYPE_LABELS[t] }))}
+              placeholder="Choose Payment Type"
             />
-            <div className="flex gap-2">
-              <input
-                type="number"
-                placeholder="Weight (kg)"
-                value={product.itemWeight}
-                onChange={(e) => setProducts((prev) =>
-                  prev.map((p, i) => i === index ? { ...p, itemWeight: Number(e.target.value) } : p)
-                )}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-              />
-              <button
-                type="button"
-                onClick={() => removeProduct(index)}
-                disabled={products.length === 1}
-                className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 disabled:opacity-30 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+          </div>
+          <div className="md:col-span-2">
+            <label className={labelBase}>Order Cost (EGP)</label>
+            <div className="relative">
+              <DollarSign className="absolute left-3 top-3 text-gray-400" size={16} />
+              <input type="number" {...register("orderCost")} className={`${inputBase} pl-9 font-bold text-primary`} placeholder="0.00" />
             </div>
           </div>
-        ))}
-
-        {errors.products && (
-          <p className="text-xs text-red-500">{errors.products.message}</p>
-        )}
-      </div>
-
-      {/* ── Notes ── */}
-      <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-        <h3 className="text-sm font-bold text-gray-900">Notes</h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Merchant Notes</label>
-            <textarea
-              {...register("merchantNotes")}
-              placeholder="Optional..."
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Employee Notes</label>
-            <textarea
-              {...register("employeeNotes")}
-              placeholder="Optional..."
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Delivery Notes</label>
-            <textarea
-              {...register("deliveryNotes")}
-              placeholder="Optional..."
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
-            />
+          <div className="md:col-span-2">
+            <label className={labelBase}>Total Weight (KG)</label>
+            <div className="relative">
+              <Weight className="absolute left-3 top-3 text-gray-400" size={16} />
+              <input type="number" step="0.1" {...register("orderTotalWeight")} className={`${inputBase} pl-9`} placeholder="0.0" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Actions ── */}
-      <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="flex-1 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {isLoading ? "Creating..." : "Create Order"}
-        </button>
+      {/* 4. CLIENT INFO SECTION */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
+          <div className="p-2 bg-green-50 rounded-lg text-green-600"><User size={18} /></div>
+          <h3 className="text-md font-bold text-gray-800">Client Contact Details</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="md:col-span-1">
+            <label className={labelBase}>Full Name</label>
+            <input {...register("clientName")} className={inputBase} placeholder="Receiver's full name" />
+          </div>
+          <div className="md:col-span-1">
+            <label className={labelBase}>Email Address (Optional)</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 text-gray-400" size={14} />
+              <input type="email" {...register("clientEmail")} className={`${inputBase} pl-9`} placeholder="client@example.com" />
+            </div>
+          </div>
+          <div>
+            <label className={labelBase}>Phone Number 1</label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-3 text-gray-400" size={14} />
+              <input {...register("clientPhone1")} className={`${inputBase} pl-9`} placeholder="01xxxxxxxxx" />
+            </div>
+          </div>
+          <div>
+            <label className={labelBase}>Phone Number 2 (Optional)</label>
+            <input {...register("clientPhone2")} className={inputBase} placeholder="01xxxxxxxxx" />
+          </div>
+          <div className="md:col-span-2">
+            <label className={labelBase}>Detailed Address</label>
+            <textarea {...register("clientAddress")} rows={2} className={`${inputBase} resize-none`} placeholder="Street, Building No, Floor, Apartment..." />
+          </div>
+        </div>
       </div>
 
+      {/* 5. PRODUCTS SECTION */}
+      <div className="bg-white rounded-2xl p-6 shadow-xl">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="text-primary" size={20} />
+            <h3 className="text-lg font-bold tracking-tight">Order Items</h3>
+          </div>
+          <button type="button" onClick={() => setProducts([...products, { name: "", quantity: 1, itemWeight: 0.1 }])}
+            className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
+            <Plus size={14} /> Add Product
+          </button>
+        </div>
+        <div className="space-y-3">
+          {products.map((p, index) => (
+            <div key={index} className="flex gap-3 items-center bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+              <input value={p.name} onChange={(e) => { const n = [...products]; n[index].name = e.target.value; setProducts(n); }} placeholder="Product Name" className="bg-transparent border-b border-white/20 outline-none flex-[4] text-sm py-1 focus:border-primary" />
+              <input type="number" value={p.quantity} onChange={(e) => { const n = [...products]; n[index].quantity = Number(e.target.value); setProducts(n); }} className="bg-transparent border-b border-white/20 outline-none flex-1 text-sm py-1 text-center" placeholder="Qty" />
+              <input type="number" step="0.1" value={p.itemWeight} onChange={(e) => { const n = [...products]; n[index].itemWeight = Number(e.target.value); setProducts(n); }} className="bg-transparent border-b border-white/20 outline-none flex-1 text-sm py-1 text-center" placeholder="Wt" />
+              <button type="button" onClick={() => setProducts(products.filter((_, i) => i !== index))} disabled={products.length === 1} className="p-2 text-red-400 hover:text-red-300 disabled:opacity-0 transition-opacity"><Trash2 size={18} /></button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 6. NOTES SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {notesFields.map((n) => (
+          <div key={n} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+            <label className={labelBase}>{n.replace("Notes", " Instructions")}</label>
+            <textarea {...register(n)} className={`${inputBase} h-24 resize-none bg-gray-50/30`} placeholder="Write any specific notes here..." />
+          </div>
+        ))}
+      </div>
+
+      {/* FOOTER ACTIONS */}
+      <div className="flex gap-4 sticky bottom-6 z-10 bg-white/90 backdrop-blur-md p-4 border border-gray-200 rounded-3xl shadow-2xl mx-4 md:mx-0">
+        <button type="button" onClick={onCancel} className="flex-1 py-4 text-sm font-bold text-gray-400 hover:text-gray-700 transition-colors">Discard Changes</button>
+        <button type="submit" disabled={isLoading} className="flex-[2] py-4 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all">
+          {isLoading ? "Synchronizing Data..." : "Finalize & Create Order"}
+        </button>
+      </div>
     </form>
   );
 }

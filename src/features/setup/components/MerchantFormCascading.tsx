@@ -6,6 +6,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { useState, useEffect, useMemo, type FC, type HTMLAttributes } from "react";
 import { useForm } from "react-hook-form";
+import { Plus, X } from "lucide-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
@@ -89,6 +90,11 @@ const merchantSchema = yup.object({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MerchantFormValues = any;
 
+interface SpecialShippingRate {
+  city_Id: number;
+  specialPrice: number;
+}
+
 interface MerchantFormCascadingProps {
   isLoading: boolean;
   onSubmit: (values: MerchantFormValues) => Promise<void>;
@@ -104,6 +110,7 @@ export default function MerchantFormCascading({
   onCancel,
 }: MerchantFormCascadingProps) {
   const [selectedGovernment, setSelectedGovernment] = useState<string>("");
+  const [specialShippingRates, setSpecialShippingRates] = useState<{ city_Id: number; specialPrice: number }[]>([]);
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 10000 });
   const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 10000 });
@@ -171,8 +178,21 @@ export default function MerchantFormCascading({
     setValue("city", "");
   };
 
+  const handleSubmitWrapper = (values: MerchantFormValues) => {
+    const validRates = specialShippingRates.filter(r => r.city_Id > 0 && r.specialPrice > 0);
+    if (validRates.length === 0) {
+      alert("At least one special shipping rate is required");
+      return;
+    }
+    const payload = {
+      ...values,
+      specialShippingRates: validRates,
+    };
+    onSubmit(payload);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleSubmitWrapper)} className="space-y-4">
       {/* Name */}
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700">Full Name</label>
@@ -361,6 +381,67 @@ export default function MerchantFormCascading({
           placeholder="0"
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
+      </div>
+
+      {/* Special Shipping Rates */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-700">
+          Special Shipping Rates <span className="text-red-500">*</span>
+        </label>
+        <p className="text-xs text-gray-500">Add at least one special shipping rate for specific cities</p>
+        {specialShippingRates.map((rate, index) => (
+          <div key={index} className="flex gap-2 items-center">
+            <select
+              value={rate.city_Id}
+              onChange={(e) => {
+                const updated = [...specialShippingRates];
+                updated[index].city_Id = Number(e.target.value);
+                setSpecialShippingRates(updated);
+              }}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
+            >
+              <option value="">Select city</option>
+              {filteredCities.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              value={rate.specialPrice}
+              onChange={(e) => {
+                const updated = [...specialShippingRates];
+                updated[index].specialPrice = Number(e.target.value);
+                setSpecialShippingRates(updated);
+              }}
+              placeholder="Price"
+              className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const updated = specialShippingRates.filter((_, i) => i !== index);
+                setSpecialShippingRates(updated);
+              }}
+              className="p-2 text-red-500 hover:text-red-700"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            setSpecialShippingRates([...specialShippingRates, { city_Id: 0, specialPrice: 0 }]);
+          }}
+          className="text-sm text-primary hover:text-primary-600 flex items-center gap-1"
+        >
+          <Plus size={14} /> Add Special Rate
+        </button>
+        {specialShippingRates.length === 0 && (
+          <p className="text-xs text-red-500">At least one special shipping rate is required</p>
+        )}
       </div>
 
       {/* Actions */}

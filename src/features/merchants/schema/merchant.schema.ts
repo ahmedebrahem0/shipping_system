@@ -74,6 +74,17 @@ export const merchantCreateSchema = yup.object({
       return [];
     })
     .optional(),
+
+  specialShippingRates: yup
+    .array()
+    .of(
+      yup.object({
+        city_Id: yup.number().required("City is required"),
+        specialPrice: yup.number().required("Special price is required"),
+      })
+    )
+    .min(1, "At least one special shipping rate is required")
+    .required("Special shipping rates are required"),
 });
 
 // export const merchantEditSchema = yup.object({

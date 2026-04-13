@@ -216,7 +216,7 @@ getMerchants: builder.query<MerchantsResponse, { page?: number; pageSize?: numbe
   providesTags: ["Merchants"],
 }),
 
-getMerchantById: builder.query<MerchantResponse, number>({
+getMerchantById: builder.query<ApiResponse<MerchantResponse>, number>({
   query: (id) => ({
     url: ENDPOINTS.MERCHANTS.GET_BY_ID(id),
   }),

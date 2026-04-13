@@ -1,8 +1,8 @@
-// ReportTable.tsx
-// Displays order reports in a table
-
 import type { OrderReport } from "@/types/report.types";
-import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/constants/orderStatuses";
+import {
+  ORDER_STATUS_COLORS,
+  ORDER_STATUS_LABELS,
+} from "@/constants/orderStatuses";
 import { formatCurrency } from "@/lib/utils/formatters";
 
 interface ReportTableProps {
@@ -10,53 +10,114 @@ interface ReportTableProps {
 }
 
 export default function ReportTable({ orders }: ReportTableProps) {
+  if (!orders.length) {
+    return (
+      <div className="flex items-center justify-center h-40 text-sm text-gray-500 border border-dashed rounded-xl">
+        No orders found
+      </div>
+    );
+  }
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Serial #</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Status</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Merchant</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Client</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Location</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Order Cost</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Shipping Cost</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Company Rights</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Created At</th>
+    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+      <table className="w-full text-sm">
+        
+        {/* Header */}
+        <thead className="bg-gray-50 sticky top-0 z-10">
+          <tr className="border-b border-gray-200">
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Serial #
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Status
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Merchant
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Client
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Location
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Order Cost
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Shipping Cost
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Created At
+            </th>
           </tr>
         </thead>
+
+        {/* Body */}
         <tbody className="divide-y divide-gray-100">
-          {orders.map((order) => (
-            <tr key={order.serialNumber} className="hover:bg-gray-50 transition-colors">
-              <td className="px-4 py-3 text-sm font-medium text-gray-900">
+          {orders.map((order, index) => (
+            <tr
+              key={`${order.serialNumber}-${index}`}
+              className="hover:bg-gray-50/80 transition-colors even:bg-gray-50/40"
+            >
+              {/* Serial */}
+              <td className="px-4 py-3 font-semibold text-gray-900">
                 #{order.serialNumber}
               </td>
+
+              {/* Status */}
               <td className="px-4 py-3">
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                  ORDER_STATUS_COLORS[order.orderStatus as keyof typeof ORDER_STATUS_COLORS] ?? "bg-gray-100 text-gray-700"
-                }`}>
-                  {ORDER_STATUS_LABELS[order.orderStatus as keyof typeof ORDER_STATUS_LABELS] ?? order.orderStatus}
+                <span
+                  className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                    ORDER_STATUS_COLORS[
+                      order.orderStatus as keyof typeof ORDER_STATUS_COLORS
+                    ] ?? "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {
+                    ORDER_STATUS_LABELS[
+                      order.orderStatus as keyof typeof ORDER_STATUS_LABELS
+                    ] ?? order.orderStatus
+                  }
                 </span>
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">{order.merchantName}</td>
+
+              {/* Merchant */}
+              <td className="px-4 py-3 text-gray-700 font-medium">
+                {order.merchantName}
+              </td>
+
+              {/* Client */}
               <td className="px-4 py-3">
-                <p className="text-sm text-gray-900">{order.clientName}</p>
-                <p className="text-xs text-gray-500">{order.clientPhone}</p>
+                <div className="flex flex-col">
+                  <span className="text-gray-900 font-medium">
+                    {order.clientName}
+                  </span>
+                  <span className="text-xs text-gray-500 whitespace-pre-line">
+                    {order.clientPhone}
+                  </span>
+                </div>
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">
-                {order.governrate} - {order.city}
+
+              {/* Location */}
+              <td className="px-4 py-3 text-gray-600">
+                {order.governrate}{" "}
+                <span className="text-gray-400">•</span> {order.city}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">
+
+              {/* Order Cost */}
+              <td className="px-4 py-3 font-medium text-gray-800">
                 {formatCurrency(order.orderCost)}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">
+
+              {/* Shipping Cost */}
+              <td className="px-4 py-3 text-gray-600">
                 {formatCurrency(order.shippingCost)}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">
-                {order.companyRights ? formatCurrency(order.companyRights) : "—"}
+
+              {/* Date */}
+              <td className="px-4 py-3 text-gray-500 text-xs">
+                {order.createdDate}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">{order.createdDate}</td>
             </tr>
           ))}
         </tbody>

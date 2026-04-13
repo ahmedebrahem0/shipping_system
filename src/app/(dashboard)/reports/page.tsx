@@ -22,6 +22,24 @@ export default function ReportsPage() {
     handleFilterChange,
   } = useReports();
 
+  const searchValue = filters.searchTxt?.toLowerCase().trim();
+
+const firstMatch = searchValue
+  ? orders.find((o) => {
+      return (
+        o.serialNumber === searchValue ||
+        o.clientName?.toLowerCase().includes(searchValue) ||
+        o.merchantName?.toLowerCase().includes(searchValue)
+      );
+    })
+  : null;
+
+const displayedOrders = searchValue
+  ? firstMatch
+    ? [firstMatch]
+    : []
+  : orders;
+
   return (
     <div>
       {/* Header */}
@@ -89,7 +107,7 @@ export default function ReportsPage() {
           />
         ) : (
           <>
-            <ReportTable orders={orders} />
+            <ReportTable orders={displayedOrders} />
             <Pagination
               currentPage={filters.page ?? 1}
               totalCount={totalOrders}
