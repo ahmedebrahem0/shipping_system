@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { Resolver } from "react-hook-form";
@@ -15,8 +15,7 @@ import {
   type MerchantEditFormValues,
 } from "@/features/merchants/schema/merchant.schema";
 
-type MerchantFormValues = MerchantCreateFormValues | MerchantEditFormValues;
-import { useGetBranchesQuery, useGetGovernmentsQuery } from "@/store/slices/api/apiSlice";
+import { useGetBranchesQuery, useGetGovernmentsQuery, useGetCitiesQuery } from "@/store/slices/api/apiSlice";
 import type { Merchant } from "@/types/merchant.types";
 import PasswordInput from "@/components/common/PasswordInput";
 
@@ -37,6 +36,9 @@ export default function MerchantForm({
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
   const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 100 });
+  const { data: citiesData } = useGetCitiesQuery({ pageSize: 100 });
+
+  const [specialShippingRates, setSpecialShippingRates] = useState<{ city_Id: number; specialPrice: number }[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const resolver: any = isEditing 
@@ -89,9 +91,16 @@ useEffect(() => {
     });
   }
 }, [selectedMerchant, reset]);
+  const handleSubmitWrapper = (values: any) => {
+    const payload = {
+      ...values,
+      specialShippingRates: specialShippingRates.filter(r => r.city_Id > 0 && r.specialPrice > 0),
+    };
+    onSubmit(payload);
+  };
   return (
     <form 
-  onSubmit={handleSubmit(onSubmit, (errors) => console.log("Form Errors:", errors))} 
+  onSubmit={handleSubmit(handleSubmitWrapper, (errors) => console.log("Form Errors:", errors))} 
   className="space-y-4"
 >
 
@@ -271,6 +280,63 @@ useEffect(() => {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Special Shipping Rates */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-700">
+          Special Shipping Rates <span className="text-gray-400">(optional)</span>
+        </label>
+        {specialShippingRates.map((rate, index) => (
+          <div key={index} className="flex gap-2 items-center">
+            <select
+              value={rate.city_Id}
+              onChange={(e) => {
+                const updated = [...specialShippingRates];
+                updated[index].city_Id = Number(e.target.value);
+                setSpecialShippingRates(updated);
+              }}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 bg-white"
+            >
+              <option value="">Select city</option>
+              {citiesData?.data?.cities?.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              value={rate.specialPrice}
+              onChange={(e) => {
+                const updated = [...specialShippingRates];
+                updated[index].specialPrice = Number(e.target.value);
+                setSpecialShippingRates(updated);
+              }}
+              placeholder="Price"
+              className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const updated = specialShippingRates.filter((_, i) => i !== index);
+                setSpecialShippingRates(updated);
+              }}
+              className="px-2 py-2 text-red-500 hover:text-red-700"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            setSpecialShippingRates([...specialShippingRates, { city_Id: 0, specialPrice: 0 }]);
+          }}
+          className="text-sm text-primary hover:text-primary-600"
+        >
+          + Add Special Rate
+        </button>
       </div>
 
       {/* Actions */}

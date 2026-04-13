@@ -355,7 +355,7 @@ export default function Sidebar() {
     <aside
       className={cn(
         "fixed top-0 left-0 h-full bg-[#0F172A] text-slate-300 transition-all duration-300 z-40 flex flex-col border-r border-white/5 shadow-2xl",
-        isSidebarOpen ? "w-72" : "w-0 overflow-hidden shadow-none border-none" // 👈 تم زيادة العرض هنا لـ 72
+        isSidebarOpen ? "w-72" : "w-0 overflow-hidden shadow-none border-none" 
       )}
     >
       {/* 1. Brand Logo */}

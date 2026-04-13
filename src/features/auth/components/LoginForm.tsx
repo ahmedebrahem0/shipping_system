@@ -84,7 +84,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-800 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? "Logging in..." : "Login"}
       </button>
