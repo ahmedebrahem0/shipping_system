@@ -36,10 +36,10 @@ export default function OrderForm({
     { name: "", quantity: 1, itemWeight: 0.1 },
   ]);
 
-  const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
-  const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 100 });
-  const { data: citiesData } = useGetCitiesQuery({ pageSize: 100 });
-  const { data: merchantsData } = useGetMerchantsQuery({ pageSize: 100 });
+  const { data: branchesData } = useGetBranchesQuery({ pageSize: 10000 });
+  const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 10000 });
+  const { data: citiesData } = useGetCitiesQuery({ pageSize: 10000 });
+  const { data: merchantsData } = useGetMerchantsQuery({ pageSize: 10000 });
   const { data: shippingTypes } = useGetShippingTypesQuery();
 
   const {
@@ -53,7 +53,6 @@ export default function OrderForm({
     defaultValues: {
       deliverToVillage: false,
       products: [{ name: "", quantity: 1, itemWeight: 0.1 }],
-      // ضيف دول عشان الـ Backend ميعملش Crash
       merchantNotes: "",
       employeeNotes: "",
       deliveryNotes: "",
@@ -68,7 +67,7 @@ export default function OrderForm({
     },
   });
 
-  const [selectedBranch_Id, selectedMerchant_Id, selectedGovernment_Id, city_Id] = watch(["branch_Id", "merchant_Id", "government_Id", "city_Id"]);
+  const [selectedBranch_Id, selectedMerchant_Id, selectedGovernment_Id] = watch(["branch_Id", "merchant_Id", "government_Id"]);
 
   const activeBranches = useMemo(
     () => branchesData?.data?.branches?.filter((b) => !b.isDeleted) || [],
@@ -97,34 +96,37 @@ export default function OrderForm({
     [governmentsData?.governments, selectedBranch_Id]
   );
 
-  const selectedGovernment = activeGovernments.find(
-    (g) => g.id === selectedGovernment_Id
+  const filteredCities = useMemo(() => {
+  if (!selectedGovernment_Id) return [];
+
+  const selectedGov = governmentsData?.governments?.find(
+    (g) => g.id === selectedGovernment_Id && !g.isDeleted
   );
 
-  const filteredCities = useMemo(() => {
-    if (!selectedGovernment || !selectedGovernment_Id) {
-      return citiesData?.data?.cities?.filter((c) => !c.isDeleted) || [];
-    }
-    return (
-      citiesData?.data?.cities?.filter(
-        (c) => !c.isDeleted && c.governmentName === selectedGovernment.name
-      ) || []
-    );
-  }, [citiesData?.data?.cities, selectedGovernment, selectedGovernment_Id]);
+  if (!selectedGov) return [];
+
+  return (
+    citiesData?.data?.cities?.filter(
+      (c) => !c.isDeleted && c.governmentName === selectedGov.name
+    ) || []
+  );
+}, [citiesData, governmentsData, selectedGovernment_Id]);
+  
+  const currentCity_Id = watch("city_Id");
 
   useEffect(() => {
-    if (!selectedGovernment_Id && city_Id !== 0) {
+    if (!selectedGovernment_Id && currentCity_Id !== 0) {
       setValue("city_Id", 0);
     }
-  }, [selectedGovernment_Id, city_Id, setValue]);
+  }, [selectedGovernment_Id, currentCity_Id, setValue]);
 
   useEffect(() => {
-    if (!selectedBranch_Id && (selectedGovernment_Id !== 0 || city_Id !== 0 || selectedMerchant_Id !== 0)) {
+    if (!selectedBranch_Id && (selectedGovernment_Id !== 0 || currentCity_Id !== 0 || selectedMerchant_Id !== 0)) {
       setValue("government_Id", 0);
       setValue("city_Id", 0);
       setValue("merchant_Id", 0);
     }
-  }, [selectedBranch_Id, selectedGovernment_Id, city_Id, selectedMerchant_Id, setValue]);
+  }, [selectedBranch_Id, selectedGovernment_Id, currentCity_Id, selectedMerchant_Id, setValue]);
 
   useEffect(() => {
     if (selectedMerchant_Id && !activeMerchants.some((m) => m.id === selectedMerchant_Id)) {
@@ -133,11 +135,16 @@ export default function OrderForm({
   }, [selectedMerchant_Id, activeMerchants, setValue]);
 
   useEffect(() => {
-    if (selectedGovernment_Id && !activeGovernments.some((g) => g.id === selectedGovernment_Id)) {
-      setValue("government_Id", 0);
-      setValue("city_Id", 0);
+    if (selectedGovernment_Id) {
+      const exists = governmentsData?.governments?.some(
+        (g) => g.id === selectedGovernment_Id && !g.isDeleted
+      );
+      if (!exists) {
+        setValue("government_Id", 0);
+        setValue("city_Id", 0);
+      }
     }
-  }, [selectedGovernment_Id, activeGovernments, setValue]);
+  }, [selectedGovernment_Id, governmentsData, setValue]);
 
   useEffect(() => {
     setValue("products", products, {
@@ -157,6 +164,7 @@ export default function OrderForm({
   };
 
   const handleSubmitForm = (values: OrderCreateFormValues) => {
+    console.log("Raw form values on submit:", values);
     // 1. التحقق من وجود منتجات
     if (products.length === 0) {
       toast.error("Please add at least one product");
@@ -281,7 +289,9 @@ export default function OrderForm({
               <option value={0}>Select shipping type</option>
               {shippingTypes?.map((s) => (
                 <option key={s.id} value={s.id}>{s.type} - {s.cost} EGP</option>
+                
               ))}
+              
             </select>
             {errors.shippingType_Id && <p className="text-xs text-red-500">{errors.shippingType_Id.message}</p>}
           </div>

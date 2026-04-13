@@ -354,60 +354,94 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-full bg-gray-900 text-white transition-all duration-300 z-40 flex flex-col",
-        isSidebarOpen ? "w-64" : "w-0 overflow-hidden"
+        "fixed top-0 left-0 h-full bg-[#0F172A] text-slate-300 transition-all duration-300 z-40 flex flex-col border-r border-white/5 shadow-2xl",
+        isSidebarOpen ? "w-72" : "w-0 overflow-hidden shadow-none border-none" // 👈 تم زيادة العرض هنا لـ 72
       )}
     >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10 flex-shrink-0">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
-          <Package className="w-4 h-4 text-white" />
+      {/* 1. Brand Logo */}
+      <div className="flex items-center gap-4 px-7 py-9 flex-shrink-0">
+        <div className="w-11 h-11 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 transform rotate-3">
+          <Package className="w-6 h-6 text-white -rotate-3" />
         </div>
-        <span className="font-bold text-lg">ShipPro</span>
+        <div className="flex flex-col">
+          <span className="font-black text-2xl text-white tracking-tight leading-none italic">SHIPPRO</span>
+          <span className="text-[10px] font-black text-primary tracking-[0.3em] mt-1.5 uppercase opacity-90">Logistics System</span>
+        </div>
       </div>
 
-      {/* User Info */}
-      <div className="px-5 py-4 border-b border-white/10 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+      {/* 2. User Profile Card */}
+      <div className="px-5 mb-6">
+        <div className="bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 rounded-2xl p-4 flex items-center gap-3 shadow-inner">
+          <div className="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg">
             {user.name?.charAt(0).toUpperCase()}
           </div>
           <div className="overflow-hidden">
-            <p className="text-sm font-semibold truncate">{user.name}</p>
-            <p className="text-xs text-primary-foreground/70">{user.role}</p>
+            <p className="text-sm font-bold text-white truncate leading-tight mb-1">{user.name}</p>
+            <div className="flex items-center gap-1.5">
+               <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.6)] animate-pulse" />
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{user.role}</p>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* 3. Navigation - Custom Scrollbar with Primary Color */}
+      <nav 
+        className="flex-1 overflow-y-auto px-4 py-2 space-y-7 custom-sidebar-scroll"
+        style={{ 
+            scrollbarWidth: 'thin', 
+            scrollbarColor: '#0ea5e9 transparent' // 👈 استبدل #0ea5e9 بلون الـ primary بتاعك لو مختلف
+        }}
+      >
+        {/* CSS Style Inject for Webkit Browsers */}
+        <style jsx global>{`
+          .custom-sidebar-scroll::-webkit-scrollbar {
+            width: 5px;
+          }
+          .custom-sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: #0ea5e9; /* لون الـ Primary */
+            border-radius: 20px;
+          }
+          .custom-sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: #0284c7; /* لون أغمق عند الهوفر */
+          }
+        `}</style>
 
-      {/* Nav */}
-      <nav className="sidebar-nav flex-1 overflow-y-auto px-3 py-4 space-y-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(199 89% 48%) transparent' }}>
         {menu.map((section) => (
-          <div key={section.key}>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
-              {section.section}
-            </p>
-            <div className="space-y-1 ">
+          <div key={section.key} className="space-y-2">
+            <div className="flex items-center gap-3 px-3 mb-4">
+               <span className="text-[11px] font-black text-slate-500 uppercase tracking-[0.25em]">
+                 {section.section}
+               </span>
+               <div className="h-[1px] flex-1 bg-white/5" />
+            </div>
+
+            <div className="space-y-1.5">
               {section.items.map((item) =>
                 item.children ? (
-                  <DropdownItem
-                    key={item.label}
-                    item={item}
-                    pathname={pathname}
-                  />
+                  <DropdownItem key={item.label} item={item} pathname={pathname} />
                 ) : (
                   <Link
                     key={item.label}
                     href={item.href!}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
+                      "group relative flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-[13px] font-bold transition-all duration-300",
                       pathname === item.href
-                        ? "bg-primary text-white"
-                        : "text-slate-400 hover:bg-white/10 hover:text-white"
+                        ? "bg-primary text-white shadow-xl shadow-primary/25 translate-x-1"
+                        : "text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1"
                     )}
                   >
-                    <item.icon className="w-4 h-4 flex-shrink-0" />
+                    <item.icon className={cn(
+                      "w-5 h-5 transition-transform group-hover:scale-110",
+                      pathname === item.href ? "text-white" : "text-slate-500 group-hover:text-primary"
+                    )} />
                     {item.label}
+                    {pathname === item.href && (
+                      <span className="absolute left-0 w-1 h-6 bg-white rounded-r-full" />
+                    )}
                   </Link>
                 )
               )}
@@ -416,56 +450,60 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Logout
-      <div className="px-3 py-4 border-t border-white/10 flex-shrink-0">
+      {/* 4. Logout Footer */}
+      <div className="p-5 border-t border-white/5 mt-auto bg-[#0F172A]/50 backdrop-blur-md">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-red-500/20 hover:text-red-400 transition-all w-full"
+          className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-xs font-black text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all border border-white/5 hover:border-red-500/20 uppercase tracking-widest"
         >
-          <LogOut className="w-4 h-4 flex-shrink-0" />
-          Logout
+          <LogOut className="w-4 h-4" />
+          Logout System
         </button>
-      </div> */}
+      </div>
     </aside>
   );
 }
 
-function DropdownItem({
-  item,
-  pathname,
-}: {
-  item: { label: string; icon: React.ElementType; children?: { label: string; icon: React.ElementType; href: string }[] };
-  pathname: string;
-}) {
-  const isActive = item.children?.some((child) => pathname.startsWith(child.href));
+function DropdownItem({ item, pathname }: { item: any, pathname: string }) {
+  const isActive = item.children?.some((child: any) => pathname.startsWith(child.href));
 
   return (
     <details open={isActive} className="group">
       <summary
         className={cn(
-          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all list-none rounded-xl",
+          "flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-[13px] font-bold cursor-pointer transition-all list-none group-hover:bg-white/[0.02]",
           isActive
-            ? "bg-white/10 text-white"
-            : "text-slate-400 hover:bg-white/10 hover:text-white"
+            ? "bg-white/5 text-white"
+            : "text-slate-400 hover:text-white"
         )}
       >
-        <item.icon className="w-4 h-4 flex-shrink-0 " />
-        <span className="flex-1 ">{item.label}</span>
-        <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 rounded-xl" />
+        <item.icon className={cn(
+          "w-5 h-5 transition-colors",
+          isActive ? "text-primary" : "text-slate-500 group-hover:text-primary"
+        )} />
+        <span className="flex-1 uppercase tracking-tight">{item.label}</span>
+        <ChevronDown className="w-4 h-4 transition-transform duration-500 group-open:rotate-180 text-slate-600" />
       </summary>
-      <div className="mt-1 ml-4 space-y-1 ">
-        {item.children?.map((child) => (
+      
+      <div className="mt-2 ml-6 pl-4 border-l-1 border-primary/20 space-y-1.5 py-1 animate-in slide-in-from-left-2 duration-300">
+        {item.children?.map((child: any) => (
           <Link
             key={child.label}
             href={child.href}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all",
+              "flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold transition-all relative group/item",
               pathname === child.href
-                ? "bg-primary text-white"
-                : "text-slate-400 hover:bg-white/10 hover:text-white"
+                ? "text-primary bg-primary/10 shadow-sm"
+                : "text-slate-500 hover:text-slate-200 hover:bg-white/5"
             )}
           >
-            <child.icon className="w-4 h-4 flex-shrink-0" />
+            {pathname === child.href && (
+              <span className="absolute left-[-18px] w-1.5 h-5 bg-primary rounded-r-full shadow-[2px_0_10px_rgba(14,165,233,0.4)]" />
+            )}
+            <child.icon className={cn(
+                "w-4 h-4",
+                pathname === child.href ? "text-primary" : "text-slate-600 group-hover/item:text-primary/70"
+            )} />
             {child.label}
           </Link>
         ))}

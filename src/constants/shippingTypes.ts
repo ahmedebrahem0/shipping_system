@@ -16,6 +16,19 @@ export const PAYMENT_TYPES = {
   CASH_ON_DELIVERY: "CashOnDelivery",
 } as const;
 
+export const DISCOUNT_TYPES = {
+  FIXED: "Fixed",
+  PERCENTAGE: "Percentage",
+} as const;
+
+export type DiscountType =
+  (typeof DISCOUNT_TYPES)[keyof typeof DISCOUNT_TYPES];
+
+export const DISCOUNT_TYPE_LABELS: Record<DiscountType, string> = {
+  Fixed: "Fixed",
+  Percentage: "Percentage",
+};
+
 export type PaymentType = (typeof PAYMENT_TYPES)[keyof typeof PAYMENT_TYPES];
 
 export const PAYMENT_TYPE_LABELS: Record<PaymentType, string> = {

@@ -223,6 +223,16 @@ export default function SetupPage() {
         {!showSmartRedirect && (
           <>
             {currentStepData[currentStep].length > 0 ? (
+              <div className="space-y-3">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setIsFormOpen(true)}
+                  className="btn btn-primary"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Another
+                </button>
+              </div>
               <div className="border border-gray-200 rounded-lg overflow-hidden">
                 <table className="w-full">
                   <thead className="bg-gray-50">
@@ -265,6 +275,7 @@ export default function SetupPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
               </div>
             ) : (
               <div className="text-center py-8">

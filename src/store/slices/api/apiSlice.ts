@@ -339,9 +339,21 @@ searchEmployees: builder.query<Employee[], string>({
 }),
 // Shipping Types
 getShippingTypes: builder.query<ShippingType[], void>({
-  query: () => ({
-    url: ENDPOINTS.SHIPPING_TYPES.GET_ALL,
-  }),
+  queryFn: async (_args, _api, _extraOptions, baseQuery) => {
+    const result = await baseQuery({
+      url: ENDPOINTS.SHIPPING_TYPES.GET_ALL,
+    });
+    const raw = result.data as unknown;
+    if (Array.isArray(raw)) {
+      return { data: raw.filter((t) => (t as ShippingType).isDeleted !== true) };
+    }
+    if (raw && typeof raw === "object" && "data" in raw) {
+      const wrapped = raw as { data: { shippingTypes?: ShippingType[] } };
+      const types = wrapped.data?.shippingTypes ?? [];
+      return { data: types.filter((t) => !t.isDeleted) };
+    }
+    return { data: [] as ShippingType[] };
+  },
   providesTags: ["ShippingTypes"],
 }),
 

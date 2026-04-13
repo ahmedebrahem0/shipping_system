@@ -60,6 +60,7 @@ export const ENDPOINTS = {
     UPDATE: (id: number) => `${BASE_URL}/api/City/${id}`,
     DELETE: (id: number) => `${BASE_URL}/api/City/${id}`,
   },
+  
 
   EMPLOYEES: {
     GET_ALL: `${BASE_URL}/api/Employee`,

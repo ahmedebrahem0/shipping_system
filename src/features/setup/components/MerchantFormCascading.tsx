@@ -105,9 +105,9 @@ export default function MerchantFormCascading({
 }: MerchantFormCascadingProps) {
   const [selectedGovernment, setSelectedGovernment] = useState<string>("");
 
-  const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
-  const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 100 });
-  const { data: citiesData } = useGetCitiesQuery({ pageSize: 100 });
+  const { data: branchesData } = useGetBranchesQuery({ pageSize: 10000 });
+  const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 10000 });
+  const { data: citiesData } = useGetCitiesQuery({ pageSize: 10000 });
 
   const {
     register,
