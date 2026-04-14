@@ -1,26 +1,33 @@
 // setup/page.tsx
-// Smart Admin Setup Wizard - Guided step-by-step system setup
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronRight, ChevronLeft, Plus, Building2, Map, MapPin, Store } from "lucide-react";
+import { 
+  CheckCircle2,
+  Circle,
+  ChevronLeft, 
+  Plus, 
+  Building2, 
+  Map, 
+  MapPin, 
+  Store, 
+  Settings2,
+  ArrowRight
+} from "lucide-react";
 import { toast } from "sonner";
 import { useSetupWizard, SETUP_STEPS, type SetupStep } from "@/features/setup/hooks/useSetupWizard";
 import BranchForm from "@/features/branches/components/BranchForm";
 import GovernmentForm from "@/features/settings/governments/components/GovernmentForm";
 import CityForm from "@/features/settings/cities/components/CityForm";
 import MerchantFormCascading from "@/features/setup/components/MerchantFormCascading";
+import type { MerchantCreateFormValues } from "@/features/merchants/schema/merchant.schema";
 import PageHeader from "@/components/common/PageHeader";
 import Loader from "@/components/common/Loader";
 import EmptyState from "@/components/common/EmptyState";
 import { useAppSelector } from "@/store/hooks";
 import { ROLES } from "@/constants/roles";
-import type { BranchFormValues } from "@/features/branches/schema/branch.schema";
-import type { GovernmentFormValues } from "@/features/settings/governments/schema/government.schema";
-import type { CityFormValues } from "@/features/settings/cities/schema/city.schema";
-import type { MerchantCreateFormValues } from "@/features/merchants/schema/merchant.schema";
+import { cn } from "@/lib/utils";
 
 const STEP_ICONS = {
   branches: Building2,
@@ -29,17 +36,20 @@ const STEP_ICONS = {
   merchants: Store,
 };
 
+interface SetupTableItem {
+  id: number | string;
+  name: string;
+  location?: string;
+  branch_Id?: number;
+  governmentName?: string;
+  storeName?: string;
+}
+
 export default function SetupPage() {
   const router = useRouter();
-  const [formValues] = useState<Record<string, unknown>>({});
-
-  // Get user from Redux store
   const { user } = useAppSelector((state) => state.auth);
-
-  // Check if user is admin
   const isAdmin = user?.role === ROLES.ADMIN;
 
-  // Route guard - only allow Admin role
   useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -51,16 +61,6 @@ export default function SetupPage() {
     }
   }, [user, isAdmin, router]);
 
-  // Redirect if not admin
-  if (!user || !isAdmin) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader />
-      </div>
-    );
-  }
-
-  // Hooks must be called before any conditional returns (rules of hooks)
   const {
     currentStep,
     currentStepIndex,
@@ -83,13 +83,12 @@ export default function SetupPage() {
     handleCreateGovernment,
     handleCreateCity,
     handleCreateMerchant,
-    markStepCompleted,
   } = useSetupWizard();
 
   const [createLoading] = useState(false);
-
   const currentStepInfo = SETUP_STEPS.find((s) => s.id === currentStep);
-  const StepIcon = STEP_ICONS[currentStep];
+  const StepIcon = STEP_ICONS[currentStep as keyof typeof STEP_ICONS];
+  const currentTableStepIndex = SETUP_STEPS.findIndex((step) => step.id === currentStep);
 
   const hasData = {
     branches: hasBranches,
@@ -105,293 +104,271 @@ export default function SetupPage() {
     merchants,
   };
 
-  const handleSmartRedirect = (targetStep: SetupStep) => {
-    goToStep(targetStep);
-  };
-
   const redirectInfo: Record<SetupStep, { target: SetupStep; message: string }> = {
-    branches: {
-      target: "branches",
-      message: "",
-    },
-    governments: {
-      target: "branches",
-      message: "No Branches yet. Add Branch First",
-    },
-    cities: {
-      target: "governments",
-      message: "No Governments yet. Add Government First",
-    },
-    merchants: {
-      target: "branches",
-      message: "No Branches yet. Add Branch First",
-    },
+    branches: { target: "branches", message: "" },
+    governments: { target: "branches", message: "No Branches available" },
+    cities: { target: "governments", message: "No Governments available" },
+    merchants: { target: "branches", message: "No Branches available" },
   };
 
-  const showSmartRedirect = currentStep !== "branches" && !hasData[currentStep] && redirectInfo[currentStep]?.message;
+  const showSmartRedirect = currentStep !== "branches" && !hasData[currentStep as keyof typeof hasData] && redirectInfo[currentStep as SetupStep]?.message;
 
-  if (isLoading) {
+  if (isLoading || !user || !isAdmin) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex h-[70vh] items-center justify-center">
         <Loader />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in">
-      <PageHeader
-        title="System Setup Wizard"
-        description="Follow the steps to set up your shipping system"
-      />
+    <div className="mx-auto max-w-5xl space-y-8 pb-20 animate-in fade-in duration-700">
+      <div className="flex items-center justify-between">
+        <PageHeader
+          title="System Setup Wizard"
+          description="Configuration center to get your shipping operations running"
+        />
+        <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full border border-primary/10">
+          <Settings2 size={16} className="text-primary animate-spin-slow" />
+          <span className="text-xs font-bold text-primary uppercase tracking-wider">Admin Configuration Mode</span>
+        </div>
+      </div>
 
-      {/* Stepper */}
-      <div className="mt-6 card">
-        <div className="flex items-center justify-between">
+      {/* --- Progress Stepper --- */}
+      <div className="relative bg-white px-8 pb-12 pt-3 rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gray-50">
+          <div 
+            className="h-full bg-primary transition-all duration-500 ease-in-out" 
+            style={{ width: `${(currentStepIndex / (SETUP_STEPS.length - 1)) * 100}%` }}
+          />
+        </div>
+        
+        <div className="relative flex justify-between items-center">
           {SETUP_STEPS.map((step, index) => {
-            const Icon = STEP_ICONS[step.id];
+            const Icon = STEP_ICONS[step.id as keyof typeof STEP_ICONS];
             const isActive = step.id === currentStep;
-            const isCompleted = currentStepIndex > index || (index === 0 ? hasBranches : 
-              index === 1 ? hasGovernments : 
-              index === 2 ? hasCities : hasMerchants);
+            const isCompleted = index < currentStepIndex;
             const isClickable = index <= currentStepIndex + 1;
 
             return (
-              <div key={step.id} className="flex items-center">
+              <div key={step.id} className="flex flex-col items-center z-10">
                 <button
-                  onClick={() => isClickable && goToStep(step.id)}
+                  onClick={() => isClickable && goToStep(step.id as SetupStep)}
                   disabled={!isClickable}
-                  className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : isCompleted
-                      ? "bg-emerald-50 text-emerald-600"
-                      : isClickable
-                      ? "text-gray-500 hover:bg-gray-50"
-                      : "text-gray-300 cursor-not-allowed"
-                  }`}
-                >
-                  {isCompleted && !isActive ? (
-                    <Check className="w-6 h-6" />
-                  ) : (
-                    <Icon className="w-6 h-6" />
+                  className={cn(
+                    "relative group flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all duration-300",
+                    isActive 
+                      ? "border-primary bg-primary text-white shadow-lg shadow-primary/30 scale-110" 
+                      : isCompleted 
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-600" 
+                      : "border-primary bg-primary text-white"
                   )}
-                  <span className="text-xs font-medium">{step.title}</span>
+                >
+                  {isCompleted ? <CheckCircle2 size={24} strokeWidth={3} /> : <Icon size={22} />}
+                  
+                  {/* Tooltip-style title */}
+                  <span className={cn(
+                    "absolute -bottom-10 whitespace-nowrap text-[11px] font-bold uppercase tracking-tighter transition-colors",
+                    isActive ? "text-primary" : isCompleted ? "text-emerald-600" : "text-primary"
+                  )}>
+                    {step.title}
+                  </span>
                 </button>
-                {index < SETUP_STEPS.length - 1 && (
-                  <ChevronRight
-                    className={`w-5 h-5 mx-2 ${
-                      currentStepIndex > index ? "text-emerald-500" : "text-gray-300"
-                    }`}
-                  />
-                )}
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="mt-6 card">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <StepIcon className="w-5 h-5 text-primary" />
+      {/* --- Main Content Section --- */}
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 overflow-hidden transition-all duration-500">
+        <div className="p-8 border-b border-gray-50 bg-gray-50/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+              <StepIcon size={24} />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                {currentStepInfo?.title}
-              </h2>
-              <p className="text-sm text-gray-500">
-                {currentStepInfo?.description}
-              </p>
+              <h2 className="text-xl font-black text-gray-900 leading-none mb-1">{currentStepInfo?.title}</h2>
+              <p className="text-sm text-gray-500 font-medium">{currentStepInfo?.description}</p>
             </div>
           </div>
+
+          {!showSmartRedirect && (
+             <button
+              onClick={() => setIsFormOpen(true)}
+              className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-primary transition-all shadow-md active:scale-95 text-sm font-bold"
+            >
+              <Plus size={18} />
+              Add New {currentStepInfo?.title.replace(/s$/, "")}
+            </button>
+          )}
         </div>
 
-        {/* Smart Redirect Empty State */}
-        {showSmartRedirect && (
-          <EmptyState
-            title={redirectInfo[currentStep].message}
-            description={`You need to create ${redirectInfo[currentStep].target} before adding ${currentStep}.`}
-            actionLabel={`Add ${redirectInfo[currentStep].target.charAt(0).toUpperCase() + redirectInfo[currentStep].target.slice(1)} First`}
-            onAction={() => handleSmartRedirect(redirectInfo[currentStep].target)}
-          />
-        )}
-
-        {/* Data Table or Add Button */}
-        {!showSmartRedirect && (
-          <>
-            {currentStepData[currentStep].length > 0 ? (
-              <div className="space-y-3">
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setIsFormOpen(true)}
-                  className="btn btn-primary"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Another
-                </button>
-              </div>
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Name
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        {currentStep === "governments" ? "Branch" : currentStep === "cities" ? "Government" : "Details"}
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {currentStepData[currentStep].map((item: unknown) => (
-                      <tr key={(item as { id: number }).id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 font-medium text-gray-900">
-                          {(item as { name: string }).name}
-                        </td>
-                        <td className="px-4 py-3 text-gray-500">
-                          {currentStep === "governments"
-                            ? branches.find((b) => b.id === (item as { branch_Id: number }).branch_Id)?.name
-                            : currentStep === "cities"
-                            ? (item as { governmentName: string }).governmentName
-                            : currentStep === "merchants"
-                            ? (item as { storeName: string }).storeName
-                            : "-"}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <button
-                            onClick={() => setIsFormOpen(true)}
-                            className="text-primary hover:text-primary/80 text-sm font-medium"
-                          >
-                            Add Another
-                          </button>
-                        </td>
+        <div className="p-8 min-h-[300px]">
+          {showSmartRedirect ? (
+            <div className="py-10 animate-in zoom-in-95 duration-300">
+              <EmptyState
+                title={redirectInfo[currentStep as SetupStep].message}
+                description={`Dependencies required: You must configure ${redirectInfo[currentStep as SetupStep].target} before managing ${currentStep}.`}
+                actionLabel={`Configure ${redirectInfo[currentStep as SetupStep].target} Now`}
+                onAction={() => goToStep(redirectInfo[currentStep as SetupStep].target)}
+              />
+            </div>
+          ) : (
+            <div className="animate-in slide-in-from-top-4 duration-500">
+              {currentStepData[currentStep as keyof typeof currentStepData].length > 0 ? (
+                <div className="border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/50">
+                        <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-widest">Resource Name</th>
+                        <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-widest">
+                          {currentStep === "governments" ? "Linked Branch" : currentStep === "cities" ? "Linked Government" : "Secondary Info"}
+                        </th>
+                        <th className="px-6 py-4 text-right text-[10px] font-black uppercase text-gray-400 tracking-widest">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">
-                  No {currentStep} created yet. Get started by adding your first one.
-                </p>
-                <button
-                  onClick={() => setIsFormOpen(true)}
-                  className="btn btn-primary"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add {currentStepInfo?.title.replace(/s$/, "")}
-                </button>
-              </div>
-            )}
-          </>
-        )}
+                    </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {currentStepData[currentStep as keyof typeof currentStepData].map((item: SetupTableItem) => {
+                          const isCompletedStep = currentStepIndex > currentTableStepIndex;
+                          const isActiveStep = currentStepIndex === currentTableStepIndex;
+
+                          return (
+                            <tr key={item.id} className="group hover:bg-primary/5 transition-colors">
+                              <td className="px-6 py-4 font-bold text-gray-800">{item.name}</td>
+
+                              <td className="px-6 py-4 text-sm text-gray-500">
+                                {currentStep === "branches"
+                                  ? item.location 
+                                  : currentStep === "governments"
+                                    ? branches.find((b) => b.id === item.branch_Id)?.name
+                                    : currentStep === "cities"
+                                      ? item.governmentName
+                                      : currentStep === "merchants"
+                                        ? item.storeName
+                                        : "-"}
+                              </td>
+
+                              {/* 3. لوجيك الـ Status الجديد والأيقونات المتغيرة */}
+                              <td className="px-6 py-4 text-right">
+                                {isCompletedStep ? (
+                                  // حالة الخطوة المكتملة (أخضر + علامة صح)
+                                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-black uppercase text-emerald-700 shadow-sm">
+                                    <CheckCircle2 size={10} />
+                                    Confirmed
+                                  </span>
+                                ) : isActiveStep ? (
+                                  // حالة الخطوة الحالية (أزرق + أيقونة الخطوة الأصلية بتنبض)
+                                  <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[10px] font-black uppercase text-blue-700 shadow-sm">
+                                    <StepIcon size={10} className="animate-pulse" />
+                                    In Progress
+                                  </span>
+                                ) : (
+                                  // حالة الخطوات القادمة (رمادي + دائرة فارغة)
+                                  <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[10px] font-black uppercase text-gray-400">
+                                    <Circle size={10} />
+                                    Pending
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center space-y-4">
+                  <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300">
+                    <StepIcon size={40} />
+                  </div>
+                  <div className="max-w-xs">
+                    <h3 className="text-gray-900 font-bold">No data found</h3>
+                    <p className="text-sm text-gray-400">Start by clicking the &quot;Add New&quot; button to begin your system configuration.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Navigation */}
-      <div className="mt-6 flex justify-between">
+      {/* --- Footer Navigation --- */}
+      <div className="flex items-center justify-between gap-4">
         <button
           onClick={goPrevStep}
           disabled={currentStepIndex === 0}
-          className="btn btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:grayscale transition-all"
         >
-          <ChevronLeft className="w-4 h-4" />
-          Previous
+          <ChevronLeft size={20} />
+          Previous Stage
         </button>
         
         <button
           onClick={goNextStep}
           disabled={!canProceed || currentStepIndex === SETUP_STEPS.length - 1}
-          className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
-          Continue
-          <ChevronRight className="w-4 h-4" />
+          {currentStepIndex === SETUP_STEPS.length - 1 ? "Complete Setup" : "Continue to Next Step"}
+          <ArrowRight size={20} />
         </button>
       </div>
 
-      {/* Form Modal */}
+      {/* --- Improved Form Modal --- */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setIsFormOpen(false)}
-          />
-          <div className="relative card w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto animate-fade-in">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
-              Add {currentStepInfo?.title.replace(/s$/, "")}
-            </h2>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setIsFormOpen(false)} />
+          <div className="relative bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
+            <div className="p-8 border-b border-gray-50 bg-gray-50/50 flex items-center gap-4">
+               <div className="h-10 w-10 bg-primary text-white rounded-xl flex items-center justify-center">
+                  <Plus size={20} />
+               </div>
+               <div>
+                 <h2 className="text-xl font-black text-gray-900 tracking-tight">New {currentStepInfo?.title.replace(/s$/, "")}</h2>
+                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Entry Registration</p>
+               </div>
+            </div>
             
-            {currentStep === "branches" && (
-              <BranchForm
-                selectedBranch={null}
-                isLoading={createLoading}
-                onSubmit={async (values) => {
-                  await handleCreateBranch(values);
-                }}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            )}
-            
-            {currentStep === "governments" && (
-              <GovernmentForm
-                selectedGovernment={null}
-                isLoading={createLoading}
-                onSubmit={async (values) => {
-                  await handleCreateGovernment(values);
-                }}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            )}
-            
-            {currentStep === "cities" && (
-              <CityForm
-                selectedCity={null}
-                isLoading={createLoading}
-                onSubmit={async (values) => {
-                  await handleCreateCity(values);
-                }}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            )}
-            
-            {currentStep === "merchants" && (
-              <MerchantFormCascading
-                isLoading={createLoading}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onSubmit={async (values: any) => {
-                  console.log("📝 Submitting Merchant form data:", values);
-                  console.log("📋 branches_Id (array):", values.branches_Id);
-                  try {
-                    await handleCreateMerchant({
-                      name: values.name,
-                      email: values.email,
-                      password: values.password,
-                      confirmPassword: values.confirmPassword,
-                      phone: values.phone,
-                      address: values.address,
-                      storeName: values.storeName,
-                      government: values.government,
-                      city: values.city,
-                      pickupCost: values.pickupCost,
-                      rejectedOrderPercentage: values.rejectedOrderPercentage,
-                      branches_Id: values.branches_Id,
-                      specialShippingRates: values.specialShippingRates || [],
-                    });
-                  } catch (error) {
-                    console.error("❌ Failed to create merchant:", error);
-                    throw error;
-                  }
-                }}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            )}
+            <div className="p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              {currentStep === "branches" && (
+                <BranchForm
+                  selectedBranch={null}
+                  isLoading={createLoading}
+                  onSubmit={async (values) => await handleCreateBranch(values)}
+                  onCancel={() => setIsFormOpen(false)}
+                />
+              )}
+              {currentStep === "governments" && (
+                <GovernmentForm
+                  selectedGovernment={null}
+                  isLoading={createLoading}
+                  onSubmit={async (values) => await handleCreateGovernment(values)}
+                  onCancel={() => setIsFormOpen(false)}
+                />
+              )}
+              {currentStep === "cities" && (
+                <CityForm
+                  selectedCity={null}
+                  isLoading={createLoading}
+                  onSubmit={async (values) => await handleCreateCity(values)}
+                  onCancel={() => setIsFormOpen(false)}
+                />
+              )}
+              {currentStep === "merchants" && (
+                <MerchantFormCascading
+                  isLoading={createLoading}
+                  onSubmit={async (values: MerchantCreateFormValues) => {
+                    try {
+                      await handleCreateMerchant({
+                        ...values,
+                        specialShippingRates: values.specialShippingRates || [],
+                      });
+                    } catch (error) { throw error; }
+                  }}
+                  onCancel={() => setIsFormOpen(false)}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}
