@@ -8,6 +8,7 @@ import { useDeliveries } from "@/features/deliveries/hooks/useDeliveries";
 import DeliveryForm from "@/features/deliveries/components/DeliveryForm";
 import PageHeader from "@/components/common/PageHeader";
 import { ROUTES } from "@/constants/routes";
+import type { DeliveryCreateRequest } from "@/types/delivery.types";
 
 export default function CreateDeliveryPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function CreateDeliveryPage() {
       <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-2xl">
         <DeliveryForm
           isLoading={isCreating}
-          onSubmit={handleCreate}
+          onSubmit={(values) => handleCreate(values as DeliveryCreateRequest)}
           onCancel={() => router.push(ROUTES.DELIVERIES)}
         />
       </div>

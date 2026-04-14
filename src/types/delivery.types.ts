@@ -9,6 +9,8 @@ export interface Delivery {
   email: string;
   phone: string;
   address: string;
+  branchId?: number;
+  governmentsId?: number[];
   branchName: string;
   governmentName: string[];
   discountType: string;
@@ -30,6 +32,8 @@ export interface DeliveryCreateRequest {
   companyPercentage: number;
 }
 
-export interface DeliveryEditRequest extends DeliveryCreateRequest {
+export interface DeliveryEditRequest
+  extends Omit<DeliveryCreateRequest, "password"> {
+  password?: string;
   isDeleted?: boolean;
 }

@@ -13,7 +13,7 @@ import {
   type MerchantEditFormValues,
 } from "@/features/merchants/schema/merchant.schema";
 
-import { useGetBranchesQuery, useGetGovernmentsQuery, useGetCitiesQuery } from "@/store/slices/api/apiSlice";
+import { useGetBranchesQuery, useGetGovernmentsByBranchQuery, useGetCitiesQuery } from "@/store/slices/api/apiSlice";
 import type { Merchant } from "@/types/merchant.types";
 import PasswordInput from "@/components/common/PasswordInput";
 
@@ -33,15 +33,31 @@ export default function MerchantForm({
   const isEditing = !!selectedMerchant;
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
-  const { data: governmentsData } = useGetGovernmentsQuery({ pageSize: 100 });
   const { data: citiesData } = useGetCitiesQuery({ pageSize: 100 });
 
-  const [selectedGovernment, setSelectedGovernment] = useState<string>(selectedMerchant?.government || "");
-  const [specialShippingRates, setSpecialShippingRates] = useState<{ city_Id: number; specialPrice: number }[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<number | "">(
+    selectedMerchant?.branches_Id?.[0] || ""
+  );
+  const [selectedGovernments, setSelectedGovernments] = useState<number[]>(
+    selectedMerchant?.branches_Id || []
+  );
 
-  const filteredCities = citiesData?.data?.cities?.filter(
-    (city) => city.governmentName === selectedGovernment
-  ) || [];
+  const { data: governmentsData } = useGetGovernmentsByBranchQuery(
+    typeof selectedBranch === "number" ? selectedBranch : 0,
+    { skip: !selectedBranch }
+  );
+
+  const [selectedGovernment, setSelectedGovernment] = useState<string>(
+    selectedMerchant?.government || ""
+  );
+  const [specialShippingRates, setSpecialShippingRates] = useState<
+    { city_Id: number; specialPrice: number }[]
+  >([]);
+
+  const filteredCities =
+    citiesData?.data?.cities?.filter(
+      (city) => city.governmentName === selectedGovernment
+    ) || [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const resolver: any = isEditing 
@@ -86,6 +102,8 @@ useEffect(() => {
     }
     const payload = {
       ...values,
+      government: selectedGovernments,
+      branches_Id: selectedBranch ? [Number(selectedBranch)] : [],
       specialShippingRates: validRates,
     };
     onSubmit(payload);
@@ -192,39 +210,15 @@ useEffect(() => {
     </div>
 
     <div className="space-y-1">
-      <label className="text-sm font-semibold text-gray-700">Government</label>
-      <select
-        {...register("government")}
-        onChange={(e) => setSelectedGovernment(e.target.value)}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none appearance-none"
-      >
-        <option value="">Select government</option>
-        {governmentsData?.governments?.map((gov) => (
-          <option key={gov.id} value={gov.name}>{gov.name}</option>
-        ))}
-      </select>
-      {errors.government && <p className="text-xs text-red-500">{String(errors.government.message)}</p>}
-    </div>
-
-    <div className="space-y-1">
-      <label className="text-sm font-semibold text-gray-700">City</label>
-      <select
-        {...register("city")}
-        disabled={!selectedGovernment}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white disabled:bg-gray-50 disabled:text-gray-400 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
-      >
-        <option value="">{selectedGovernment ? "Select city" : "Select gov first"}</option>
-        {filteredCities.map((city) => (
-          <option key={city.id} value={city.name}>{city.name}</option>
-        ))}
-      </select>
-      {errors.city && <p className="text-xs text-red-500">{String(errors.city.message)}</p>}
-    </div>
-
-    <div className="space-y-1">
       <label className="text-sm font-semibold text-gray-700">Branch</label>
       <select
-        {...register("branches_Id" as never)}
+        value={selectedBranch}
+        onChange={(e) => {
+          const branchId = e.target.value ? Number(e.target.value) : "";
+          setSelectedBranch(branchId);
+          setSelectedGovernments([]);
+          setSelectedGovernment("");
+        }}
         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
       >
         <option value="">Select branch</option>
@@ -233,6 +227,27 @@ useEffect(() => {
         ))}
       </select>
     </div>
+
+    <div className="space-y-1">
+      <label className="text-sm font-semibold text-gray-700">Government</label>
+      <select
+        multiple
+        value={selectedGovernments.map(String)}
+        onChange={(e) => {
+          const selected = Array.from(e.target.selectedOptions, (option) => Number(option.value));
+          setSelectedGovernments(selected);
+        }}
+        disabled={!selectedBranch}
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white disabled:bg-gray-50 disabled:text-gray-400 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+      >
+        <option value="">Select governments</option>
+        {governmentsData?.map((gov: { id: number; name: string }) => (
+          <option key={gov.id} value={gov.id}>{gov.name}</option>
+        ))}
+      </select>
+      {!selectedBranch && <p className="text-xs text-gray-400">Select a branch first</p>}
+    </div>
+
   </div>
 
   {/* --- القسم الثالث: التكاليف والنسب --- */}

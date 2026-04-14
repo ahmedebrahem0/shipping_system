@@ -4,7 +4,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { LoginRequest } from "@/types/auth.types";
 import type { BranchCreateRequest, BranchEditRequest, BranchesData, Branch } from "@/types/branch.types";
-import type { GovernmentCreateRequest, GovernmentEditRequest, GovernmentsData } from "@/types/government.types";
+import type { GovernmentCreateRequest, GovernmentEditRequest, GovernmentsData, Government } from "@/types/government.types";
 import type { CityCreateRequest, CityEditRequest, CitiesResponse } from "@/types/city.types";
 import type { ApiResponse } from "@/types/api.types";
 import type { MerchantCreateRequest, MerchantEditRequest, MerchantsResponse, MerchantResponse } from "@/types/merchant.types";
@@ -141,6 +141,13 @@ export const apiSlice = createApi({
       query: (params) => ({
         url: ENDPOINTS.GOVERNMENTS.GET_ALL,
         params,
+      }),
+      providesTags: ["Governments"],
+    }),
+
+    getGovernmentsByBranch: builder.query<Government[], number>({
+      query: (branchId) => ({
+        url: ENDPOINTS.GOVERNMENTS.GET_BY_BRANCH(branchId),
       }),
       providesTags: ["Governments"],
     }),
@@ -287,6 +294,13 @@ deleteDelivery: builder.mutation<void, number>({
     method: "DELETE",
   }),
   invalidatesTags: ["Deliveries"],
+}),
+
+getDeliveryGovernmentsByBranch: builder.query<Government[], number>({
+  query: (branchId) => ({
+    url: ENDPOINTS.DELIVERIES.GET_GOVERNMENTS_BY_BRANCH(branchId),
+  }),
+  providesTags: ["Governments"],
 }),
 
 // Employees
@@ -642,6 +656,7 @@ export const {
   useUpdateBranchMutation,
   useDeleteBranchMutation,
   useGetGovernmentsQuery,
+  useGetGovernmentsByBranchQuery,
   useCreateGovernmentMutation,
   useUpdateGovernmentMutation,
   useDeleteGovernmentMutation,
@@ -659,6 +674,7 @@ useGetDeliveriesQuery,
   useCreateDeliveryMutation,
   useUpdateDeliveryMutation,
   useDeleteDeliveryMutation,
+useGetDeliveryGovernmentsByBranchQuery,
   useGetEmployeesQuery,
   useGetEmployeeByIdQuery,
   useCreateEmployeeMutation,

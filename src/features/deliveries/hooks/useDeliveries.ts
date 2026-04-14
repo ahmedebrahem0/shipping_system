@@ -10,8 +10,11 @@ import {
   useUpdateDeliveryMutation,
   useDeleteDeliveryMutation,
 } from "@/store/slices/api/apiSlice";
-import type { DeliveryCreateFormValues, DeliveryEditFormValues } from "@/features/deliveries/schema/delivery.schema";
-import type { Delivery } from "@/types/delivery.types";
+import type {
+  Delivery,
+  DeliveryCreateRequest,
+  DeliveryEditRequest,
+} from "@/types/delivery.types";
 import { ROUTES } from "@/constants/routes";
 
 export const useDeliveries = () => {
@@ -23,28 +26,44 @@ export const useDeliveries = () => {
   const { data, isLoading, isError } = useGetDeliveriesQuery();
 
   // ==================== Create ====================
-  const [createDelivery, { isLoading: isCreating }] = useCreateDeliveryMutation();
+  // ==================== Create ====================
+const [createDelivery, { isLoading: isCreating }] = useCreateDeliveryMutation();
 
-  const handleCreate = async (values: DeliveryCreateFormValues) => {
-    try {
-      await createDelivery(values).unwrap();
-      toast.success("Delivery agent created successfully");
-      router.push(ROUTES.DELIVERIES);
-    } catch {
-      toast.error("Failed to create delivery agent");
-    }
-  };
+// ==================== Create ====================
+// const [createDelivery, { isLoading: isCreating }] = useCreateDeliveryMutation();
+
+const handleCreate = async (values: DeliveryCreateRequest) => {
+  try {
+    // طبع الداتا قبل الإرسال للتأكد النهائي
+    console.log("🚀 Sending Payload to Server:", values);
+
+    await createDelivery(values).unwrap();
+    toast.success("Delivery agent created successfully");
+    router.push(ROUTES.DELIVERIES);
+  } catch (error: any) {
+    // --- هنا السحر ---
+    // بنطبع الخطأ التفصيلي اللي راجع من السيرفر في الكونسول
+    // console.error("❌ Full Server Error Response:", error?.data);
+
+    // لو السيرفر باعت رسالة خطأ واضحة (زي 'Email already exists')
+    const serverMessage = error?.data?.message || error?.data?.title || "Failed to create delivery agent";
+    
+    // إظهار الخطأ الحقيقي في الـ Toast بدل الرسالة العامة
+    toast.error(serverMessage);
+  }
+};
 
   // ==================== Update ====================
   const [updateDelivery, { isLoading: isUpdating }] = useUpdateDeliveryMutation();
 
-  const handleUpdate = async (id: number, values: DeliveryEditFormValues) => {
+  const handleUpdate = async (id: number, values: DeliveryEditRequest) => {
     try {
       await updateDelivery({ id, data: values }).unwrap();
       toast.success("Delivery agent updated successfully");
       router.push(ROUTES.DELIVERIES);
-    } catch {
-      toast.error("Failed to update delivery agent");
+    } catch (error) {
+      console.error("❌ Update Delivery Error:", error);
+      throw error;
     }
   };
 

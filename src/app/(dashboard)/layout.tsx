@@ -16,6 +16,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const isSidebarOpen = useAppSelector((state) => state.ui.isSidebarOpen);
+  const user = useAppSelector((state) => state.auth.user);
+  const shouldShowDesktopSidebar = isSidebarOpen && Boolean(user);
 
   return (
     // 1. أضفت overflow-x-hidden هنا كخط دفاع أول للموقع كله
@@ -25,7 +27,7 @@ export default function DashboardLayout({
       <div
         className={cn(
           "hidden lg:block fixed top-0 left-0 h-screen z-40 transition-all duration-300 ease-in-out bg-[#0F172A]",
-          isSidebarOpen ? "w-72" : "w-0 overflow-hidden"
+          shouldShowDesktopSidebar ? "w-72" : "w-0 overflow-hidden"
         )}
       >
         <Sidebar />
@@ -40,7 +42,7 @@ export default function DashboardLayout({
           // 2. أهم تعديل: min-w-0 تمنع الـ Flexbox من التمدد خارج حدود الأب
           // 3. overflow-x-hidden تضمن عدم وجود سكرول يمين/شمال نهائياً
           "flex-1 flex flex-col min-h-screen min-w-0 overflow-x-hidden transition-all duration-300 ease-in-out relative",
-          isSidebarOpen ? "lg:pl-72" : "lg:pl-0"
+          shouldShowDesktopSidebar ? "lg:pl-72" : "lg:pl-0"
         )}
       >
         {/* Header */}

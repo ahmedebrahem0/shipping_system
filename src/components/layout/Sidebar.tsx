@@ -15,7 +15,6 @@ import {
   Settings,
   ChevronDown,
   MapPin,
-  Building2,
   Weight,
   PackageOpen,
   UserCog,
@@ -29,8 +28,8 @@ import {
 import { cn } from "@/lib/utils/cn";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { ROUTES } from "@/constants/routes";
-import { ROLES } from "@/constants/roles";
 import { logout } from "@/store/slices/auth/authSlice";
+import { closeSidebar } from "@/store/slices/ui/uiSlice";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -356,6 +355,7 @@ const baseToastStyle = {
   width: "100%",
 };
   const handleLogout = () => {
+    dispatch(closeSidebar());
     dispatch(logout());
     Cookies.remove("token");
     router.push(ROUTES.LOGIN);
@@ -378,8 +378,8 @@ const baseToastStyle = {
     >
       {/* 1. Brand Logo */}
       <div className="flex items-center gap-4 px-7 py-9 flex-shrink-0">
-        <div className="w-11 h-11 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 transform rotate-3">
-          <Package className="w-6 h-6 text-white -rotate-3" />
+        <div className="w-11 h-11 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 transform ">
+          <Package className="w-6 h-6 text-white " />
         </div>
         <div className="flex flex-col">
           <span className="font-black text-2xl text-white tracking-tight leading-none italic">SHIPPRO</span>
@@ -482,8 +482,15 @@ const baseToastStyle = {
   );
 }
 
-function DropdownItem({ item, pathname }: { item: any, pathname: string }) {
-  const isActive = item.children?.some((child: any) => pathname.startsWith(child.href));
+interface DropdownItemProps {
+  item: MenuItem & {
+    children: NonNullable<MenuItem["children"]>;
+  };
+  pathname: string;
+}
+
+function DropdownItem({ item, pathname }: DropdownItemProps) {
+  const isActive = item.children.some((child) => pathname.startsWith(child.href));
 
   return (
     <details open={isActive} className="group">
@@ -504,7 +511,7 @@ function DropdownItem({ item, pathname }: { item: any, pathname: string }) {
       </summary>
       
       <div className="mt-2 ml-6 pl-4 border-l-1 border-primary/20 space-y-1.5 py-1 animate-in slide-in-from-left-2 duration-300">
-        {item.children?.map((child: any) => (
+        {item.children.map((child) => (
           <Link
             key={child.label}
             href={child.href}

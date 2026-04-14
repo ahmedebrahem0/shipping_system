@@ -36,6 +36,7 @@ export const ENDPOINTS = {
     CREATE: `${BASE_URL}/api/Delivery`,
     UPDATE: (id: number) => `${BASE_URL}/api/Delivery/${id}`,
     DELETE: (id: number) => `${BASE_URL}/api/Delivery/${id}`,
+    GET_GOVERNMENTS_BY_BRANCH: (branchId: number) => `${BASE_URL}/api/Delivery/GovernmentByBranch/${branchId}`,
   },
 
   BRANCHES: {
@@ -49,6 +50,7 @@ export const ENDPOINTS = {
   GOVERNMENTS: {
     GET_ALL: `${BASE_URL}/api/Government/all`,
     GET_BY_ID: (id: number) => `${BASE_URL}/api/Government/${id}`,
+    GET_BY_BRANCH: (branchId: number) => `${BASE_URL}/api/Government/Branch/${branchId}`,
     CREATE: `${BASE_URL}/api/Government`,
     UPDATE: (id: number) => `${BASE_URL}/api/Government/${id}`,
     DELETE: (id: number) => `${BASE_URL}/api/Government/${id}`,

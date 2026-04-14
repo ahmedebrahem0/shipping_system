@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { toggleSidebar } from "@/store/slices/ui/uiSlice";
+import { closeSidebar, toggleSidebar } from "@/store/slices/ui/uiSlice";
 import { logout } from "@/store/slices/auth/authSlice";
 import { ROUTES } from "@/constants/routes";
 
@@ -27,8 +27,9 @@ const baseToastStyle = {
   minWidth: "320px",
   maxWidth: "420px",
   width: "100%",
-};
+  };
   const handleLogout = () => {
+    dispatch(closeSidebar());
     dispatch(logout());
     Cookies.remove("token");
     router.push(ROUTES.LOGIN);
@@ -48,9 +49,9 @@ const baseToastStyle = {
       {/* Left - Sidebar Toggle */}
       <button
         onClick={() => dispatch(toggleSidebar())}
-        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        className="p-2 rounded-lg  transition-colors bg-primary"
       >
-        <Menu className="w-5 h-5 text-gray-600" />
+        <Menu className="w-5 h-5  bg-primary text-white" />
       </button>
 
       {/* Right - User Info + Logout */}

@@ -3,13 +3,13 @@
 
 import * as yup from "yup";
 
-const egyptianPhoneRegex = /^(?:\+20|0)?1[0-2,5]{1}[0-9]{8}$/;
+const phoneRegex = /^\d{11}$/;
 
 export const deliveryCreateSchema = yup.object({
   name: yup
     .string()
-    .min(3, "Name must be at least 3 characters")
-    .max(10, "Name must be at most 10 characters")
+    .min(3, "Name (Username) must be 3 to 10 characters")
+    .max(10, "Name (Username) must be 3 to 10 characters")
     .required("Name is required"),
 
   email: yup
@@ -19,7 +19,7 @@ export const deliveryCreateSchema = yup.object({
 
   phone: yup
     .string()
-    .matches(egyptianPhoneRegex, "Please enter a valid Egyptian phone number")
+    .matches(phoneRegex, "Phone number must be exactly 11 digits")
     .required("Phone is required"),
 
   password: yup
@@ -34,12 +34,13 @@ export const deliveryCreateSchema = yup.object({
 
   branchId: yup
     .number()
+    .typeError("Branch is required")
     .min(1, "Please select a branch")
     .required("Branch is required"),
 
   governmentsId: yup
     .array()
-    .of(yup.number().required())
+    .of(yup.number().typeError("Invalid government").required())
     .min(1, "Please select at least one government")
     .required("Government is required"),
 
@@ -49,16 +50,19 @@ export const deliveryCreateSchema = yup.object({
 
   companyPercentage: yup
     .number()
+    .typeError("Company percentage is required")
     .min(0, "Must be at least 0")
     .max(100, "Must be at most 100")
     .required("Company percentage is required"),
+
+  isDeleted: yup.boolean().default(false),
 });
 
 export const deliveryEditSchema = yup.object({
   name: yup
     .string()
-    .min(3, "Name must be at least 3 characters")
-    .max(10, "Name must be at most 10 characters")
+    .min(3, "Name (Username) must be 3 to 10 characters")
+    .max(10, "Name (Username) must be 3 to 10 characters")
     .required("Name is required"),
 
   email: yup
@@ -68,13 +72,13 @@ export const deliveryEditSchema = yup.object({
 
   phone: yup
     .string()
-    .matches(egyptianPhoneRegex, "Please enter a valid Egyptian phone number")
+    .matches(phoneRegex, "Phone number must be exactly 11 digits")
     .required("Phone is required"),
 
   password: yup
     .string()
     .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+    .optional(),
 
   address: yup
     .string()
@@ -83,12 +87,13 @@ export const deliveryEditSchema = yup.object({
 
   branchId: yup
     .number()
+    .typeError("Branch is required")
     .min(1, "Please select a branch")
     .required("Branch is required"),
 
   governmentsId: yup
     .array()
-    .of(yup.number().required())
+    .of(yup.number().typeError("Invalid government").required())
     .min(1, "Please select at least one government")
     .required("Government is required"),
 
@@ -98,6 +103,7 @@ export const deliveryEditSchema = yup.object({
 
   companyPercentage: yup
     .number()
+    .typeError("Company percentage is required")
     .min(0, "Must be at least 0")
     .max(100, "Must be at most 100")
     .required("Company percentage is required"),
