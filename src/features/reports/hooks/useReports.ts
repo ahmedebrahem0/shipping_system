@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useGetOrderReportQuery } from "@/store/slices/api/apiSlice";
-import type { OrderReportFilters } from "@/types/report.types";
+import type { OrderReport, OrderReportFilters } from "@/types/report.types";
 
 export const useReports = () => {
   const [filters, setFilters] = useState<OrderReportFilters>({
@@ -15,7 +15,7 @@ export const useReports = () => {
     orderStatus: "",
   });
 
-  const { data, isLoading, isError } = useGetOrderReportQuery();
+  const { data, isLoading, isError } = useGetOrderReportQuery(filters);
 
   console.log("DEBUG - Reports API Response:", data);
   console.log("DEBUG - Reports Filters:", filters);
@@ -34,7 +34,6 @@ console.log("API RESPONSE:", data);
     totalOrders: data?.data?.totalOrders?? 0,
     isLoading,
     isError,
-
     // Filters
     filters,
     handleFilterChange,

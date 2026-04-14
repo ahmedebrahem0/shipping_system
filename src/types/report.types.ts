@@ -1,17 +1,15 @@
 export interface OrderReport {
-  id: number;
-  orderNumber: string;
+  serialNumber: string;
+  orderStatus: string;
   merchantName: string;
   clientName: string;
   clientPhone: string;
-  address: string;
-  productName: string;
-  productPrice: number;
+  governrate: string;
+  city: string;
+  orderCost: number;
   shippingCost: number;
-  totalCost: number;
-  orderStatus: string;
-  paymentType: string;
   createdDate: string;
+  companyRights?: string | null;
 }
 
 export interface OrderReportFilters {
@@ -28,8 +26,10 @@ export interface OrderReportFilters {
 }
 
 export interface OrderReportResponse {
-  orders: OrderReport[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
+  data: {
+    orders: OrderReport[];
+    totalOrders: number;
+    page: number;
+    pageSize: number;
+  };
 }

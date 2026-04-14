@@ -11,6 +11,7 @@ import EmptyState from "@/components/common/EmptyState";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import Pagination from "@/components/common/Pagination";
 import { ORDER_STATUSES } from "@/constants/orderStatuses";
+import { OrderReport } from "@/types/report.types";
 
 export default function ReportsPage() {
   const {
@@ -27,7 +28,7 @@ export default function ReportsPage() {
 const firstMatch = searchValue
   ? orders.find((o:OrderReport) => {
       return (
-        o.orderNumber === searchValue ||
+        o.serialNumber === searchValue ||
         o.clientName?.toLowerCase().includes(searchValue) ||
         o.merchantName?.toLowerCase().includes(searchValue)
       );
