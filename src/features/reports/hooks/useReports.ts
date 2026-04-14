@@ -30,7 +30,7 @@ console.log("API RESPONSE:", data);
 
   return {
     // Data
-    orders: data?.data?.orders ?? [],
+    orders: (data?.data?.orders ?? []) as OrderReport[],
     totalOrders: data?.data?.totalOrders?? 0,
     isLoading,
     isError,

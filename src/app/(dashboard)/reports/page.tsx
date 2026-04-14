@@ -25,7 +25,7 @@ export default function ReportsPage() {
   const searchValue = filters.searchTxt?.toLowerCase()?.trim();
 
 const firstMatch = searchValue
-  ? orders.find((o) => {
+  ? orders.find((o:OrderReport) => {
       return (
         o.orderNumber === searchValue ||
         o.clientName?.toLowerCase().includes(searchValue) ||
