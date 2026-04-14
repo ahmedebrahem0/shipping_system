@@ -3,9 +3,10 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Controller, useForm, type Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Landmark, User } from "lucide-react";
 import {
   merchantCreateSchema,
   merchantEditSchema,
@@ -13,15 +14,75 @@ import {
   type MerchantEditFormValues,
 } from "@/features/merchants/schema/merchant.schema";
 
-import { useGetBranchesQuery, useGetGovernmentsByBranchQuery, useGetCitiesQuery } from "@/store/slices/api/apiSlice";
+import {
+  useGetBranchesQuery,
+  useGetCitiesQuery,
+  useGetDeliveryGovernmentsByBranchQuery,
+} from "@/store/slices/api/apiSlice";
 import type { Merchant } from "@/types/merchant.types";
+import type { Government } from "@/types/government.types";
 import PasswordInput from "@/components/common/PasswordInput";
+import { cn } from "@/lib/utils/cn";
 
 interface MerchantFormProps {
   selectedMerchant?: Merchant | null;
   isLoading: boolean;
   onSubmit: (values: MerchantCreateFormValues | MerchantEditFormValues) => void;
   onCancel: () => void;
+}
+
+interface MerchantFormFields {
+  name: string;
+  email: string;
+  password?: string;
+  confirmPassword?: string;
+  phone: string;
+  address: string;
+  storeName?: string;
+  government: number[];
+  governmentsId: number[];
+  city: string;
+  pickupCost: number;
+  rejectedOrderPercentage?: number;
+  branches_Id: number[];
+  branchId: number;
+  specialShippingRates?: { city_Id: number; specialPrice: number }[];
+  isDeleted?: boolean;
+  currentPassword?: string;
+  newPassword?: string;
+  confirmNewPassword?: string;
+}
+
+const SELECT_CLASSNAME =
+  "w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 pl-11 text-sm transition-all outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20";
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+
+  return <p className="mt-1 text-xs text-red-500">{message}</p>;
+}
+
+function InputField({
+  label,
+  icon: Icon,
+  error,
+  children,
+}: {
+  label: string;
+  icon: typeof User;
+  error?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="space-y-1">
+      <label className="text-sm font-semibold text-gray-700">{label}</label>
+      <div className="relative">
+        <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        {children}
+      </div>
+      <FieldError message={error} />
+    </div>
+  );
 }
 
 export default function MerchantForm({
@@ -31,21 +92,12 @@ export default function MerchantForm({
   onCancel,
 }: MerchantFormProps) {
   const isEditing = !!selectedMerchant;
+  const previousBranchIdRef = useRef<number>(selectedMerchant?.branches_Id?.[0] ?? 0);
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
+  const activeBranches =
+    branchesData?.data?.branches?.filter((branch) => !branch.isDeleted) ?? [];
   const { data: citiesData } = useGetCitiesQuery({ pageSize: 100 });
-
-  const [selectedBranch, setSelectedBranch] = useState<number | "">(
-    selectedMerchant?.branches_Id?.[0] || ""
-  );
-  const [selectedGovernments, setSelectedGovernments] = useState<number[]>(
-    selectedMerchant?.branches_Id || []
-  );
-
-  const { data: governmentsData } = useGetGovernmentsByBranchQuery(
-    typeof selectedBranch === "number" ? selectedBranch : 0,
-    { skip: !selectedBranch }
-  );
 
   const [selectedGovernment, setSelectedGovernment] = useState<string>(
     selectedMerchant?.government || ""
@@ -59,42 +111,161 @@ export default function MerchantForm({
       (city) => city.governmentName === selectedGovernment
     ) || [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const resolver: any = isEditing 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? yupResolver(merchantEditSchema as any) 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    : yupResolver(merchantCreateSchema as any);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const resolver = yupResolver(
+    isEditing ? merchantEditSchema : merchantCreateSchema
+  ) as unknown as Resolver<MerchantFormFields>;
   const {
+    control,
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<any>({
+  } = useForm<MerchantFormFields>({
     resolver,
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phone: "",
+      address: "",
+      storeName: "",
+      government: [],
+      governmentsId: [],
+      city: "",
+      pickupCost: 0,
+      rejectedOrderPercentage: 0,
+      branches_Id: [],
+      branchId: 0,
+      specialShippingRates: [],
+      isDeleted: false,
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
   });
 
+  // Required here to mirror the delivery form interaction pattern.
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const watchedBranchId = watch("branchId");
+  const watchedGovernments = watch("governmentsId");
+  const branchId = Number(watchedBranchId || 0);
+  const hasSelectedBranch = branchId > 0;
 
-useEffect(() => {
-  if (selectedMerchant) {
+  const { data: governmentsData, isFetching: isFetchingGovernments } =
+    useGetDeliveryGovernmentsByBranchQuery(branchId, {
+      skip: !hasSelectedBranch,
+    });
+
+  useEffect(() => {
+    if (selectedMerchant) {
+      const nextBranchId = Number(selectedMerchant.branches_Id?.[0] ?? 0);
+
+      previousBranchIdRef.current = nextBranchId;
+      reset({
+        name: selectedMerchant.name,
+        email: selectedMerchant.email,
+        phone: selectedMerchant.phone,
+        address: selectedMerchant.address,
+        storeName: selectedMerchant.storeName,
+        government: [],
+        governmentsId: [],
+        city: selectedMerchant.city,
+        pickupCost: selectedMerchant.pickupCost,
+        rejectedOrderPercentage: selectedMerchant.rejectedOrderPercentage,
+        branches_Id: selectedMerchant.branches_Id ?? [],
+        branchId: nextBranchId,
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+      return;
+    }
+
+    previousBranchIdRef.current = 0;
     reset({
-      name: selectedMerchant.name,
-      email: selectedMerchant.email,
-      phone: selectedMerchant.phone,
-      address: selectedMerchant.address,
-      storeName: selectedMerchant.storeName,
-      government: selectedMerchant.government,
-      city: selectedMerchant.city,
-      pickupCost: selectedMerchant.pickupCost,
-      rejectedOrderPercentage: selectedMerchant.rejectedOrderPercentage,
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phone: "",
+      address: "",
+      storeName: "",
+      government: [],
+      governmentsId: [],
+      city: "",
+      pickupCost: 0,
+      rejectedOrderPercentage: 0,
+      branches_Id: [],
+      branchId: 0,
+      specialShippingRates: [],
+      isDeleted: false,
       currentPassword: "",
       newPassword: "",
       confirmNewPassword: "",
     });
-  }
-}, [selectedMerchant, reset]);
-  const handleSubmitWrapper = (values: any) => {
+  }, [selectedMerchant, reset]);
+
+  useEffect(() => {
+    setValue("branches_Id", branchId > 0 ? [branchId] : [], {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+
+    if (previousBranchIdRef.current !== branchId) {
+      setValue("governmentsId", [], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("government", [], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setSelectedGovernment("");
+    }
+
+    previousBranchIdRef.current = branchId;
+  }, [branchId, setValue]);
+
+  useEffect(() => {
+    const selectedGovernmentIds = watchedGovernments ?? [];
+
+    if (!selectedMerchant || !governmentsData?.length || selectedGovernmentIds.length > 0) {
+      return;
+    }
+
+    const governmentNames = selectedMerchant.government
+      .split(",")
+      .map((name) => name.trim())
+      .filter(Boolean);
+
+    if (!governmentNames.length) {
+      return;
+    }
+
+    const matchedGovernmentIds = governmentsData
+      .filter((government: Government) => governmentNames.includes(government.name))
+      .map((government: Government) => government.id);
+
+    if (matchedGovernmentIds.length) {
+      setValue("governmentsId", matchedGovernmentIds);
+      setValue("government", matchedGovernmentIds);
+    }
+  }, [governmentsData, selectedMerchant, setValue, watchedGovernments]);
+
+  useEffect(() => {
+    const selectedGovernmentIds = watchedGovernments ?? [];
+    const selectedGovernmentName =
+      governmentsData?.find((government: Government) =>
+        selectedGovernmentIds.includes(government.id)
+      )?.name ?? "";
+
+    setSelectedGovernment(selectedGovernmentName);
+  }, [governmentsData, watchedGovernments]);
+
+  const handleSubmitWrapper = (values: MerchantFormFields) => {
     const validRates = specialShippingRates.filter(r => r.city_Id > 0 && r.specialPrice > 0);
     if (validRates.length === 0) {
       alert("At least one special shipping rate is required");
@@ -102,8 +273,8 @@ useEffect(() => {
     }
     const payload = {
       ...values,
-      government: selectedGovernments,
-      branches_Id: selectedBranch ? [Number(selectedBranch)] : [],
+      government: values.governmentsId,
+      branches_Id: values.branchId ? [Number(values.branchId)] : [],
       specialShippingRates: validRates,
     };
     onSubmit(payload);
@@ -179,16 +350,16 @@ useEffect(() => {
         <h3 className="text-sm font-bold text-gray-800">Security</h3>
       </div>
       <PasswordInput
-        {...register("password" as never)}
+        {...register("password")}
         label="Password"
         placeholder="••••••••"
-        error={String((errors as any)?.password?.message || "")}
+        error={String(errors.password?.message || "")}
       />
       <PasswordInput
-        {...register("confirmPassword" as never)}
+        {...register("confirmPassword")}
         label="Confirm Password"
         placeholder="••••••••"
-        error={String((errors as any)?.confirmPassword?.message || "")}
+        error={String(errors.confirmPassword?.message || "")}
       />
     </div>
   )}
@@ -209,43 +380,92 @@ useEffect(() => {
       {errors.address && <p className="text-xs text-red-500 mt-1">{String(errors.address.message)}</p>}
     </div>
 
-    <div className="space-y-1">
-      <label className="text-sm font-semibold text-gray-700">Branch</label>
+    <InputField
+      label="Branch"
+      icon={Landmark}
+      error={String(errors.branches_Id?.message || errors.branchId?.message || "")}
+    >
       <select
-        value={selectedBranch}
-        onChange={(e) => {
-          const branchId = e.target.value ? Number(e.target.value) : "";
-          setSelectedBranch(branchId);
-          setSelectedGovernments([]);
-          setSelectedGovernment("");
-        }}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+        {...register("branchId", { valueAsNumber: true })}
+        className={cn(SELECT_CLASSNAME, (errors.branches_Id || errors.branchId) && "border-red-500")}
       >
-        <option value="">Select branch</option>
-        {branchesData?.data?.branches?.map((branch) => (
-          <option key={branch.id} value={branch.id}>{branch.name}</option>
+        <option value={0}>Select branch</option>
+        {activeBranches.map((branch) => (
+          <option key={branch.id} value={branch.id}>
+            {branch.name}
+          </option>
         ))}
       </select>
-    </div>
+    </InputField>
 
     <div className="space-y-1">
       <label className="text-sm font-semibold text-gray-700">Government</label>
-      <select
-        multiple
-        value={selectedGovernments.map(String)}
-        onChange={(e) => {
-          const selected = Array.from(e.target.selectedOptions, (option) => Number(option.value));
-          setSelectedGovernments(selected);
-        }}
-        disabled={!selectedBranch}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white disabled:bg-gray-50 disabled:text-gray-400 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
-      >
-        <option value="">Select governments</option>
-        {governmentsData?.map((gov: { id: number; name: string }) => (
-          <option key={gov.id} value={gov.id}>{gov.name}</option>
-        ))}
-      </select>
-      {!selectedBranch && <p className="text-xs text-gray-400">Select a branch first</p>}
+      <Controller
+        control={control}
+        name="governmentsId"
+        render={({ field }) => (
+          <div
+            className={cn(
+              "rounded-xl border bg-gray-50/70 p-4 transition-all",
+              errors.government || errors.governmentsId
+                ? "border-red-500"
+                : "border-gray-200",
+              !hasSelectedBranch && "bg-gray-50"
+            )}
+          >
+            {!hasSelectedBranch ? (
+              <p className="text-sm text-gray-400">Select a branch first</p>
+            ) : isFetchingGovernments ? (
+              <p className="text-sm text-gray-500">Loading...</p>
+            ) : governmentsData?.length ? (
+              <div className="grid max-h-52 grid-cols-1 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+                {governmentsData.map((government: Government) => {
+                  const checked = field.value?.includes(government.id);
+
+                  return (
+                    <label
+                      key={government.id}
+                      className={cn(
+                        "flex w-fit cursor-pointer items-center gap-3 rounded-lg border px-3 py-2 text-sm transition-colors",
+                        checked
+                          ? "border-primary-300 bg-primary-50 text-primary-700"
+                          : "border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-primary-50/50"
+                      )}
+                    >
+                      <input
+                        type="checkbox"
+                        value={government.id}
+                        checked={checked}
+                        onChange={(event) => {
+                          const nextValues = event.target.checked
+                            ? [...(field.value ?? []), government.id]
+                            : (field.value ?? []).filter((value) => value !== government.id);
+
+                          field.onChange(nextValues);
+                          setValue("government", nextValues, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          });
+                        }}
+                        disabled={!hasSelectedBranch}
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary-500"
+                      />
+                      <span>{government.name}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">
+                No governments are available for this branch.
+              </p>
+            )}
+          </div>
+        )}
+      />
+      <FieldError
+        message={String(errors.government?.message || errors.governmentsId?.message || "")}
+      />
     </div>
 
   </div>
@@ -350,22 +570,22 @@ useEffect(() => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <PasswordInput
-              {...register("currentPassword" as never)}
+              {...register("currentPassword")}
               label="Current Password"
               placeholder="••••••••"
-              error={String((errors as any)?.currentPassword?.message || "")}
+              error={String(errors.currentPassword?.message || "")}
             />
             <PasswordInput
-              {...register("newPassword" as never)}
+              {...register("newPassword")}
               label="New Password"
               placeholder="••••••••"
-              error={String((errors as any)?.newPassword?.message || "")}
+              error={String(errors.newPassword?.message || "")}
             />
             <PasswordInput
-              {...register("confirmNewPassword" as never)}
+              {...register("confirmNewPassword")}
               label="Confirm New Password"
               placeholder="••••••••"
-              error={String((errors as any)?.confirmNewPassword?.message || "")}
+              error={String(errors.confirmNewPassword?.message || "")}
             />
         </div>
       </div>
