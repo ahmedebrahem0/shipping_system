@@ -54,7 +54,7 @@ export interface MerchantCreateRequest {
   phone: string;
   address: string;
   storeName?: string;
-  government: string;
+  government: number[];
   city: string;
   pickupCost: number;
   rejectedOrderPercentage?: number;

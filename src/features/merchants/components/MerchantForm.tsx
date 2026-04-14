@@ -111,9 +111,9 @@ export default function MerchantForm({
       (city) => city.governmentName === selectedGovernment
     ) || [];
 
-  const resolver = yupResolver(
-    isEditing ? merchantEditSchema : merchantCreateSchema
-  ) as unknown as Resolver<MerchantFormFields>;
+ const resolver = yupResolver(
+  (isEditing ? merchantEditSchema : merchantCreateSchema) as any
+) as unknown as Resolver<MerchantFormFields>;
   const {
     control,
     register,
@@ -277,7 +277,7 @@ export default function MerchantForm({
       branches_Id: values.branchId ? [Number(values.branchId)] : [],
       specialShippingRates: validRates,
     };
-    onSubmit(payload);
+    onSubmit(payload as any);
   };
 
   return (
