@@ -133,11 +133,15 @@ export const useOrders = () => {
 
   // ==================== Filter ====================
   const handleFilterChange = (key: keyof OrderFilters, value: string | number) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-      page: key !== "page" ? 1 : value,
-    }));
+    setFilters((prev) => {
+      const newFilters = { ...prev, [key]: value };
+      if (key !== "page") {
+        (newFilters as OrderFilters).page = 1;
+      } else {
+        (newFilters as OrderFilters).page = value as number;
+      }
+      return newFilters;
+    });
   };
 
   return {

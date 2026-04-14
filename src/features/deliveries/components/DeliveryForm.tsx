@@ -101,6 +101,8 @@ export default function DeliveryForm({
   ) as unknown as Resolver<DeliveryFormValues>;
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
+  const activeBranches =
+    branchesData?.data?.branches?.filter((branch) => !branch.isDeleted) ?? [];
 
   const {
     control,
@@ -419,7 +421,7 @@ export default function DeliveryForm({
             className={cn(SELECT_CLASSNAME, errors.branchId && "border-red-500")}
           >
             <option value={0}>Select branch</option>
-            {branchesData?.data?.branches?.map((branch) => (
+            {activeBranches.map((branch) => (
               <option key={branch.id} value={branch.id}>
                 {branch.name}
               </option>

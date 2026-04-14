@@ -19,6 +19,12 @@ export interface OrderReportFilters {
   status?: string;
   fromDate?: string;
   toDate?: string;
+  searchTxt?: string;
+  page?: number;
+  pageSize?: number;
+  orderStatus?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface OrderReportResponse {

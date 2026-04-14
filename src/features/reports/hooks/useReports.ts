@@ -15,20 +15,23 @@ export const useReports = () => {
     orderStatus: "",
   });
 
-  const { data, isLoading, isError } = useGetOrderReportQuery(filters);
+  const { data, isLoading, isError } = useGetOrderReportQuery();
 
+  console.log("DEBUG - Reports API Response:", data);
+  console.log("DEBUG - Reports Filters:", filters);
+console.log("API RESPONSE:", data);
   const handleFilterChange = (key: keyof OrderReportFilters, value: string | number) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
-      page: key !== "page" ? 1 : value,
+      page: key !== "page" ? 1 : (value as number),
     }));
   };
 
   return {
     // Data
     orders: data?.data?.orders ?? [],
-    totalOrders: data?.data?.totalOrders ?? 0,
+    totalOrders: data?.data?.totalOrders?? 0,
     isLoading,
     isError,
 

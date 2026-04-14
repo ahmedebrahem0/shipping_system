@@ -8,7 +8,8 @@ import PageHeader from "@/components/common/PageHeader";
 import Loader from "@/components/common/Loader";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { ROUTES } from "@/constants/routes";
-import {
+import type { Merchant } from "@/types/merchant.types";
+import { 
   User, Mail, Phone, Store, MapPin,
   Globe, CreditCard, Percent, Calendar, Edit3
 } from "lucide-react";
@@ -35,7 +36,7 @@ export default function MerchantDetailsPage() {
   const { data, isLoading, isError } = useGetMerchantByIdQuery(Number(id));
   const { handleUpdate, isUpdating } = useMerchants();
 
-  const merchant = data?.data;
+  const merchant = data?.data?.merchant;
 
   const onSubmit = (values: any) => {
     handleUpdate(Number(id), values, merchant);
@@ -50,7 +51,6 @@ export default function MerchantDetailsPage() {
       <PageHeader
         title={isEditing ? "Edit Merchant" : merchant.name}
         description={isEditing ? "Update merchant profile information" : `Merchant ID: #${merchant.id}`}
-        showBackButton
       />
 
       <div className="mt-6">

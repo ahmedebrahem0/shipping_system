@@ -56,10 +56,10 @@ export default function ReportTable({ orders }: ReportTableProps) {
         <tbody className="divide-y divide-gray-100">
           {orders.map((order, index) => (
             <tr
-              key={`${order.serialNumber}-${index}`}
+              key={`${order.orderNumber}-${index}`}
               className="hover:bg-gray-50/80 transition-colors even:bg-gray-50/40"
             >
-              {/* Serial */}
+                {/* Serial */}
               <td className="px-4 py-3 font-semibold text-gray-900">
                 #{order.serialNumber}
               </td>
@@ -100,13 +100,12 @@ export default function ReportTable({ orders }: ReportTableProps) {
 
               {/* Location */}
               <td className="px-4 py-3 text-gray-600">
-                {order.governrate}{" "}
-                <span className="text-gray-400">•</span> {order.city}
+                {order.address}
               </td>
 
               {/* Order Cost */}
               <td className="px-4 py-3 font-medium text-gray-800">
-                {formatCurrency(order.orderCost)}
+                {formatCurrency(order.totalCost)}
               </td>
 
               {/* Shipping Cost */}

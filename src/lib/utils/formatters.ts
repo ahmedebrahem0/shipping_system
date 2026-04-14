@@ -17,9 +17,10 @@ export function formatDateTime(date: string | Date): string {
   });
 }
 
-// Format currency: 1,500 EGP
-export function formatCurrency(amount: number): string {
-  return `${amount.toLocaleString()} EGP`;
+export function formatCurrency(amount?: number): string {
+  const safeAmount = Number(amount ?? 0);
+
+  return `${safeAmount.toLocaleString()} EGP`;
 }
 
 // Format phone: 01012345678 → +20 101 234 5678

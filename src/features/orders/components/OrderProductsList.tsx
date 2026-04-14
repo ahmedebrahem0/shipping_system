@@ -10,13 +10,13 @@ import { toast } from "sonner";
 import type { Product, ProductRequest } from "@/types/order.types";
 
 interface OrderProductsListProps {
-  products: Product[];
+  products?: Product[];
   orderId?: number;
   isEditing?: boolean;
 }
 
 export default function OrderProductsList({
-  products,
+  products=[],
   orderId,
   isEditing = false,
 }: OrderProductsListProps) {

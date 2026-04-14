@@ -22,12 +22,12 @@ export default function ReportsPage() {
     handleFilterChange,
   } = useReports();
 
-  const searchValue = filters.searchTxt?.toLowerCase().trim();
+  const searchValue = filters.searchTxt?.toLowerCase()?.trim();
 
 const firstMatch = searchValue
   ? orders.find((o) => {
       return (
-        o.serialNumber === searchValue ||
+        o.orderNumber === searchValue ||
         o.clientName?.toLowerCase().includes(searchValue) ||
         o.merchantName?.toLowerCase().includes(searchValue)
       );
@@ -39,6 +39,11 @@ const displayedOrders = searchValue
     ? [firstMatch]
     : []
   : orders;
+
+  
+  console.log("DEBUG - Reports Orders:", orders);
+  console.log("DEBUG - Reports Displayed Orders:", displayedOrders);
+  console.log("DEBUG - Reports Total Orders:", totalOrders);
 
   return (
     <div>

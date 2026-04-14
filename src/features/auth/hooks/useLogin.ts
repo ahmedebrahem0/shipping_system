@@ -86,9 +86,6 @@ export const useLogin = () => {
         id: toastId,
         description: "Please check your credentials and try again.",
         duration: 4000,
-        icon: createElement({
-          className: "size-4 text-rose-600",
-        }),
         style: {
           borderRadius: "18px",
           padding: "16px 18px",

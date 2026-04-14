@@ -8,7 +8,12 @@ import { ROLES } from "@/constants/roles";
 import { Package, Users, Truck, GitBranch } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/constants/routes";
-import { useGetDashboardStatsQuery,useGetMerchantsQuery ,useGetBranchesQuery,useGetDeliveriesQuery} from "@/store/slices/api/apiSlice";
+import {
+  useGetDashboardStatsQuery,
+  useGetMerchantsQuery,
+  useGetBranchesQuery,
+  useGetDeliveriesQuery,
+} from "@/store/slices/api/apiSlice";
 
 const statsSkeleton = Array.from({ length: 4 });
 
@@ -34,39 +39,47 @@ export default function DashboardPage() {
     skip: !isAdminOrEmployee,
   });
 
-  console.log("Dashboard stats:", { statsData, isLoading, isError, isAdminOrEmployee, userRole: user?.role });
-  const { data: merchantsData } = useGetMerchantsQuery();
-  const { data: branchesData } = useGetBranchesQuery();
+  console.log("Dashboard stats:", {
+    statsData,
+    isLoading,
+    isError,
+    isAdminOrEmployee,
+    userRole: user?.role,
+  });
+
+  const { data: merchantsData } = useGetMerchantsQuery({ pageSize: 100 });
+  const { data: branchesData } = useGetBranchesQuery({ pageSize: 100 });
   const { data: deliveriesData } = useGetDeliveriesQuery();
-console.log("MerchantData",merchantsData)
-console.log("BranchData",branchesData?.data?.totalBranches)
-console.log("deliveriesData",deliveriesData?.length)
+
+  console.log("MerchantData", merchantsData);
+  console.log("BranchData", branchesData?.data?.totalBranches);
+  console.log("deliveriesData", deliveriesData?.length);
 
   const defaultStats = [
     {
       label: "Total Orders",
-      value: (deliveriesData?.length?? 0).toLocaleString() ?? "-",
+      value: (deliveriesData?.length ?? 0).toLocaleString(),
       icon: Package,
       color: "bg-primary-100 text-primary-600",
       href: ROUTES.ORDERS,
     },
     {
       label: "Total Merchants",
-      value: (merchantsData?.data?.totalMerchants?? 0).toLocaleString()?? "-",
+      value: (merchantsData?.data?.totalMerchants ?? 0).toLocaleString(),
       icon: Users,
       color: "bg-blue-100 text-blue-600",
       href: ROUTES.MERCHANTS,
     },
     {
       label: "Total Deliveries",
-      value:  (deliveriesData?.length?? 0).toLocaleString() ?? "-",
+      value: (deliveriesData?.length ?? 0).toLocaleString(),
       icon: Truck,
       color: "bg-green-100 text-green-600",
       href: ROUTES.DELIVERIES,
     },
     {
       label: "Total Branches",
-      value: (branchesData?.data?.totalBranches?? 0).toLocaleString()?? "-",
+      value: (branchesData?.data?.totalBranches ?? 0).toLocaleString(),
       icon: GitBranch,
       color: "bg-purple-100 text-purple-600",
       href: ROUTES.BRANCHES,
@@ -101,7 +114,6 @@ console.log("deliveriesData",deliveriesData?.length)
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                      {console.log(statsData?.data?.totalOrders)}
                       <p className="text-sm text-gray-500">{stat.label}</p>
                     </div>
                   </div>

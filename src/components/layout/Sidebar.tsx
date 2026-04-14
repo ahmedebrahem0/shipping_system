@@ -483,14 +483,12 @@ const baseToastStyle = {
 }
 
 interface DropdownItemProps {
-  item: MenuItem & {
-    children: NonNullable<MenuItem["children"]>;
-  };
+  item: MenuItem;
   pathname: string;
 }
 
 function DropdownItem({ item, pathname }: DropdownItemProps) {
-  const isActive = item.children.some((child) => pathname.startsWith(child.href));
+  const isActive = item.children?.some((child) => pathname.startsWith(child.href)) ?? false;
 
   return (
     <details open={isActive} className="group">
@@ -511,7 +509,7 @@ function DropdownItem({ item, pathname }: DropdownItemProps) {
       </summary>
       
       <div className="mt-2 ml-6 pl-4 border-l-1 border-primary/20 space-y-1.5 py-1 animate-in slide-in-from-left-2 duration-300">
-        {item.children.map((child) => (
+        {item.children?.map((child) => (
           <Link
             key={child.label}
             href={child.href}

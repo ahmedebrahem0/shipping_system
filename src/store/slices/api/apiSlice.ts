@@ -17,7 +17,7 @@ import type { ProfileResponse } from "@/types/profile.types";
 import type { OrderReportResponse, OrderReportFilters } from "@/types/report.types";
 import type { SettingsResponse, SettingCreateRequest, SettingEditRequest } from "@/types/settings.types";
 import type {Role,Permission,CreateRoleRequest,UpdateRoleRequest,CreateRolePermissionRequest,UpdateRolePermissionRequest,} from "@/types/role.types";
-import type {OrdersResponse,OrderDetailsResponse,OrderCreateRequest,OrderEditRequest,OrderFilters, ProductRequest,} from "@/types/order.types";
+import type {OrdersResponse,OrderDetails,OrderDetailsResponse,OrderCreateRequest,OrderEditRequest,OrderFilters, ProductRequest,} from "@/types/order.types";
 import { ENDPOINTS } from "@/constants/api-endpoints";
 import type { Product } from "@/types/order.types";
 interface RootState {
@@ -551,7 +551,47 @@ getOrderById: builder.query<OrderDetailsResponse, number>({
     url: ENDPOINTS.ORDERS.GET_BY_ID(id),
   }),
   providesTags: ["Orders"],
-}),
+  transformResponse: (response: OrderDetailsResponse | OrderDetails | { data?: OrderDetails | { order?: OrderDetails } }) => {
+    if ("isSuccess" in response) {
+      const nestedOrder =
+        response.data && typeof response.data === "object" && "order" in response.data
+          ? response.data.order
+          : response.data;
+
+      return {
+        ...response,
+        data: nestedOrder as OrderDetails,
+      };
+    }
+
+    if ("data" in response && response.data) {
+      const nestedOrder =
+        typeof response.data === "object" && "order" in response.data
+          ? response.data.order
+          : response.data;
+
+      return {
+        isSuccess: true,
+        data: nestedOrder as OrderDetails,
+        message: null,
+        error: null,
+      };
+    }
+
+    return {
+      isSuccess: true,
+      data: response as OrderDetails,
+      message: null,
+      error: null,
+    };
+  },
+  transformErrorResponse: (response) => {
+      if (response.status === 404) {
+        return { data: null, isSuccess: false, message: "Order not found", error: "Order not found" };
+      }
+      return response;
+    },
+  }),
 
 getMerchantOrders: builder.query<OrdersResponse, { merchantId: number; status?: string; filters?: OrderFilters }>({
   query: ({ merchantId, status, filters }) => ({

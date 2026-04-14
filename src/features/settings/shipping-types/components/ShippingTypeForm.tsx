@@ -8,14 +8,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   shippingTypeSchema,
-  type ShippingTypeFormValues,
 } from "@/features/settings/shipping-types/schema/shippingType.schema";
 import type { ShippingType } from "@/types/shippingType.types";
 
 interface ShippingTypeFormProps {
   selectedShippingType: ShippingType | null;
   isLoading: boolean;
-  onSubmit: (values: ShippingTypeFormValues) => void;
+  onSubmit: (values: { type: string; description?: string; cost: number }) => void;
   onCancel: () => void;
 }
 
@@ -30,8 +29,8 @@ export default function ShippingTypeForm({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ShippingTypeFormValues>({
-    resolver: yupResolver(shippingTypeSchema),
+  } = useForm<{ type: string; description?: string; cost: number }>({
+    resolver: yupResolver(shippingTypeSchema) as any,
   });
 
   useEffect(() => {
@@ -47,7 +46,7 @@ export default function ShippingTypeForm({
   }, [selectedShippingType, reset]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit((values) => onSubmit(values as { type: string; description?: string; cost: number }))} className="space-y-4">
 
       {/* Type */}
       <div className="space-y-1">
@@ -57,7 +56,7 @@ export default function ShippingTypeForm({
           placeholder="e.g. Express, Standard"
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
-        {errors.type && <p className="text-xs text-red-500">{errors.type.message}</p>}
+        {errors.type && <p className="text-xs text-red-500">{String(errors.type.message)}</p>}
       </div>
 
       {/* Description */}
@@ -71,7 +70,7 @@ export default function ShippingTypeForm({
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 resize-none"
         />
-        {errors.description && <p className="text-xs text-red-500">{errors.description.message}</p>}
+        {errors.description && <p className="text-xs text-red-500">{String(errors.description.message)}</p>}
       </div>
 
       {/* Cost */}
@@ -83,7 +82,7 @@ export default function ShippingTypeForm({
           placeholder="0.00"
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
         />
-        {errors.cost && <p className="text-xs text-red-500">{errors.cost.message}</p>}
+        {errors.cost && <p className="text-xs text-red-500">{String(errors.cost.message)}</p>}
       </div>
 
       {/* Actions */}

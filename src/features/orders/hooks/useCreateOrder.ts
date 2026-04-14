@@ -21,7 +21,28 @@ export const useCreateOrder = () => {
 
   const handleCreate = async (values: OrderCreateFormValues) => {
     try {
-      await createOrder(values).unwrap();
+      const payload = {
+        merchant_Id: values.merchant_Id,
+        branch_Id: values.branch_Id,
+        government_Id: values.government_Id,
+        city_Id: values.city_Id,
+        shippingType_Id: values.shippingType_Id,
+        orderType: values.orderType,
+        clientName: values.clientName,
+        clientPhone1: values.clientPhone1,
+        clientPhone2: values.clientPhone2,
+        clientEmail: values.clientEmail,
+        clientAddress: values.clientAddress,
+        deliverToVillage: values.deliverToVillage,
+        paymentType: values.paymentType,
+        orderCost: values.orderCost,
+        orderTotalWeight: values.orderTotalWeight ?? 0,
+        merchantNotes: values.merchantNotes ?? "",
+        employeeNotes: values.employeeNotes ?? "",
+        deliveryNotes: values.deliveryNotes ?? "",
+        products: values.products,
+      };
+      await createOrder(payload).unwrap();
       toast.success("Order created successfully");
       router.push(ROUTES.ORDERS);
     } catch (error: any) {
