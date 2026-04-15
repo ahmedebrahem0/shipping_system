@@ -1,0 +1,845 @@
+"use client";
+
+import React, { useMemo } from "react";
+
+
+import {
+  Package,
+  Users,
+  Truck,
+  GitBranch,
+  TrendingUp,
+  ArrowUpRight,
+  Activity,
+  Globe,
+  Server,
+  Database,
+  DollarSign,
+  MapPin,
+  ShoppingBag,
+  CircleDollarSign,
+  AlertTriangle,
+  Building2,
+} from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  YAxis,
+} from "recharts";
+import {
+  useGetOrdersQuery,
+  useGetMerchantsQuery,
+  useGetBranchesQuery,
+  useGetDeliveriesQuery,
+} from "@/store/slices/api/apiSlice";
+import { StatCard } from "../shared/StatCard";
+import { DashboardSkeleton } from "../shared/DashboardSkeleton";
+import { ROUTES } from "@/constants/routes";
+import { cn } from "@/lib/utils/cn";
+import type { OrderListItem } from "@/types/order.types";
+import type { Merchant } from "@/types/merchant.types";
+import type { Branch } from "@/types/branch.types";
+import type { Delivery } from "@/types/delivery.types";
+
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-EG", {
+    style: "currency",
+    currency: "EGP",
+    maximumFractionDigits: 0,
+  }).format(value || 0);
+}
+
+function getClientName(clientData?: string) {
+  if (!clientData) return "Unknown Client";
+  return clientData.split("\n")[0] || "Unknown Client";
+}
+
+// function getSafeArray<T>(value: unknown): T[] {
+//   return Array.isArray(value) ? (value as T[]) : [];
+// }
+
+export function AdminDashboard() {
+  const { data: ordersRes, isLoading: ordersLoading } = useGetOrdersQuery({
+    status: "New",
+    filters: { page: 1, pageSize: 1000 },
+  });
+  const { data: merchantsRes, isLoading: merchantsLoading } =
+    useGetMerchantsQuery({ pageSize: 1000 });
+  const { data: branchesRes, isLoading: branchesLoading } =
+    useGetBranchesQuery({ pageSize: 1000 });
+  const { data: deliveriesRes, isLoading: deliveriesLoading } =
+    useGetDeliveriesQuery();
+
+const orders = useMemo<OrderListItem[]>(
+  () => ordersRes?.data?.orders || [],
+  [ordersRes]
+);
+
+const merchants = useMemo<Merchant[]>(
+  () => merchantsRes?.data?.merchants || [],
+  [merchantsRes]
+);
+
+const branches = useMemo<Branch[]>(
+  () => branchesRes?.data?.branches || [],
+  [branchesRes]
+);
+
+ const deliveries = useMemo<Delivery[]>(
+  () => deliveriesRes || [],
+  [deliveriesRes]
+);
+
+  const activeMerchants = useMemo(
+    () => merchants.filter((m) => !m.isDeleted),
+    [merchants]
+  );
+
+  const activeBranches = useMemo(
+    () => branches.filter((b) => !b.isDeleted),
+    [branches]
+  );
+
+  const activeDeliveries = useMemo(
+    () => deliveries.filter((d) => !d.isDeleted),
+    [deliveries]
+  );
+
+  const totalRevenue = useMemo(
+    () => orders.reduce((sum, order) => sum + (Number(order.orderCost) || 0), 0),
+    [orders]
+  );
+
+  const avgOrderValue = useMemo(
+    () => (orders.length ? totalRevenue / orders.length : 0),
+    [orders, totalRevenue]
+  );
+
+  const avgPickupCost = useMemo(() => {
+    if (!activeMerchants.length) return 0;
+    const sum = activeMerchants.reduce(
+      (acc, merchant) => acc + (Number(merchant.pickupCost) || 0),
+      0
+    );
+    return sum / activeMerchants.length;
+  }, [activeMerchants]);
+
+  const avgRejectedRate = useMemo(() => {
+    if (!activeMerchants.length) return 0;
+    const sum = activeMerchants.reduce(
+      (acc, merchant) => acc + (Number(merchant.rejectedOrderPercentage) || 0),
+      0
+    );
+    return sum / activeMerchants.length;
+  }, [activeMerchants]);
+
+  const avgCompanyPercentage = useMemo(() => {
+    if (!activeDeliveries.length) return 0;
+    const sum = activeDeliveries.reduce(
+      (acc, delivery) => acc + (Number(delivery.companyPercentage) || 0),
+      0
+    );
+    return sum / activeDeliveries.length;
+  }, [activeDeliveries]);
+
+  const coverageCount = useMemo(() => {
+    const set = new Set<string>();
+    activeDeliveries.forEach((delivery) => {
+      (delivery.governmentName || []).forEach((gov) => {
+        if (gov) set.add(gov);
+      });
+    });
+    return set.size;
+  }, [activeDeliveries]);
+
+  const ordersByDay = useMemo(() => {
+    const dayMap: Record<string, number> = {
+      Sat: 0,
+      Sun: 0,
+      Mon: 0,
+      Tue: 0,
+      Wed: 0,
+      Thu: 0,
+      Fri: 0,
+    };
+
+    orders.forEach((order) => {
+      const date = new Date(order.createdDate.replace(/\.(?=\d{2}(AM|PM))/i, ":"));
+      const day = date.toLocaleDateString("en-US", { weekday: "short" });
+      if (dayMap[day] !== undefined) {
+        dayMap[day] += 1;
+      }
+    });
+
+    return Object.entries(dayMap).map(([name, value]) => ({
+      name,
+      orders: value,
+    }));
+  }, [orders]);
+
+  const latestOrders = useMemo(() => {
+    return [...orders]
+      .sort((a, b) => {
+        const aDate = new Date(a.createdDate.replace(/\.(?=\d{2}(AM|PM))/i, ":")).getTime();
+        const bDate = new Date(b.createdDate.replace(/\.(?=\d{2}(AM|PM))/i, ":")).getTime();
+        return bDate - aDate;
+      })
+      .slice(0, 6);
+  }, [orders]);
+
+  const topMerchants = useMemo(() => {
+    const map = new Map<
+      string,
+      { name: string; orders: number; revenue: number; storeName: string }
+    >();
+
+    orders.forEach((order) => {
+      const matchedMerchant =
+        activeMerchants.find(
+          (merchant) =>
+            merchant.name?.toLowerCase() === getClientName(order.clientData).toLowerCase()
+        ) ?? null;
+
+      const merchantName = matchedMerchant?.name || "Unknown Merchant";
+      const storeName = matchedMerchant?.storeName || "—";
+
+      if (!map.has(merchantName)) {
+        map.set(merchantName, {
+          name: merchantName,
+          storeName,
+          orders: 0,
+          revenue: 0,
+        });
+      }
+
+      const current = map.get(merchantName)!;
+      current.orders += 1;
+      current.revenue += Number(order.orderCost) || 0;
+    });
+
+    const fallbackFromMerchants = activeMerchants.map((merchant) => ({
+      name: merchant.name,
+      storeName: merchant.storeName || "—",
+      orders: 0,
+      revenue: 0,
+    }));
+
+    const merged = [...fallbackFromMerchants];
+
+    Array.from(map.values()).forEach((item) => {
+      const existingIndex = merged.findIndex((m) => m.name === item.name);
+      if (existingIndex >= 0) {
+        merged[existingIndex] = item;
+      } else {
+        merged.push(item);
+      }
+    });
+
+    return merged
+      .sort((a, b) => b.revenue - a.revenue || b.orders - a.orders)
+      .slice(0, 5);
+  }, [orders, activeMerchants]);
+
+  const cityDistribution = useMemo(() => {
+    const map = new Map<string, number>();
+
+    orders.forEach((order) => {
+      const key = `${order.governrate || "Unknown"} / ${order.city || "Unknown"}`;
+      map.set(key, (map.get(key) || 0) + 1);
+    });
+
+    return Array.from(map.entries())
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+  }, [orders]);
+
+  const merchantHealth = useMemo(() => {
+    return activeMerchants
+      .map((merchant) => ({
+        name: merchant.name,
+        rejectedRate: Number(merchant.rejectedOrderPercentage) || 0,
+        pickupCost: Number(merchant.pickupCost) || 0,
+      }))
+      .sort((a, b) => b.rejectedRate - a.rejectedRate)
+      .slice(0, 5);
+  }, [activeMerchants]);
+
+  const deliveryCoverage = useMemo(() => {
+    return activeDeliveries.slice(0, 6).map((delivery) => ({
+      id: delivery.id,
+      name: delivery.name,
+      branchName: delivery.branchName || "—",
+      discountType: delivery.discountType || "—",
+      companyPercentage: delivery.companyPercentage || 0,
+      governments: (delivery.governmentName || []).join(", ") || "—",
+    }));
+  }, [activeDeliveries]);
+
+  const systemStatus = useMemo(
+    () => [
+      {
+        label: "Global Reach",
+        val: `${coverageCount} Areas`,
+        icon: Globe,
+        color: "text-sky-400",
+      },
+      {
+        label: "Server Load",
+        val: orders.length > 0 ? "Operational" : "Idle",
+        icon: Server,
+        color: "text-emerald-400",
+      },
+      {
+        label: "Database",
+        val: "Synced",
+        icon: Database,
+        color: "text-violet-400",
+      },
+    ],
+    [coverageCount, orders.length]
+  );
+
+  const isLoading =
+    ordersLoading || merchantsLoading || branchesLoading || deliveriesLoading;
+
+  if (isLoading) {
+    return <DashboardSkeleton variant="stats" count={4} />;
+  }
+console.log("iam admin")
+  return (
+    <div className="min-h-screen bg-[#0e1227] p-5 lg:p-6 space-y-6 animate-in fade-in duration-500">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <StatCard
+          label="Orders"
+          value={ordersRes?.data?.totalOrders || orders.length}
+          icon={Package}
+          color="sky"
+          trend={12}
+          href={ROUTES.ORDERS}
+        />
+        <StatCard
+          label="Revenue"
+          value={formatCurrency(totalRevenue)}
+          icon={CircleDollarSign}
+          color="emerald"
+          trend={8}
+        />
+        <StatCard
+          label="Active Merchants"
+          value={activeMerchants.length}
+          icon={Users}
+          color="amber"
+          trend={5}
+          href={ROUTES.MERCHANTS}
+        />
+        <StatCard
+          label="Branches"
+          value={activeBranches.length}
+          icon={GitBranch}
+          color="rose"
+          href={ROUTES.BRANCHES}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <div className="xl:col-span-8 bg-[#0a1120] rounded-[2rem] p-6 border border-white/5 shadow-xl">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-black text-white tracking-tight italic">
+                Performance Flow
+              </h3>
+              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+                Weekly order activity from live data
+              </p>
+            </div>
+            <Activity className="text-blue-500 w-5 h-5 opacity-50" />
+          </div>
+
+          <div className="h-[280px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={ordersByDay}>
+                <defs>
+                  <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#ffffff08"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="name"
+                  stroke="#475569"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#475569"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#0f172a",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: "16px",
+                    fontSize: "12px",
+                    color: "#fff",
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="orders"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  fill="url(#chartColor)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="xl:col-span-4 bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-[2rem] p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden group">
+          <div className="relative z-10">
+            <div className="flex justify-between items-start">
+              <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md">
+                <TrendingUp className="text-white w-5 h-5" />
+              </div>
+              <span className="text-white/50 text-[10px] font-black uppercase tracking-widest">
+                Efficiency
+              </span>
+            </div>
+
+            <div className="mt-8">
+              <h2 className="text-4xl font-black text-white tracking-tighter">
+                {orders.length ? "98.2%" : "0%"}
+              </h2>
+              <p className="text-white/70 text-[10px] font-bold uppercase mt-1 tracking-widest">
+                Operational Success Rate
+              </p>
+            </div>
+
+            <div className="mt-8 space-y-3">
+              <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
+                  Avg Order Value
+                </span>
+                <span className="text-white font-black">
+                  {formatCurrency(avgOrderValue)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
+                  Avg Pickup Cost
+                </span>
+                <span className="text-white font-black">
+                  {formatCurrency(avgPickupCost)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+                <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
+                  Delivery Margin
+                </span>
+                <span className="text-white font-black">
+                  {avgCompanyPercentage.toFixed(0)}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <button className="relative z-10 w-full py-4 bg-white text-blue-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+            Generate Report <ArrowUpRight className="w-4 h-4" />
+          </button>
+
+          <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-700" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {systemStatus.map((item, i) => (
+          <div
+            key={i}
+            className="bg-[#0a1120] p-5 rounded-[1.5rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className={cn("p-2 rounded-lg bg-white/5", item.color)}>
+                <item.icon className="w-4 h-4" />
+              </div>
+              <span className="text-slate-400 text-[11px] font-bold uppercase tracking-tight">
+                {item.label}
+              </span>
+            </div>
+            <span
+              className={cn(
+                "text-[10px] font-black uppercase tracking-widest",
+                item.color
+              )}
+            >
+              {item.val}
+            </span>
+          </div>
+        ))}
+      </div>
+
+
+
+      <div className="grid grid-cols-1 2xl:grid-cols-12 gap-6">
+  {/* Latest Orders */}
+  <div className="2xl:col-span-7 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+      <div>
+        <h3 className="text-white text-lg font-black tracking-tight">
+          Latest Orders
+        </h3>
+        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+          Recent shipping activity
+        </p>
+      </div>
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-400 shadow-inner shadow-sky-500/10">
+        <ShoppingBag className="h-5 w-5" />
+      </div>
+    </div>
+
+    <div className="divide-y divide-white/5">
+      {latestOrders.length ? (
+        latestOrders.map((order, index) => (
+          <div
+            key={order.id}
+            className="group grid grid-cols-1 gap-4 px-6 py-4 transition-all duration-300 hover:bg-white/[0.03] md:grid-cols-[auto_1fr_auto]"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-sky-400 shadow-inner shadow-white/5">
+              <Package className="h-5 w-5" />
+            </div>
+
+            <div className="min-w-0 space-y-1">
+              <div className="flex items-center gap-2">
+                <p className="truncate text-sm font-black text-white">
+                  #{order.serialNumber}
+                </p>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  #{index + 1}
+                </span>
+              </div>
+
+              <p className="truncate text-sm font-medium text-slate-300">
+                {getClientName(order.clientData)}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+                <span>{order.governrate}</span>
+                <span className="text-slate-700">•</span>
+                <span>{order.city}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start justify-center gap-1 md:items-end">
+              <p className="text-sm font-black text-emerald-400">
+                {formatCurrency(order.orderCost)}
+              </p>
+              <p className="text-[11px] text-slate-500">
+                {order.createdDate}
+              </p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="px-6 py-14 text-center">
+          <p className="text-sm font-medium text-slate-500">
+            No recent orders available
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  {/* Orders by City */}
+  <div className="2xl:col-span-5 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="mb-5 flex items-center justify-between">
+      <div>
+        <h3 className="text-white text-lg font-black tracking-tight">
+          Orders by City
+        </h3>
+        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+          Top active destinations
+        </p>
+      </div>
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10">
+        <MapPin className="h-5 w-5" />
+      </div>
+    </div>
+
+    <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.02] p-4">
+      <div className="h-[320px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={cityDistribution}
+            layout="vertical"
+            margin={{ top: 0, right: 10, left: 20, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#ffffff08"
+              horizontal={true}
+              vertical={false}
+            />
+            <XAxis
+              type="number"
+              stroke="#64748b"
+              fontSize={11}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              type="category"
+              dataKey="name"
+              stroke="#94a3b8"
+              fontSize={11}
+              tickLine={false}
+              axisLine={false}
+              width={130}
+            />
+            <Tooltip
+              cursor={{ fill: "rgba(255,255,255,0.03)" }}
+              contentStyle={{
+                backgroundColor: "#0f172a",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "16px",
+                fontSize: "12px",
+                color: "#fff",
+              }}
+            />
+            <Bar dataKey="value" radius={[0, 12, 12, 0]} fill="#8b5cf6" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+  {/* Top Merchants */}
+  <div className="xl:col-span-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="mb-5 flex items-center justify-between">
+      <div>
+        <h3 className="text-white text-lg font-black tracking-tight">
+          Top Merchants
+        </h3>
+        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+          Ranked by revenue
+        </p>
+      </div>
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-400 shadow-inner shadow-amber-500/10">
+        <Building2 className="h-5 w-5" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      {topMerchants.length ? (
+        topMerchants.map((merchant, index) => (
+          <div
+            key={`${merchant.name}-${index}`}
+            className="group rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05] hover:border-white/10"
+          >
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500/10 text-[10px] font-black text-amber-400">
+                    {index + 1}
+                  </span>
+                  <p className="truncate text-sm font-black text-white">
+                    {merchant.name}
+                  </p>
+                </div>
+                <p className="mt-1 truncate pl-9 text-[11px] text-slate-500">
+                  {merchant.storeName}
+                </p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-sm font-black text-emerald-400">
+                  {formatCurrency(merchant.revenue)}
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  {merchant.orders} orders
+                </p>
+              </div>
+            </div>
+
+            <div className="h-2 overflow-hidden rounded-full bg-white/5">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500"
+                style={{
+                  width: `${Math.min(
+                    topMerchants[0]?.revenue
+                      ? (merchant.revenue / topMerchants[0].revenue) * 100
+                      : 0,
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-sm text-slate-500">No merchant data available</div>
+      )}
+    </div>
+  </div>
+
+  {/* Merchant Health */}
+  <div className="xl:col-span-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="mb-5 flex items-center justify-between">
+      <div>
+        <h3 className="text-white text-lg font-black tracking-tight">
+          Merchant Health
+        </h3>
+        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+          Rejection and pickup indicators
+        </p>
+      </div>
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-rose-400/20 bg-rose-500/10 text-rose-400 shadow-inner shadow-rose-500/10">
+        <AlertTriangle className="h-5 w-5" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      {merchantHealth.length ? (
+        merchantHealth.map((merchant, index) => (
+          <div
+            key={`${merchant.name}-${index}`}
+            className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4"
+          >
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="truncate text-sm font-black text-white">
+                {merchant.name}
+              </p>
+              <span className="rounded-full bg-rose-500/10 px-2.5 py-1 text-[10px] font-black text-rose-400">
+                {merchant.rejectedRate.toFixed(0)}%
+              </span>
+            </div>
+
+            <div className="h-2 overflow-hidden rounded-full bg-white/5">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-400"
+                style={{ width: `${Math.min(merchant.rejectedRate, 100)}%` }}
+              />
+            </div>
+
+            <div className="mt-3 flex items-center justify-between text-[11px]">
+              <span className="text-slate-500">Pickup Cost</span>
+              <span className="font-bold text-slate-300">
+                {formatCurrency(merchant.pickupCost)}
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-sm text-slate-500">No health metrics available</div>
+      )}
+    </div>
+
+    <div className="mt-5 grid grid-cols-2 gap-3">
+      <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          Avg Reject
+        </p>
+        <p className="mt-2 text-2xl font-black text-white">
+          {avgRejectedRate.toFixed(0)}%
+        </p>
+      </div>
+
+      <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          Avg Pickup
+        </p>
+        <p className="mt-2 text-2xl font-black text-white">
+          {formatCurrency(avgPickupCost)}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* Delivery Coverage */}
+  <div className="xl:col-span-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="mb-5 flex items-center justify-between">
+      <div>
+        <h3 className="text-white text-lg font-black tracking-tight">
+          Delivery Coverage
+        </h3>
+        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+          Branches, areas, and commission model
+        </p>
+      </div>
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-400 shadow-inner shadow-sky-500/10">
+        <Truck className="h-5 w-5" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      {deliveryCoverage.length ? (
+        deliveryCoverage.map((delivery) => (
+          <div
+            key={delivery.id}
+            className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-black text-white">
+                  {delivery.name}
+                </p>
+                <p className="mt-1 truncate text-[11px] text-slate-500">
+                  {delivery.branchName}
+                </p>
+              </div>
+
+              <span className="rounded-full border border-sky-400/10 bg-sky-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-sky-400">
+                {delivery.discountType}
+              </span>
+            </div>
+
+            <div className="mt-3 rounded-xl bg-white/[0.03] px-3 py-2">
+              <p className="line-clamp-2 text-[11px] leading-relaxed text-slate-400">
+                {delivery.governments}
+              </p>
+            </div>
+
+            <div className="mt-3 flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                Company %
+              </span>
+              <span className="text-sm font-black text-white">
+                {delivery.companyPercentage}%
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-sm text-slate-500">
+          No delivery coverage data available
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+    </div>
+  );
+}

@@ -1,3 +1,4 @@
+// orderStatuses.ts
 export const ORDER_STATUSES = {
   NEW: "New",
   PENDING: "Pending",

@@ -54,6 +54,7 @@ const adminMenu: MenuSection[] = [
     section: "Main",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, href: ROUTES.DASHBOARD },
+      { label: "Setup Wizard", icon: PackageOpen, href: ROUTES.SETUP },
     ],
   },
   {
@@ -216,7 +217,7 @@ const merchantMenu: MenuSection[] = [
     section: "Main",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, href: ROUTES.DASHBOARD },
-      { label: "Create Order", icon: Plus, href: ROUTES.ORDER_CREATE },
+      // { label: "Create Order", icon: Plus, href: ROUTES.ORDER_CREATE },
     ],
   },
   {
@@ -229,10 +230,11 @@ const merchantMenu: MenuSection[] = [
         href: null,
         children: [
           { label: "All Orders", icon: Package, href: ROUTES.ORDERS },
-          { label: "New Orders", icon: Package, href: `${ROUTES.ORDERS}?status=New` },
-          { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
-          { label: "Delivered", icon: Package, href: `${ROUTES.ORDERS}?status=Delivered` },
-          { label: "Rejected", icon: Package, href: `${ROUTES.ORDERS}?status=Rejected` },
+          { label: "Add Orders" ,icon: Package, href: `${ROUTES.ORDER_CREATE}` },
+          // { label: "New Orders", icon: Package, href: `${ROUTES.ORDERS}?status=New` },
+          // { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
+          // { label: "Delivered", icon: Package, href: `${ROUTES.ORDERS}?status=Delivered` },
+          // { label: "Rejected", icon: Package, href: `${ROUTES.ORDERS}?status=Rejected` },
         ],
       },
     ],

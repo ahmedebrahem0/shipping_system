@@ -122,7 +122,7 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 pb-20 animate-in fade-in duration-700">
+    <div className="mx-auto max-w-8xl space-y-8 pb-20 animate-in fade-in duration-700">
       <div className="flex items-center justify-between">
         <PageHeader
           title="System Setup Wizard"
