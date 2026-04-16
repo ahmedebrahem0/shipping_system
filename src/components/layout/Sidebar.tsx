@@ -281,9 +281,6 @@ const deliveryMenu: MenuSection[] = [
         href: null,
         children: [
           { label: "All Orders", icon: Package, href: ROUTES.ORDERS },
-          { label: "Pending", icon: Package, href: `${ROUTES.ORDERS}?status=Pending` },
-          { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
-          { label: "Delivered Today", icon: Package, href: `${ROUTES.ORDERS}?status=Delivered` },
         ],
       },
     ],

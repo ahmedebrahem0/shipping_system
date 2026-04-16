@@ -154,21 +154,45 @@ export const useOrders = () => {
 
   // ==================== Assign Delivery ====================
   const [assignDelivery, { isLoading: isAssigning }] = useAssignDeliveryMutation();
+  const [assignedOrderIds, setAssignedOrderIds] = useState<Set<number>>(new Set());
 
   const handleAssignDelivery = async (deliveryId: number) => {
     if (!selectedOrderId) return;
     try {
+      setAssignedOrderIds((prev) => new Set(prev).add(selectedOrderId));
+      
       await assignDelivery({
         orderId: selectedOrderId,
         deliveryId,
       }).unwrap();
+      
       toast.success("Delivery assigned successfully");
       setIsAssignOpen(false);
       setSelectedOrderId(null);
     } catch {
+      setAssignedOrderIds((prev) => {
+        const next = new Set(prev);
+        next.delete(selectedOrderId);
+        return next;
+      });
       toast.error("Failed to assign delivery");
     }
   };
+
+  const filteredOrders = useMemo(() => {
+    const orders = ordersData?.data?.orders ?? [];
+    if (selectedStatus === ORDER_STATUSES.PENDING) {
+      return orders.filter((order) => !assignedOrderIds.has(order.id));
+    }
+    return orders;
+  }, [ordersData, selectedStatus, assignedOrderIds]);
+
+  const filteredTotalOrders = useMemo(() => {
+    if (selectedStatus === ORDER_STATUSES.PENDING) {
+      return Math.max(0, (ordersData?.data?.totalOrders ?? 0) - assignedOrderIds.size);
+    }
+    return ordersData?.data?.totalOrders ?? 0;
+  }, [ordersData, selectedStatus, assignedOrderIds]);
 
   // ==================== Filter ====================
   const handleFilterChange = (key: keyof OrderFilters, value: string | number) => {
@@ -185,8 +209,8 @@ export const useOrders = () => {
 
   return {
     // Data
-    orders: ordersData?.data?.orders ?? [],
-    totalOrders: ordersData?.data?.totalOrders ?? 0,
+    orders: filteredOrders,
+    totalOrders: filteredTotalOrders,
     isLoading,
     isError,
 
