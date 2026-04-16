@@ -34,7 +34,7 @@ const getStatusLabel = (status: string) => {
 
 export default function OrdersPage() {
   const {
-    orders, totalOrders, isLoading, isError, isAdmin, isEmployee, isMerchant, isDelivery, currentMerchant,
+    orders, totalOrders, isLoading, isError, isAdmin, isEmployee, isMerchant, isDelivery, currentMerchant, currentDelivery,
     selectedStatus, setSelectedStatus, filters, handleFilterChange, isDeleteOpen, setIsDeleteOpen,
     setSelectedOrderId, handleDelete, isDeleting, isStatusOpen, setIsStatusOpen,
     handleChangeStatus, isChangingStatus, isAssignOpen, setIsAssignOpen, handleAssignDelivery,
@@ -66,22 +66,30 @@ export default function OrdersPage() {
   const hasFilters = filters.searchTxt || filters.serialNum || filters.startDate || filters.endDate;
   const totalRevenue = orders.reduce((sum, order) => sum + (order.orderCost || 0), 0);
   const uniqueCities = new Set(orders.map((order) => `${order.governrate}-${order.city}`)).size;
-  const pageTitle = isMerchant ? "Merchant Orders" : "Orders Dashboard";
+  const pageTitle = isMerchant
+    ? "Merchant Orders"
+    : isDelivery
+    ? "Delivery Orders"
+    : "Orders Dashboard";
   const pageDescription = isMerchant
     ? `Track only ${currentMerchant?.storeName || currentMerchant?.name || "your"} shipments with the same operational view.`
+    : isDelivery
+    ? `Track only ${currentDelivery?.name || "your"} assigned shipments with the same operational view.`
     : `Manage and track ${totalOrders} orders`;
-  const emptyStateTitle = isMerchant
+  const emptyStateTitle = isMerchant || isDelivery
     ? "No orders available for this status"
     : "No Results Found";
   const emptyStateDescription = hasFilters
     ? "We couldn't find any orders matching your filters. Try clearing them."
     : isMerchant
     ? `The merchant view does not currently show any orders under "${currentLabel}". Try selecting another status or return to New Orders.`
+    : isDelivery
+    ? `The delivery view does not currently show any orders under "${currentLabel}". Try selecting another status or return to your active queue.`
     : `There are no orders currently marked as "${currentLabel}".`;
 
   return (
     <div className="space-y-4 lg:space-y-6 pb-10 animate-in fade-in duration-700">
-      {isMerchant && (
+      {(isMerchant || isDelivery) && (
         <div className="overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0a1120_100%)] shadow-[0_24px_60px_rgba(0,0,0,0.32)]">
           <div className="relative p-5 lg:p-6">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.10),transparent_24%)]" />
@@ -90,24 +98,36 @@ export default function OrdersPage() {
                 <div className="space-y-2">
                   <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/15 bg-sky-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-sky-300">
                     <ShieldCheck className="h-3.5 w-3.5" />
-                    Merchant Scope
+                    {isMerchant ? "Merchant Scope" : "Delivery Scope"}
                   </div>
                   <h2 className="text-xl lg:text-2xl font-black tracking-tight text-white">
-                    Your orders workspace is isolated to this merchant account.
+                    {isMerchant
+                      ? "Your orders workspace is isolated to this merchant account."
+                      : "Your orders workspace is isolated to this delivery account."}
                   </h2>
                   <p className="max-w-2xl text-sm leading-6 text-slate-400">
-                    This page uses the same operational flow as the shared orders dashboard, but every record here is scoped to
-                    <span className="font-bold text-slate-200"> {currentMerchant?.storeName || currentMerchant?.name || "your merchant account"}</span>.
+                    {isMerchant
+                      ? "This page uses the same operational flow as the shared orders dashboard, but every record here is scoped to"
+                      : "This page uses the same operational flow as the shared orders dashboard, but every record here is scoped to"}
+                    <span className="font-bold text-slate-200">
+                      {" "}
+                      {isMerchant
+                        ? currentMerchant?.storeName || currentMerchant?.name || "your merchant account"
+                        : currentDelivery?.name || "your delivery account"}
+                    </span>
+                    .
                   </p>
                 </div>
 
-                <button
-                  onClick={goToCreate}
-                  className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-slate-900 transition-all hover:-translate-y-0.5 hover:bg-slate-100"
-                >
-                  <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-                  Create New Order
-                </button>
+                {!isDelivery && (
+                  <button
+                    onClick={goToCreate}
+                    className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-slate-900 transition-all hover:-translate-y-0.5 hover:bg-slate-100"
+                  >
+                    <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+                    Create New Order
+                  </button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -126,7 +146,9 @@ export default function OrdersPage() {
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Queue Value</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+                        {isMerchant ? "Queue Value" : "Collection Value"}
+                      </p>
                       <p className="mt-2 text-2xl font-black text-white">{totalRevenue.toLocaleString()} EGP</p>
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-emerald-500/10 p-3 text-emerald-300">
@@ -165,19 +187,27 @@ export default function OrdersPage() {
             </div>
             <p className="text-[11px] lg:text-sm text-gray-500 font-medium flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="hidden xs:inline text-gray-400">{isMerchant ? "Showing only merchant-scoped data" : "Manage and track"}</span>
-              <span className="text-gray-900 font-bold">{isMerchant ? pageDescription : totalOrders}</span>
-              {!isMerchant && <span>orders</span>}
+              <span className="hidden xs:inline text-gray-400">
+                {isMerchant
+                  ? "Showing only merchant-scoped data"
+                  : isDelivery
+                  ? "Showing only delivery-scoped data"
+                  : "Manage and track"}
+              </span>
+              <span className="text-gray-900 font-bold">{isMerchant || isDelivery ? pageDescription : totalOrders}</span>
+              {!isMerchant && !isDelivery && <span>orders</span>}
             </p>
           </div>
 
-          <button
-            onClick={goToCreate}
-            className="group flex items-center justify-center gap-2 px-4 py-2.5 lg:px-6 lg:py-3.5 bg-primary text-white rounded-xl font-bold text-xs lg:text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20"
-          >
-            <Plus className="w-4 h-4 lg:w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
-            <span>Create New Order</span>
-          </button>
+          {!isDelivery && (
+            <button
+              onClick={goToCreate}
+              className="group flex items-center justify-center gap-2 px-4 py-2.5 lg:px-6 lg:py-3.5 bg-primary text-white rounded-xl font-bold text-xs lg:text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20"
+            >
+              <Plus className="w-4 h-4 lg:w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+              <span>Create New Order</span>
+            </button>
+          )}
         </div>
 
         {/* Status Tabs - Scrollable on mobile, Grid on desktop */}

@@ -9,6 +9,7 @@ import {
   useGetMerchantOrdersQuery,
   useGetDeliveryOrdersQuery,
   useGetMerchantsQuery,
+  useGetDeliveriesQuery,
   useDeleteOrderMutation,
   useChangeOrderStatusMutation,
   useAssignDeliveryMutation,
@@ -18,6 +19,7 @@ import { ROLES } from "@/constants/roles";
 import { ORDER_STATUSES } from "@/constants/orderStatuses";
 import type { OrderFilters, OrdersResponse } from "@/types/order.types";
 import { ROUTES } from "@/constants/routes";
+import type { Delivery } from "@/types/delivery.types";
 import type { Merchant } from "@/types/merchant.types";
 
 export const useOrders = () => {
@@ -61,6 +63,35 @@ export const useOrders = () => {
 
   const merchantId = currentMerchant?.id ?? 0;
 
+  const { data: deliveriesRes, isLoading: isLoadingDeliveries } = useGetDeliveriesQuery(
+    undefined,
+    { skip: !isDelivery }
+  );
+
+  const deliveries = useMemo<Delivery[]>(() => {
+    if (Array.isArray(deliveriesRes)) return deliveriesRes;
+    if (
+      deliveriesRes &&
+      typeof deliveriesRes === "object" &&
+      "data" in deliveriesRes &&
+      Array.isArray((deliveriesRes as { data?: Delivery[] }).data)
+    ) {
+      return (deliveriesRes as { data?: Delivery[] }).data || [];
+    }
+    return [];
+  }, [deliveriesRes]);
+
+  const currentDelivery = useMemo(
+    () =>
+      deliveries.find(
+        (delivery) =>
+          delivery.email?.toLowerCase() === user?.email?.toLowerCase()
+      ) ?? null,
+    [deliveries, user?.email]
+  );
+
+  const deliveryId = currentDelivery?.id ?? 0;
+
   const {
     data: allOrdersData,
     isLoading: isLoadingAll,
@@ -88,9 +119,10 @@ export const useOrders = () => {
     data: deliveryOrdersData,
     isLoading: isLoadingDelivery,
     isError: isErrorDelivery,
+    error: deliveryOrdersError,
   } = useGetDeliveryOrdersQuery(
-    { deliveryId: Number(user?.id), status: selectedStatus, filters },
-    { skip: !isDelivery }
+    { deliveryId, status: selectedStatus, filters },
+    { skip: !isDelivery || !deliveryId }
   );
 
   // ==================== Get correct data ====================
@@ -102,17 +134,33 @@ export const useOrders = () => {
     return undefined;
   }, [merchantOrdersData, merchantOrdersError]);
 
+  const normalizedDeliveryOrdersData = useMemo<OrdersResponse | undefined>(() => {
+    if (deliveryOrdersData) return deliveryOrdersData;
+    if (deliveryOrdersError && typeof deliveryOrdersError === "object" && "data" in deliveryOrdersError) {
+      return (deliveryOrdersError as { data?: OrdersResponse }).data;
+    }
+    return undefined;
+  }, [deliveryOrdersData, deliveryOrdersError]);
+
   const ordersData = isMerchant
     ? normalizedMerchantOrdersData
     : isDelivery
-    ? deliveryOrdersData
+    ? normalizedDeliveryOrdersData
     : allOrdersData;
 
-  const isLoading = isLoadingAll || isLoadingMerchant || isLoadingDelivery || isLoadingMerchants;
+  const isLoading =
+    isLoadingAll ||
+    isLoadingMerchant ||
+    isLoadingDelivery ||
+    isLoadingMerchants ||
+    isLoadingDeliveries;
   const hasMerchantFallbackData = Boolean(normalizedMerchantOrdersData);
+  const hasDeliveryFallbackData = Boolean(normalizedDeliveryOrdersData);
   const isError = isMerchant
     ? Boolean(!hasMerchantFallbackData && isErrorMerchant)
-    : isErrorAll || isErrorDelivery;
+    : isDelivery
+    ? Boolean(!hasDeliveryFallbackData && isErrorDelivery)
+    : isErrorAll;
 
   // ==================== Delete ====================
   const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
@@ -220,7 +268,9 @@ export const useOrders = () => {
     isMerchant,
     isDelivery,
     currentMerchant,
+    currentDelivery,
     hasMerchantFallbackData,
+    hasDeliveryFallbackData,
 
     // Status Filter
     selectedStatus,
