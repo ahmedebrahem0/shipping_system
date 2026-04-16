@@ -54,7 +54,7 @@ export default function DashboardLayout({
         </div>
 
         {/* Page Content */}
-        <main className="flex-1 bg-[#0e1227] p-4 md:p-6 lg:p-8 w-full max-w-full overflow-x-hidden">
+        <main className="themed-surface flex-1 p-4 md:p-6 lg:p-8 w-full max-w-full overflow-x-hidden">
           {/* الـ container ده بيضمن إن الـ children ميهربوش برا المساحة المحددة */}
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
             {children}

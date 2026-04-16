@@ -23,7 +23,7 @@ export default function CreateOrderPage() {
       />
 
       {/* Form */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-4xl">
+      <div className="themed-surface max-w-4xl rounded-xl p-6">
         <OrderForm
           isLoading={isLoading}
           onSubmit={handleCreate}

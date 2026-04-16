@@ -35,13 +35,13 @@ export default function OrderTable({
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Serial #</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Client</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Location</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Cost</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Status</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Date</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Actions</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Serial #</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Client</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Location</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Cost</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Status</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Date</th>
+            <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -53,22 +53,22 @@ export default function OrderTable({
 
                 {/* Serial Number */}
                 <td className="px-4 py-3">
-                  <p className="text-sm font-bold text-gray-900">#{order.serialNumber}</p>
+                  <p className="text-sm font-bold text-slate-800">#{order.serialNumber}</p>
                 </td>
 
                 {/* Client */}
                 <td className="px-4 py-3">
                   <p className="text-sm font-medium text-gray-900">{clientName}</p>
-                  <p className="text-xs text-gray-500">{clientPhone1}</p>
+                  <p className="text-xs text-slate-600">{clientPhone1}</p>
                   {clientPhone2 && (
-                    <p className="text-xs text-gray-500">{clientPhone2}</p>
+                    <p className="text-xs text-slate-600">{clientPhone2}</p>
                   )}
                 </td>
 
                 {/* Location */}
                 <td className="px-4 py-3">
-                  <p className="text-sm text-gray-600">{order.governrate}</p>
-                  <p className="text-xs text-gray-400">{order.city}</p>
+                  <p className="text-sm text-slate-700">{order.governrate}</p>
+                  <p className="text-xs text-slate-600">{order.city}</p>
                 </td>
 
                 {/* Cost */}
@@ -83,7 +83,7 @@ export default function OrderTable({
 
                 {/* Date */}
                 <td className="px-4 py-3">
-                  <p className="text-xs text-gray-500">{order.createdDate}</p>
+                  <p className="text-xs text-slate-600">{order.createdDate}</p>
                 </td>
 
                 {/* Actions */}

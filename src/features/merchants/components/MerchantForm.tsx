@@ -75,7 +75,7 @@ function InputField({
 }) {
   return (
     <div className="space-y-1">
-      <label className="text-sm font-semibold text-gray-700">{label}</label>
+      <label className="text-sm font-semibold text-gray-400">{label}</label>
       <div className="relative">
         <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         {children}
@@ -283,13 +283,13 @@ export default function MerchantForm({
   return (
     <form 
   onSubmit={handleSubmit(handleSubmitWrapper, (errors) => console.log("Form Errors:", errors))} 
-  className="max-w-4xl mx-auto space-y-8 bg-white p-6 rounded-xl"
+  className="themed-surface max-w-4xl mx-auto space-y-8 rounded-xl p-6"
 >
   
   {/* --- القسم الأول: المعلومات الأساسية --- */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div className="col-span-full border-b pb-2">
-      <h3 className="text-lg font-semibold text-gray-800">Basic Information</h3>
+      <h3 className="text-lg font-semibold text-gray-300">Basic Information</h3>
       <p className="text-xs text-gray-500">Merchant personal and store details</p>
     </div>
 
@@ -299,7 +299,7 @@ export default function MerchantForm({
       <input
         {...register("name")}
         placeholder="Enter merchant name"
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none text-white "
       />
       {errors.name && <p className="text-xs text-red-500 mt-1">{String(errors.name.message)}</p>}
     </div>
@@ -311,7 +311,7 @@ export default function MerchantForm({
         {...register("email")}
         type="email"
         placeholder="name@company.com"
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none text-white Full Name"
       />
       {errors.email && <p className="text-xs text-red-500 mt-1">{String(errors.email.message)}</p>}
     </div>
@@ -322,7 +322,7 @@ export default function MerchantForm({
       <input
         {...register("phone")}
         placeholder="01XXXXXXXXX"
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none text-white"
       />
       {errors.phone && <p className="text-xs text-red-500 mt-1">{String(errors.phone.message)}</p>}
     </div>
@@ -335,7 +335,7 @@ export default function MerchantForm({
       <input
         {...register("storeName")}
         placeholder="Enter store name"
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none text-white"
       />
     </div>
   </div>
@@ -367,15 +367,15 @@ export default function MerchantForm({
   {/* --- القسم الثاني: الموقع والفرع --- */}
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div className="col-span-full border-b pb-2">
-      <h3 className="text-lg font-semibold text-gray-800">Location & Logistics</h3>
+      <h3 className="text-lg font-semibold text-gray-400">Location & Logistics</h3>
     </div>
 
     <div className="md:col-span-3 space-y-1">
-      <label className="text-sm font-semibold text-gray-700">Full Address</label>
+      <label className="text-sm font-semibold text-gray-400">Full Address</label>
       <input
         {...register("address")}
         placeholder="Street, Building, Landmark..."
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm transition-all focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none text-white"
       />
       {errors.address && <p className="text-xs text-red-500 mt-1">{String(errors.address.message)}</p>}
     </div>
@@ -383,6 +383,7 @@ export default function MerchantForm({
     <InputField
       label="Branch"
       icon={Landmark}
+      className="text-gray-300"
       error={String(errors.branches_Id?.message || errors.branchId?.message || "")}
     >
       <select
@@ -399,7 +400,7 @@ export default function MerchantForm({
     </InputField>
 
     <div className="space-y-1">
-      <label className="text-sm font-semibold text-gray-700">Government</label>
+      <label className="text-sm font-semibold text-gray-400">Government</label>
       <Controller
         control={control}
         name="governmentsId"
@@ -478,7 +479,7 @@ export default function MerchantForm({
         {...register("pickupCost")}
         type="number"
         placeholder="0.00"
-        className="w-full px-4 py-2.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+        className="w-full px-4 py-2.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-white"
       />
       {errors.pickupCost && <p className="text-xs text-red-500">{String(errors.pickupCost.message)}</p>}
     </div>
@@ -491,7 +492,7 @@ export default function MerchantForm({
         {...register("rejectedOrderPercentage")}
         type="number"
         placeholder="0"
-        className="w-full px-4 py-2.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+        className="w-full px-4 py-2.5 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-white"
       />
     </div>
   </div>
@@ -508,7 +509,7 @@ export default function MerchantForm({
       <button
         type="button"
         onClick={() => setSpecialShippingRates([...specialShippingRates, { city_Id: 0, specialPrice: 0 }])}
-        className="text-xs font-bold text-primary-600 hover:bg-primary-50 px-3 py-1.5 rounded-full transition-colors border border-primary-200"
+        className="text-xs font-bold text-white hover:bg-primary-50 px-3 py-1.5 rounded-full transition-colors border border-primary-200"
       >
         + Add New Rate
       </button>

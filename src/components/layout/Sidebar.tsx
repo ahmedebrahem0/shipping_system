@@ -294,12 +294,12 @@ const deliveryMenu: MenuSection[] = [
         icon: Wallet,
         href: null,
         children: [
-          { label: "Today's Earnings", icon: Wallet, href: "/earnings/today" },
-          { label: "Weekly Earnings", icon: Wallet, href: "/earnings/weekly" },
-          { label: "Monthly Earnings", icon: Wallet, href: "/earnings/monthly" },
+          { label: "Today's Earnings", icon: Wallet, href: `${ROUTES.EARNINGS}?period=today` },
+          { label: "Weekly Earnings", icon: Wallet, href: `${ROUTES.EARNINGS}?period=week` },
+          { label: "Monthly Earnings", icon: Wallet, href: `${ROUTES.EARNINGS}?period=month` },
         ],
       },
-      { label: "Assigned Areas", icon: Map, href: "/assigned-areas" },
+      { label: "Assigned Areas", icon: Map, href: `${ROUTES.EARNINGS}?section=areas` },
     ],
   },
   {
@@ -369,32 +369,35 @@ const baseToastStyle = {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-full bg-[#0F172A] text-slate-300 transition-all duration-300 z-40 flex flex-col border-r border-white/5 shadow-2xl",
-        isSidebarOpen ? "w-72" : "w-0 overflow-hidden shadow-none border-none" 
+        "fixed top-0 left-0 h-full text-slate-300 dark:text-slate-300 transition-all duration-300 z-40 flex flex-col border-r border-gray-200 dark:border-white/5 shadow-xl dark:shadow-2xl themed-surface",
+        isSidebarOpen ? "w-72" : "w-0 overflow-hidden shadow-none border-none",
+        "bg-white dark:bg-[#0F172A]"
       )}
     >
       {/* 1. Brand Logo */}
       <div className="flex items-center gap-4 px-7 py-9 flex-shrink-0">
-        <div className="w-11 h-11 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 transform ">
-          <Package className="w-6 h-6 text-white " />
+        <div className="w-11 h-11 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 transform">
+          <Package className="w-6 h-6 text-white" />
         </div>
         <div className="flex flex-col">
-          <span className="font-black text-2xl text-white tracking-tight leading-none italic">SHIPPRO</span>
-          <span className="text-[10px] font-black text-primary tracking-[0.3em] mt-1.5 uppercase opacity-90">Logistics System</span>
+          <span className="font-black text-2xl text-slate-800 dark:text-white tracking-tight leading-none italic">SHIPPRO</span>
+          <span className="text-[10px] font-black text-primary dark:text-primary tracking-[0.3em] mt-1.5 uppercase opacity-90">Logistics System</span>
         </div>
       </div>
 
       {/* 2. User Profile Card */}
       <div className="px-5 mb-6">
-        <div className="bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 rounded-2xl p-4 flex items-center gap-3 shadow-inner">
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-4 shadow-inner dark:border-slate-700/80 dark:from-slate-800 dark:to-slate-900 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] flex items-center gap-3">
           <div className="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg">
             {user.name?.charAt(0).toUpperCase()}
           </div>
           <div className="overflow-hidden">
-            <p className="text-sm font-bold text-white truncate leading-tight mb-1">{user.name}</p>
+            <p className="mb-1 truncate text-sm font-bold leading-tight text-slate-400 dark:text-slate-50">
+              {user.name}
+            </p>
             <div className="flex items-center gap-1.5">
                <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.6)] animate-pulse" />
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{user.role}</p>
+               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">{user.role}</p>
             </div>
           </div>
         </div>
@@ -428,10 +431,10 @@ const baseToastStyle = {
         {menu.map((section) => (
           <div key={section.key} className="space-y-2">
             <div className="flex items-center gap-3 px-3 mb-4">
-               <span className="text-[11px] font-black text-slate-500 uppercase tracking-[0.25em]">
+               <span className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.25em]">
                  {section.section}
                </span>
-               <div className="h-[1px] flex-1 bg-white/5" />
+               <div className="h-[1px] flex-1 bg-gray-200 dark:bg-white/5" />
             </div>
 
             <div className="space-y-1.5">
@@ -446,12 +449,12 @@ const baseToastStyle = {
                       "group relative flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-[13px] font-bold transition-all duration-300",
                       pathname === item.href
                         ? "bg-primary text-white shadow-xl shadow-primary/25 translate-x-1"
-                        : "text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1"
+                        : "text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white hover:translate-x-1"
                     )}
                   >
                     <item.icon className={cn(
                       "w-5 h-5 transition-transform group-hover:scale-110",
-                      pathname === item.href ? "text-white" : "text-slate-500 group-hover:text-primary"
+                      pathname === item.href ? "text-white" : "text-slate-400 dark:text-slate-500 group-hover:text-primary"
                     )} />
                     {item.label}
                     {pathname === item.href && (
@@ -466,10 +469,10 @@ const baseToastStyle = {
       </nav>
 
       {/* 4. Logout Footer */}
-      <div className="p-5 border-t border-white/5 mt-auto bg-[#0F172A]/50 backdrop-blur-md">
+      <div className="p-5 border-t border-gray-200 dark:border-white/5 mt-auto bg-gray-50 dark:bg-[#0F172A]/50 backdrop-blur-md">
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-xs font-black text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all border border-white/5 hover:border-red-500/20 uppercase tracking-widest"
+          className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-xs font-black text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all border border-gray-200 dark:border-white/5 hover:border-red-200 dark:hover:border-red-500/20 uppercase tracking-widest"
         >
           <LogOut className="w-4 h-4" />
           Logout System
@@ -491,21 +494,20 @@ function DropdownItem({ item, pathname }: DropdownItemProps) {
     <details open={isActive} className="group">
       <summary
         className={cn(
-          "flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-[13px] font-bold cursor-pointer transition-all list-none group-hover:bg-white/[0.02]",
-          isActive
-            ? "bg-white/5 text-white"
-            : "text-slate-400 hover:text-white"
+          "flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-[13px] font-bold cursor-pointer transition-all list-none",
+          "text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/[0.02] hover:text-slate-900 dark:hover:text-white",
+          isActive ? "bg-gray-100 dark:bg-white/5 text-slate-900 dark:text-white" : ""
         )}
       >
         <item.icon className={cn(
           "w-5 h-5 transition-colors",
-          isActive ? "text-primary" : "text-slate-500 group-hover:text-primary"
+          isActive ? "text-primary" : "text-slate-400 dark:text-slate-500 group-hover:text-primary"
         )} />
         <span className="flex-1 uppercase tracking-tight">{item.label}</span>
-        <ChevronDown className="w-4 h-4 transition-transform duration-500 group-open:rotate-180 text-slate-600" />
+        <ChevronDown className="w-4 h-4 transition-transform duration-500 group-open:rotate-180 text-slate-400 dark:text-slate-600" />
       </summary>
       
-      <div className="mt-2 ml-6 pl-4 border-l-1 border-primary/20 space-y-1.5 py-1 animate-in slide-in-from-left-2 duration-300">
+      <div className="mt-2 ml-6 pl-4 border-l border-primary/20 dark:border-primary/20 space-y-1.5 py-1">
         {item.children?.map((child) => (
           <Link
             key={child.label}
@@ -514,7 +516,7 @@ function DropdownItem({ item, pathname }: DropdownItemProps) {
               "flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold transition-all relative group/item",
               pathname === child.href
                 ? "text-primary bg-primary/10 shadow-sm"
-                : "text-slate-500 hover:text-slate-200 hover:bg-white/5"
+                : "text-slate-500 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-white/5"
             )}
           >
             {pathname === child.href && (
@@ -522,7 +524,7 @@ function DropdownItem({ item, pathname }: DropdownItemProps) {
             )}
             <child.icon className={cn(
                 "w-4 h-4",
-                pathname === child.href ? "text-primary" : "text-slate-600 group-hover/item:text-primary/70"
+                pathname === child.href ? "text-primary" : "text-slate-400 dark:text-slate-600 group-hover/item:text-primary/70"
             )} />
             {child.label}
           </Link>

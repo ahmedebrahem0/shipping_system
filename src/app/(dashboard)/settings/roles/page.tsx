@@ -60,7 +60,7 @@ export default function RolesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm">
+      <div className="themed-surface rounded-3xl p-6">
         <PageHeader
           title="Roles"
           description="Manage system roles and their permissions"
@@ -74,8 +74,8 @@ export default function RolesPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Roles Table */}
         <div className="lg:col-span-5">
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+          <div className="themed-surface overflow-hidden rounded-3xl">
+            <div className="themed-surface-header px-6 py-4">
               <h2 className="text-sm font-semibold text-slate-900">
                 Roles List
               </h2>
@@ -93,8 +93,8 @@ export default function RolesPage() {
 
         {/* Permissions */}
         <div className="lg:col-span-7">
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+          <div className="themed-surface overflow-hidden rounded-3xl">
+            <div className="themed-surface-header px-6 py-4">
               <h2 className="text-sm font-semibold text-slate-900">
                 Role Permissions
               </h2>
@@ -114,8 +114,8 @@ export default function RolesPage() {
             className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
             onClick={handleClose}
           />
-          <div className="relative w-full max-w-md rounded-3xl border border-white/20 bg-white shadow-2xl">
-            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-5">
+          <div className="themed-surface relative w-full max-w-md rounded-3xl shadow-2xl">
+            <div className="themed-surface-header px-6 py-5">
               <h2 className="text-lg font-bold text-slate-900">
                 {selectedRole ? "Edit Role" : "Create New Role"}
               </h2>

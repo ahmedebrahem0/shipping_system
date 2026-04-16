@@ -41,7 +41,7 @@ export default function BranchesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm">
+      <div className="themed-surface rounded-3xl p-6">
         <PageHeader
           className="text-white"
           title="Branches"
@@ -53,8 +53,8 @@ export default function BranchesPage() {
       </div>
 
       {/* Content */}
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+      <div className="themed-surface overflow-hidden rounded-3xl">
+        <div className="themed-surface-header px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 className="text-base font-semibold text-slate-900">
@@ -64,7 +64,7 @@ export default function BranchesPage() {
                 View, create, update, and manage branch records.
               </p>
             </div>
-            <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+            <div className="themed-surface rounded-full px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
               Total: {totalBranches}
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function BranchesPage() {
               />
             </div>
 
-            <div className="border-t border-slate-100 bg-slate-50/70 px-4 py-4">
+            <div className="themed-surface-header px-4 py-4">
               <Pagination
                 currentPage={page}
                 totalCount={totalBranches}
@@ -114,8 +114,8 @@ export default function BranchesPage() {
             className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
             onClick={() => setIsFormOpen(false)}
           />
-          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/20 bg-white shadow-2xl">
-            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
+          <div className="themed-surface relative w-full max-w-lg overflow-hidden rounded-3xl shadow-2xl">
+            <div className="themed-surface-header px-6 py-5">
               <h2 className="text-xl font-bold tracking-tight text-slate-900">
                 {selectedBranch ? "Edit Branch" : "Add Branch"}
               </h2>

@@ -236,16 +236,16 @@ export function MerchantDashboard() {
       </div>
 
       {/* ================= Chart ================= */}
-      <div className="bg-[#0a1120] rounded-2xl p-6">
-        <h3 className="text-white font-bold mb-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0a1120]">
+        <h3 className="mb-4 font-bold text-slate-900 dark:text-white">
           Orders Trend
         </h3>
 
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={ordersByDay}>
-            <CartesianGrid stroke="#ffffff10" />
-            <XAxis dataKey="name" stroke="#aaa" />
-            <YAxis stroke="#aaa" />
+            <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" />
+            <XAxis dataKey="name" stroke="#64748b" />
+            <YAxis stroke="#64748b" />
             <Tooltip />
             <Area dataKey="orders" stroke="#3b82f6" fill="#3b82f620" />
           </AreaChart>
@@ -256,8 +256,8 @@ export function MerchantDashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
         {/* Latest Orders */}
-        <div className="bg-[#0a1120] rounded-2xl p-6">
-          <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0a1120]">
+          <h3 className="mb-4 flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <ShoppingBag className="w-4 h-4" />
             Latest Orders
           </h3>
@@ -266,13 +266,13 @@ export function MerchantDashboard() {
             {latestOrders.map((o) => (
               <div
                 key={o.id}
-                className="flex justify-between items-center p-3 rounded-xl bg-white/5"
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-white/5"
               >
                 <div>
-                  <p className="text-white text-sm font-bold">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">
                     #{o.serialNumber}
                   </p>
-                  <p className="text-gray-400 text-xs">
+                  <p className="text-xs text-slate-500 dark:text-gray-400">
                     {getClientName(o.clientData)}
                   </p>
                 </div>
@@ -281,7 +281,7 @@ export function MerchantDashboard() {
                   <p className="text-emerald-400 text-sm font-bold">
                     {formatCurrency(o.orderCost)}
                   </p>
-                  <p className="text-gray-500 text-xs">
+                  <p className="text-xs text-slate-500 dark:text-gray-500">
                     {o.city}
                   </p>
                 </div>
@@ -291,16 +291,16 @@ export function MerchantDashboard() {
         </div>
 
         {/* City Distribution */}
-        <div className="bg-[#0a1120] rounded-2xl p-6">
-          <h3 className="text-white font-bold mb-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0a1120]">
+          <h3 className="mb-4 font-bold text-slate-900 dark:text-white">
             Orders by City
           </h3>
 
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={cityDistribution}>
-              <CartesianGrid stroke="#ffffff10" />
-              <XAxis dataKey="name" stroke="#aaa" />
-              <YAxis stroke="#aaa" />
+              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" />
+              <XAxis dataKey="name" stroke="#64748b" />
+              <YAxis stroke="#64748b" />
               <Tooltip />
               <Bar dataKey="value" fill="#8b5cf6" />
             </BarChart>

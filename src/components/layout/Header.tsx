@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeSidebar, toggleSidebar } from "@/store/slices/ui/uiSlice";
 import { logout } from "@/store/slices/auth/authSlice";
 import { ROUTES } from "@/constants/routes";
+import { ThemeToggle } from "@/components/common/ThemeToggle";
 
 export default function Header() {
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ const baseToastStyle = {
   };
 
   return (
-    <header className="h-14 bg-white/80 backdrop-blur border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-30 transition-all">
+    <header className="h-14 bg-white/80 dark:bg-slate-950/50 backdrop-blur-md border-b border-gray-200 dark:border-white/5 flex items-center justify-between px-4 sticky top-0 z-30 transition-all">
 
       {/* Left - Sidebar Toggle */}
       <button
@@ -54,21 +55,23 @@ const baseToastStyle = {
         <Menu className="w-5 h-5  bg-primary text-white" />
       </button>
 
-      {/* Right - User Info + Logout */}
-      <div className="flex items-center gap-3">
+      {/* Right - Theme Toggle + User Info + Logout */}
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        
         <button
           onClick={() => router.push(ROUTES.PROFILE)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-all"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-all"
         >
           <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center">
             <User className="w-4 h-4 text-white" />
           </div>
-          <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-slate-200">{user?.name}</span>
         </button>
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 bg-red-50 rounded-lg transition-all"
+          className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950 bg-red-50 dark:bg-red-950/50 rounded-lg transition-all"
         >
           <LogOut className="w-4 h-4" />
         </button>

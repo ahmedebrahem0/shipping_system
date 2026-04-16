@@ -55,7 +55,7 @@ const displayedOrders = searchValue
       />
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
+      <div className="themed-surface mb-4 rounded-xl p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
 
           {/* Search */}
@@ -101,7 +101,7 @@ const displayedOrders = searchValue
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="themed-surface overflow-hidden rounded-xl">
         {isLoading ? (
           <Loader />
         ) : isError ? (

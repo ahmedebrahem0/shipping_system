@@ -19,7 +19,7 @@ export default function ReportTable({ orders }: ReportTableProps) {
   }
 console.log("REPORT DATA:", orders);
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div className="themed-surface overflow-x-auto rounded-xl">
       <table className="w-full text-sm">
         
         {/* Header */}

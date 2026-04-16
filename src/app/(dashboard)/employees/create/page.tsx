@@ -22,7 +22,7 @@ export default function CreateEmployeePage() {
       />
 
       {/* Form */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-2xl">
+      <div className="themed-surface max-w-2xl rounded-xl p-6">
         <EmployeeForm
           isLoading={isCreating}
           onSubmit={handleCreate}

@@ -48,6 +48,9 @@ PERMISSIONS: "/settings/permissions",
   // Reports
   REPORTS: "/reports",
 
+  // Earnings
+  EARNINGS: "/earnings",
+
   // Profile
   PROFILE: "/profile",
 

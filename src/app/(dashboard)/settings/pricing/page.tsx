@@ -14,7 +14,7 @@ export default function PricingPage() {
       />
 
       {/* Form */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-md">
+      <div className="themed-surface max-w-md rounded-xl p-6">
         <WeightPricingForm />
       </div>
     </div>

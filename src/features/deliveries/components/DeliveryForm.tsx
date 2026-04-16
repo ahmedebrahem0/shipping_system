@@ -314,7 +314,7 @@ export default function DeliveryForm({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="mx-auto max-w-4xl space-y-8 rounded-xl bg-white p-6"
+      className="themed-surface mx-auto max-w-4xl space-y-8 rounded-xl p-6"
     >
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="col-span-full border-b pb-2">

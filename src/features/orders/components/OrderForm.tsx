@@ -151,7 +151,7 @@ function StringSelect({
   );
 }
 
-export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormProps) {
+export default function  OrderForm({ isLoading, onSubmit, onCancel }: OrderFormProps) {
   const [products, setProducts] = useState([{ name: "", quantity: 1, itemWeight: 0.1 }]);
 
   const { data: branchesData } = useGetBranchesQuery({ pageSize: 10000 });
@@ -212,7 +212,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
     <form onSubmit={handleSubmit(handleSubmitForm)} className="max-w-6xl mx-auto space-y-6 pb-20">
 
       {/* 1. MERCHANT & BRANCH SECTION */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="themed-surface rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
           <div className="p-2 bg-primary/10 rounded-lg text-primary"><Package size={18} /></div>
           <h3 className="text-md font-bold text-gray-800">Branch & Merchant Selection</h3>
@@ -247,7 +247,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
       </div>
 
       {/* 3. GEOGRAPHY SECTION */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="themed-surface rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
           <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><MapPin size={18} /></div>
           <h3 className="text-md font-bold text-gray-800">Shipping Destination</h3>
@@ -279,7 +279,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
       </div>
 
       {/* 2. ORDER TYPE & PAYMENT SECTION */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="themed-surface rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
           <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><ListTree size={18} /></div>
           <h3 className="text-md font-bold text-gray-800">Order & Payment Configuration</h3>
@@ -321,7 +321,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
       </div>
 
       {/* 4. CLIENT INFO SECTION */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="themed-surface rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-6 border-b border-gray-50 pb-4">
           <div className="p-2 bg-green-50 rounded-lg text-green-600"><User size={18} /></div>
           <h3 className="text-md font-bold text-gray-800">Client Contact Details</h3>
@@ -357,11 +357,11 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
       </div>
 
       {/* 5. PRODUCTS SECTION */}
-      <div className="bg-white rounded-2xl p-6 shadow-xl">
+      <div className="themed-surface rounded-2xl p-6 shadow-xl">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <ShoppingBag className="text-primary" size={20} />
-            <h3 className="text-lg font-bold tracking-tight">Order Items</h3>
+            <h3 className="text-lg font-bold tracking-tight text-gray-300">Order Items</h3>
           </div>
           <button type="button" onClick={() => setProducts([...products, { name: "", quantity: 1, itemWeight: 0.1 }])}
             className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
@@ -370,7 +370,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
         </div>
         <div className="space-y-3">
           {products.map((p, index) => (
-            <div key={index} className="flex gap-3 items-center bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+            <div key={index} className="flex gap-3 items-center bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-gray-300">
               <input value={p.name} onChange={(e) => { const n = [...products]; n[index].name = e.target.value; setProducts(n); }} placeholder="Product Name" className="bg-transparent border-b border-white/20 outline-none flex-[4] text-sm py-1 focus:border-primary" />
               <input type="number" value={p.quantity} onChange={(e) => { const n = [...products]; n[index].quantity = Number(e.target.value); setProducts(n); }} className="bg-transparent border-b border-white/20 outline-none flex-1 text-sm py-1 text-center" placeholder="Qty" />
               <input type="number" step="0.1" value={p.itemWeight} onChange={(e) => { const n = [...products]; n[index].itemWeight = Number(e.target.value); setProducts(n); }} className="bg-transparent border-b border-white/20 outline-none flex-1 text-sm py-1 text-center" placeholder="Wt" />
@@ -383,7 +383,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
       {/* 6. NOTES SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {notesFields.map((n) => (
-          <div key={n} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <div key={n} className="themed-surface rounded-2xl p-5">
             <label className={labelBase}>{n.replace("Notes", " Instructions")}</label>
             <textarea {...register(n)} className={`${inputBase} h-24 resize-none bg-gray-50/30`} placeholder="Write any specific notes here..." />
           </div>
@@ -391,7 +391,7 @@ export default function OrderForm({ isLoading, onSubmit, onCancel }: OrderFormPr
       </div>
 
       {/* FOOTER ACTIONS */}
-      <div className="flex gap-4 sticky bottom-6 z-10 bg-white/90 backdrop-blur-md p-4 border border-gray-200 rounded-3xl shadow-2xl mx-4 md:mx-0">
+      <div className="themed-surface sticky bottom-6 z-10 mx-4 flex gap-4 rounded-3xl p-4 backdrop-blur-md md:mx-0">
         <button type="button" onClick={onCancel} className="flex-1 py-4 text-sm font-bold text-gray-400 hover:text-gray-700 transition-colors">Discard Changes</button>
         <button type="submit" disabled={isLoading} className="flex-[2] py-4 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all">
           {isLoading ? "Synchronizing Data..." : "Finalize & Create Order"}

@@ -135,7 +135,7 @@ export default function SetupPage() {
       </div>
 
       {/* --- Progress Stepper --- */}
-      <div className="relative bg-white px-8 pb-12 pt-3 rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="themed-surface relative overflow-hidden rounded-3xl px-8 pb-12 pt-3">
         <div className="absolute top-0 left-0 w-full h-1 bg-gray-50">
           <div 
             className="h-full bg-primary transition-all duration-500 ease-in-out" 
@@ -181,7 +181,7 @@ export default function SetupPage() {
       </div>
 
       {/* --- Main Content Section --- */}
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 overflow-hidden transition-all duration-500">
+      <div className=" rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 overflow-hidden transition-all duration-500">
         <div className="p-8 border-b border-gray-50 bg-gray-50/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
@@ -221,11 +221,11 @@ export default function SetupPage() {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-gray-50/50">
-                        <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-widest">Resource Name</th>
-                        <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-widest">
+                        <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-300 tracking-widest">Resource Name</th>
+                        <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-300 tracking-widest">
                           {currentStep === "governments" ? "Linked Branch" : currentStep === "cities" ? "Linked Government" : "Secondary Info"}
                         </th>
-                        <th className="px-6 py-4 text-right text-[10px] font-black uppercase text-gray-400 tracking-widest">Status</th>
+                        <th className="px-6 py-4 text-right text-[10px] font-black uppercase text-gray-300 tracking-widest">Status</th>
                       </tr>
                     </thead>
                       <tbody className="divide-y divide-gray-50">
@@ -235,7 +235,7 @@ export default function SetupPage() {
 
                           return (
                             <tr key={item.id} className="group hover:bg-primary/5 transition-colors">
-                              <td className="px-6 py-4 font-bold text-gray-800">{item.name}</td>
+                              <td className="px-6 py-4 font-bold text-gray-400">{item.name}</td>
 
                               <td className="px-6 py-4 text-sm text-gray-500">
                                 {currentStep === "branches"
@@ -318,8 +318,8 @@ export default function SetupPage() {
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setIsFormOpen(false)} />
-          <div className="relative bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
-            <div className="p-8 border-b border-gray-50 bg-gray-50/50 flex items-center gap-4">
+          <div className="themed-surface relative w-full max-w-xl overflow-hidden rounded-[2.5rem] shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
+            <div className="themed-surface-header flex items-center gap-4 p-8">
                <div className="h-10 w-10 bg-primary text-white rounded-xl flex items-center justify-center">
                   <Plus size={20} />
                </div>

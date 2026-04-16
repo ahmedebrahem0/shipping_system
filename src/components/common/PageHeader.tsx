@@ -23,9 +23,9 @@ export default function PageHeader({
   return (
     <div className={`flex items-center justify-between mb-6 ${className}`}>
       <div>
-        <h1 className="text-xl font-bold text-gray-900">{title}</h1>
+        <h1 className="text-xl font-bold text-gray-300">{title}</h1>
         {description && (
-          <p className="text-sm text-[primary] mt-0.5">{description}</p>
+          <p className="text-sm text-gray-300 mt-0.5">{description}</p>
         )}
       </div>
 

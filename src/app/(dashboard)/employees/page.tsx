@@ -61,7 +61,7 @@ export default function EmployeesPage() {
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="themed-surface overflow-hidden rounded-xl">
         {isLoading || isSearching ? (
           <Loader />
         ) : isError ? (

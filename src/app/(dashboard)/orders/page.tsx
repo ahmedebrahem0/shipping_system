@@ -91,7 +91,7 @@ export default function OrdersPage() {
     <div className="space-y-4 lg:space-y-6 pb-10 animate-in fade-in duration-700">
       {(isMerchant || isDelivery) && (
         <div className="overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0a1120_100%)] shadow-[0_24px_60px_rgba(0,0,0,0.32)]">
-          <div className="relative p-5 lg:p-6">
+          <div className="themed-surface  relative p-5 lg:p-6 ">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.10),transparent_24%)]" />
             <div className="relative z-10 flex flex-col gap-5">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
@@ -100,7 +100,7 @@ export default function OrdersPage() {
                     <ShieldCheck className="h-3.5 w-3.5" />
                     {isMerchant ? "Merchant Scope" : "Delivery Scope"}
                   </div>
-                  <h2 className="text-xl lg:text-2xl font-black tracking-tight text-white">
+                  <h2 className="text-xl lg:text-2xl font-black tracking-tight text-white ">
                     {isMerchant
                       ? "Your orders workspace is isolated to this merchant account."
                       : "Your orders workspace is isolated to this delivery account."}
@@ -175,7 +175,7 @@ export default function OrdersPage() {
       )}
       
       {/* 1 & 2. Header & Status Section */}
-      <div className="bg-white rounded-xl lg:rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="themed-surface overflow-hidden rounded-xl lg:rounded-2xl">
         {/* Upper Part: Responsive Header */}
         <div className="p-4 lg:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
@@ -183,18 +183,18 @@ export default function OrdersPage() {
               <div className="p-2 bg-primary/10 rounded-lg lg:rounded-xl">
                 <LayoutGrid className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
               </div>
-              <h1 className="text-lg lg:text-2xl font-bold text-gray-900 tracking-tight">{pageTitle}</h1>
+              <h1 className="text-lg lg:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{pageTitle}</h1>
             </div>
-            <p className="text-[11px] lg:text-sm text-gray-500 font-medium flex items-center gap-2">
+            <p className="flex items-center gap-2 text-[11px] font-medium text-slate-600 lg:text-sm dark:text-slate-300">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="hidden xs:inline text-gray-400">
+              <span className="hidden xs:inline text-slate-600 dark:text-slate-400">
                 {isMerchant
                   ? "Showing only merchant-scoped data"
                   : isDelivery
                   ? "Showing only delivery-scoped data"
                   : "Manage and track"}
               </span>
-              <span className="text-gray-900 font-bold">{isMerchant || isDelivery ? pageDescription : totalOrders}</span>
+              <span className="font-bold text-slate-800 dark:text-white">{isMerchant || isDelivery ? pageDescription : totalOrders}</span>
               {!isMerchant && !isDelivery && <span>orders</span>}
             </p>
           </div>
@@ -211,10 +211,10 @@ export default function OrdersPage() {
         </div>
 
         {/* Status Tabs - Scrollable on mobile, Grid on desktop */}
-        <div className="p-4 lg:p-5 bg-gray-50/40 border-t border-gray-100">
+        <div className="themed-surface-header p-4 lg:p-5">
           <div className="flex items-center gap-2 mb-3 lg:mb-4">
-            <ListFilter className="w-3.5 h-3.5 text-gray-400" />
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            <ListFilter className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
               {isMerchant ? "Filter your orders by status" : "Filter by Status"}
             </span>
             <div className="h-[1px] flex-1 bg-gray-200/50"></div>
@@ -232,7 +232,7 @@ export default function OrdersPage() {
                     "whitespace-nowrap lg:whitespace-normal px-4 lg:px-3 py-2.5 lg:py-3 rounded-lg lg:rounded-xl text-[10px] lg:text-xs font-bold transition-all duration-200 border text-center flex items-center justify-center min-h-[40px] lg:min-h-[48px] relative flex-shrink-0 lg:flex-shrink",
                     isActive 
                       ? "bg-white border-primary text-primary shadow-sm ring-1 ring-primary/10" 
-                      : "bg-white/50 border-gray-200 text-gray-500 hover:text-primary hover:border-primary/30 hover:bg-white"
+                      : "bg-slate-50 border-slate-200 text-slate-700 hover:text-primary hover:border-primary/30 hover:bg-white dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-300"
                   )}
                 >
                   {isActive && (
@@ -247,66 +247,66 @@ export default function OrdersPage() {
       </div>
 
       {/* 3. Advanced Filters Section */}
-      <div className="bg-white rounded-xl lg:rounded-2xl border border-gray-100 shadow-sm p-4 lg:p-6">
+      <div className="themed-surface rounded-xl p-4 lg:rounded-2xl lg:p-6">
         <div className="flex items-center gap-2 mb-4 lg:mb-6">
           <div className="p-1.5 bg-amber-50 rounded-lg">
             <Filter className="w-4 h-4 text-amber-600" />
           </div>
-          <span className="text-sm font-bold text-gray-800 tracking-tight">Search & Advanced Filters</span>
+          <span className="text-sm font-bold tracking-tight text-slate-700 dark:text-slate-300">Search & Advanced Filters</span>
         </div>
         
         {/* Responsive Filter Grid: 1 col (mobile), 2 cols (tablet), 4 cols (desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4">
           <div className="relative group">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 transition-colors group-focus-within:text-primary dark:text-slate-400" />
             <input
               type="text"
               placeholder="Customer details..."
               value={filters.searchTxt ?? ""}
               onChange={(e) => handleFilterChange("searchTxt", e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 lg:py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-xs lg:text-sm outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-semibold"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-11 pr-4 text-xs font-semibold text-slate-800 outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/5 lg:py-3.5 lg:text-sm dark:text-slate-100"
             />
           </div>
 
           <div className="relative group">
-            <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+            <Hash className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 transition-colors group-focus-within:text-primary dark:text-slate-400" />
             <input
               type="text"
               placeholder="Serial number..."
               value={filters.serialNum ?? ""}
               onChange={(e) => handleFilterChange("serialNum", e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 lg:py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-xs lg:text-sm outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-semibold"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-11 pr-4 text-xs font-semibold text-slate-800 outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/5 lg:py-3.5 lg:text-sm dark:text-slate-100"
             />
           </div>
 
           <div className="relative group">
-            <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+            <Calendar className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 transition-colors group-focus-within:text-primary dark:text-slate-400" />
             <input
               type="date"
               value={filters.startDate ?? ""}
               onChange={(e) => handleFilterChange("startDate", e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 lg:py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-xs lg:text-sm outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-semibold text-gray-600"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-11 pr-4 text-xs font-semibold text-slate-700 outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/5 lg:py-3.5 lg:text-sm dark:text-slate-100"
             />
           </div>
 
           <div className="relative group">
-            <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+            <Calendar className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 transition-colors group-focus-within:text-primary dark:text-slate-400" />
             <input
               type="date"
               value={filters.endDate ?? ""}
               onChange={(e) => handleFilterChange("endDate", e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 lg:py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-xs lg:text-sm outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-semibold text-gray-600"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-11 pr-4 text-xs font-semibold text-slate-700 outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/5 lg:py-3.5 lg:text-sm dark:text-slate-100"
             />
           </div>
         </div>
       </div>
 
       {/* 4. Data Table Container */}
-      <div className="bg-white rounded-xl lg:rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col min-h-[450px]">
+      <div className="themed-surface flex min-h-[450px] flex-col overflow-hidden rounded-xl lg:rounded-2xl">
         {isLoading ? (
           <div className="flex-1 flex flex-col items-center justify-center p-12 lg:p-20 gap-4">
             <Loader />
-            <p className="text-xs lg:text-sm font-bold text-gray-400 animate-pulse uppercase tracking-widest">Fetching orders...</p>
+            <p className="animate-pulse text-xs font-bold uppercase tracking-widest text-slate-600 lg:text-sm dark:text-slate-400">Fetching orders...</p>
           </div>
         ) : isEmpty ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 lg:p-16 text-center">
@@ -338,7 +338,7 @@ export default function OrdersPage() {
             </div>
             
             {/* Pagination - Stacked or centered */}
-            <div className="p-4 lg:p-6 bg-gray-50/50 border-t border-gray-100 mt-auto flex items-center justify-center">
+            <div className="themed-surface-header mt-auto flex items-center justify-center p-4 lg:p-6">
               <Pagination
                 currentPage={filters.page ?? 1}
                 totalCount={totalOrders}

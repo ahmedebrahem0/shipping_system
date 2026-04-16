@@ -18,7 +18,7 @@ export default function PermissionsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm">
+      <div className="themed-surface rounded-3xl p-6">
         <PageHeader
           title="Permissions"
           description="View all system permissions"
@@ -26,13 +26,13 @@ export default function PermissionsPage() {
       </div>
 
       {/* Content */}
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+      <div className="themed-surface overflow-hidden rounded-3xl">
+        <div className="themed-surface-header px-6 py-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-900">
               Permissions List
             </h2>
-            <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+            <div className="themed-surface rounded-full px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
               Total: {activePermissions.length}
             </div>
           </div>

@@ -22,7 +22,7 @@ function getGreeting(): string {
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="mb-8">
-      <h1 className="text-3xl font-black text-white tracking-tight">
+      <h1 className="text-3xl font-black text-slate-900  tracking-tight">
         {title} <span className="text-sky-400 text-4xl">.</span>
       </h1>
       <p className="text-slate-400 font-medium">{subtitle}</p>
@@ -54,7 +54,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
+    <div className="themed-surface max-w-[1600px] mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <SectionHeader
           title={`Good ${greeting}, ${firstName}!`}

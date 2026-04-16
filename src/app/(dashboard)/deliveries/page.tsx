@@ -40,7 +40,7 @@ export default function DeliveriesPage() {
       />
 
       {/* Content */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="themed-surface overflow-hidden rounded-xl">
         {isLoading ? (
           <Loader />
         ) : isError ? (
