@@ -593,7 +593,10 @@ getOrderById: builder.query<OrderDetailsResponse, number>({
     },
   }),
 
-getMerchantOrders: builder.query<OrdersResponse, { merchantId: number; status?: string; filters?: OrderFilters }>({
+getMerchantOrders: builder.query<
+  OrdersResponse,
+  { merchantId: number; status?: string; filters?: OrderFilters }
+>({
   query: ({ merchantId, status, filters }) => ({
     url: ENDPOINTS.ORDERS.GET_BY_MERCHANT(merchantId, status || ""),
     params: filters,

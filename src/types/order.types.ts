@@ -116,6 +116,7 @@ export interface OrderFilters {
   page?: number;
   pageSize?: number;
   searchTxt?: string;
+  all?: string;
   branchId?: number;
   merchantId?: number;
   governId?: number;

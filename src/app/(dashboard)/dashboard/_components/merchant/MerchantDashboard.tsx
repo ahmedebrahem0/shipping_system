@@ -41,6 +41,51 @@ function getClientName(clientData?: string) {
   return clientData?.split("\n")[0] || "Unknown";
 }
 
+function parseOrderDate(dateValue: string) {
+  const directDate = new Date(dateValue);
+  if (!Number.isNaN(directDate.getTime())) {
+    return directDate;
+  }
+
+  const normalizedValue = dateValue
+    .trim()
+    .replace(/\.(?=\d{2}(\D|$))/g, ":")
+    .replace(/\s+/g, " ");
+
+  const normalizedDate = new Date(normalizedValue);
+  if (!Number.isNaN(normalizedDate.getTime())) {
+    return normalizedDate;
+  }
+
+  const match = normalizedValue.match(
+    /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})(?:[ T](\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?\s*(AM|PM)?)?$/i
+  );
+
+  if (match) {
+    const [, dayStr, monthStr, yearStr, hourStr, minuteStr, secondStr, meridiem] = match;
+    let hours = Number(hourStr || 0);
+    const minutes = Number(minuteStr || 0);
+    const seconds = Number(secondStr || 0);
+
+    if (meridiem) {
+      const upperMeridiem = meridiem.toUpperCase();
+      if (upperMeridiem === "PM" && hours < 12) hours += 12;
+      if (upperMeridiem === "AM" && hours === 12) hours = 0;
+    }
+
+    return new Date(
+      Number(yearStr),
+      Number(monthStr) - 1,
+      Number(dayStr),
+      hours,
+      minutes,
+      seconds
+    );
+  }
+
+  return new Date(NaN);
+}
+
 export function MerchantDashboard() {
   const user = useAppSelector((state) => state.auth.user);
   const { data: merchantsRes, isLoading: merchantsLoading } = useGetMerchantsQuery({
@@ -69,6 +114,7 @@ export function MerchantDashboard() {
   } = useGetMerchantOrdersQuery(
     {
       merchantId,
+      status: "New",
       filters: { page: 1, pageSize: 1000 },
     },
     { skip: !merchantId }
@@ -121,15 +167,27 @@ export function MerchantDashboard() {
 
   // ================= Orders per day =================
   const ordersByDay = useMemo(() => {
-    const map: Record<string, number> = {};
+    const map: Record<string, number> = {
+      Sat: 0,
+      Sun: 0,
+      Mon: 0,
+      Tue: 0,
+      Wed: 0,
+      Thu: 0,
+      Fri: 0,
+    };
 
     orders.forEach((o) => {
-      const date = new Date(o.createdDate.replace(/\./g, ":"));
+      const date = parseOrderDate(o.createdDate);
+      if (Number.isNaN(date.getTime())) return;
+
       const key = date.toLocaleDateString("en-US", {
         weekday: "short",
       });
 
-      map[key] = (map[key] || 0) + 1;
+      if (key in map) {
+        map[key] += 1;
+      }
     });
 
     return Object.entries(map).map(([name, value]) => ({
@@ -158,8 +216,8 @@ export function MerchantDashboard() {
     return [...orders]
       .sort(
         (a, b) =>
-          new Date(b.createdDate).getTime() -
-          new Date(a.createdDate).getTime()
+          parseOrderDate(b.createdDate).getTime() -
+          parseOrderDate(a.createdDate).getTime()
       )
       .slice(0, 6);
   }, [orders]);
