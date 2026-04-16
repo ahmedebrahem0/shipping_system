@@ -383,7 +383,6 @@ export default function MerchantForm({
     <InputField
       label="Branch"
       icon={Landmark}
-      className="text-gray-300"
       error={String(errors.branches_Id?.message || errors.branchId?.message || "")}
     >
       <select
