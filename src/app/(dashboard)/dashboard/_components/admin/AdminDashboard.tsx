@@ -315,7 +315,7 @@ const branches = useMemo<Branch[]>(
   }
 console.log("iam admin")
   return (
-    <div className="min-h-screen bg-[#0e1227] p-5 lg:p-6 space-y-6 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-[#0e1227] p-5 lg:p-6 space-y-6 animate-in fade-in duration-500 themed-surface">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           label="Orders"
@@ -350,7 +350,7 @@ console.log("iam admin")
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        <div className="xl:col-span-8 bg-[#0a1120] rounded-[2rem] p-6 border border-white/5 shadow-xl">
+        <div className="xl:col-span-8 bg-[#0a1120] rounded-[2rem] p-6 border border-white/5 shadow-xl themed-surface">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-black text-white tracking-tight italic">
@@ -411,7 +411,7 @@ console.log("iam admin")
           </div>
         </div>
 
-        <div className="xl:col-span-4 bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-[2rem] p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden group">
+        <div className="xl:col-span-4 bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-[2rem] p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden group ">
           <div className="relative z-10">
             <div className="flex justify-between items-start">
               <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md">
@@ -473,7 +473,7 @@ console.log("iam admin")
         {systemStatus.map((item, i) => (
           <div
             key={i}
-            className="bg-[#0a1120] p-5 rounded-[1.5rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all"
+            className="bg-[#0a1120] p-5 rounded-[1.5rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all  themed-surface"
           >
             <div className="flex items-center gap-3">
               <div className={cn("p-2 rounded-lg bg-white/5", item.color)}>
@@ -499,10 +499,10 @@ console.log("iam admin")
 
       <div className="grid grid-cols-1 2xl:grid-cols-12 gap-6">
   {/* Latest Orders */}
-  <div className="2xl:col-span-7 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-    <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+  <div className="2xl:col-span-7 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.35)] themed-surface">
+    <div className="flex items-center justify-between border-b border-white/10 px-6 py-5 themed-surface">
       <div>
-        <h3 className="text-white text-lg font-black tracking-tight">
+        <h3 className="text-slate-400 text-lg font-black tracking-tight">
           Latest Orders
         </h3>
         <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
@@ -510,19 +510,19 @@ console.log("iam admin")
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-400 shadow-inner shadow-sky-500/10">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-400 shadow-inner shadow-sky-500/10  themed-surface">
         <ShoppingBag className="h-5 w-5" />
       </div>
     </div>
 
-    <div className="divide-y divide-white/5">
+    <div className="divide-y divide-white/5  themed-surface">
       {latestOrders.length ? (
         latestOrders.map((order, index) => (
           <div
             key={order.id}
             className="group grid grid-cols-1 gap-4 px-6 py-4 transition-all duration-300 hover:bg-white/[0.03] md:grid-cols-[auto_1fr_auto]"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-sky-400 shadow-inner shadow-white/5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-sky-400 shadow-inner shadow-white/5  themed-surface">
               <Package className="h-5 w-5" />
             </div>
 
@@ -531,7 +531,7 @@ console.log("iam admin")
                 <p className="truncate text-sm font-black text-white">
                   #{order.serialNumber}
                 </p>
-                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-400  themed-surface">
                   #{index + 1}
                 </span>
               </div>
@@ -568,10 +568,10 @@ console.log("iam admin")
   </div>
 
   {/* Orders by City */}
-  <div className="2xl:col-span-5 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+  <div className="2xl:col-span-5 rounded-[2rem] border border-white/10 p-6  themed-surface">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-white text-lg font-black tracking-tight">
+        <h3 className="text-slate-400 text-lg font-black tracking-tight">
           Orders by City
         </h3>
         <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
@@ -579,12 +579,12 @@ console.log("iam admin")
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10  themed-surface">
         <MapPin className="h-5 w-5" />
       </div>
     </div>
 
-    <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.02] p-4">
+    <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.02] p-4  themed-surface">
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -634,7 +634,7 @@ console.log("iam admin")
 
 <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
   {/* Top Merchants */}
-  <div className="xl:col-span-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+  <div className="xl:col-span-4 rounded-[2rem] border border-white/10  p-6 ">
     <div className="mb-5 flex items-center justify-between">
       <div>
         <h3 className="text-white text-lg font-black tracking-tight">
@@ -655,7 +655,7 @@ console.log("iam admin")
         topMerchants.map((merchant, index) => (
           <div
             key={`${merchant.name}-${index}`}
-            className="group rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05] hover:border-white/10"
+            className="group rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05] hover:border-white/10  themed-surface"
           >
             <div className="mb-3 flex items-center justify-between gap-3">
               <div className="min-w-0">
@@ -704,7 +704,7 @@ console.log("iam admin")
   </div>
 
   {/* Merchant Health */}
-  <div className="xl:col-span-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+  <div className="xl:col-span-4 rounded-[2rem] border border-white/10  p-6 ">
     <div className="mb-5 flex items-center justify-between">
       <div>
         <h3 className="text-white text-lg font-black tracking-tight">
@@ -720,7 +720,7 @@ console.log("iam admin")
       </div>
     </div>
 
-    <div className="space-y-3">
+    <div className="space-y-3  themed-surface">
       {merchantHealth.length ? (
         merchantHealth.map((merchant, index) => (
           <div
@@ -778,7 +778,7 @@ console.log("iam admin")
   </div>
 
   {/* Delivery Coverage */}
-  <div className="xl:col-span-4 rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+  <div className="xl:col-span-4 rounded-[2rem] border border-white/10  p-6 ">
     <div className="mb-5 flex items-center justify-between">
       <div>
         <h3 className="text-white text-lg font-black tracking-tight">
@@ -799,7 +799,7 @@ console.log("iam admin")
         deliveryCoverage.map((delivery) => (
           <div
             key={delivery.id}
-            className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05]"
+            className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05] themed-surface"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
