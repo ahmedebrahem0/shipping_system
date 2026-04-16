@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { Plus, Search, Calendar, Filter, Hash, LayoutGrid, ListFilter } from "lucide-react";
+import { Plus, Search, Calendar, Filter, Hash, LayoutGrid, ListFilter, ShieldCheck, Package, MapPin, DollarSign } from "lucide-react";
 import { useOrders } from "@/features/orders/hooks/useOrders";
 import OrderTable from "@/features/orders/components/OrderTable";
 import AssignDeliveryModal from "@/features/orders/components/AssignDeliveryModal";
@@ -35,9 +34,9 @@ const getStatusLabel = (status: string) => {
 
 export default function OrdersPage() {
   const {
-    orders, totalOrders, isLoading, isError, isAdmin, isEmployee, isMerchant, isDelivery,
+    orders, totalOrders, isLoading, isError, isAdmin, isEmployee, isMerchant, isDelivery, currentMerchant,
     selectedStatus, setSelectedStatus, filters, handleFilterChange, isDeleteOpen, setIsDeleteOpen,
-    selectedOrderId, setSelectedOrderId, handleDelete, isDeleting, isStatusOpen, setIsStatusOpen,
+    setSelectedOrderId, handleDelete, isDeleting, isStatusOpen, setIsStatusOpen,
     handleChangeStatus, isChangingStatus, isAssignOpen, setIsAssignOpen, handleAssignDelivery,
     isAssigning, goToCreate, goToDetails,
   } = useOrders();
@@ -50,9 +49,93 @@ export default function OrdersPage() {
   const currentLabel = getStatusLabel(selectedStatus);
   const isEmpty = orders.length === 0;
   const hasFilters = filters.searchTxt || filters.serialNum || filters.startDate || filters.endDate;
+  const totalRevenue = orders.reduce((sum, order) => sum + (order.orderCost || 0), 0);
+  const uniqueCities = new Set(orders.map((order) => `${order.governrate}-${order.city}`)).size;
+  const pageTitle = isMerchant ? "Merchant Orders" : "Orders Dashboard";
+  const pageDescription = isMerchant
+    ? `Track only ${currentMerchant?.storeName || currentMerchant?.name || "your"} shipments with the same operational view.`
+    : `Manage and track ${totalOrders} orders`;
+  const emptyStateTitle = isMerchant
+    ? "No orders available for this status"
+    : "No Results Found";
+  const emptyStateDescription = hasFilters
+    ? "We couldn't find any orders matching your filters. Try clearing them."
+    : isMerchant
+    ? `The merchant view does not currently show any orders under "${currentLabel}". Try selecting another status or return to New Orders.`
+    : `There are no orders currently marked as "${currentLabel}".`;
 
   return (
     <div className="space-y-4 lg:space-y-6 pb-10 animate-in fade-in duration-700">
+      {isMerchant && (
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0a1120_100%)] shadow-[0_24px_60px_rgba(0,0,0,0.32)]">
+          <div className="relative p-5 lg:p-6">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.10),transparent_24%)]" />
+            <div className="relative z-10 flex flex-col gap-5">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div className="space-y-2">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/15 bg-sky-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-sky-300">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    Merchant Scope
+                  </div>
+                  <h2 className="text-xl lg:text-2xl font-black tracking-tight text-white">
+                    Your orders workspace is isolated to this merchant account.
+                  </h2>
+                  <p className="max-w-2xl text-sm leading-6 text-slate-400">
+                    This page uses the same operational flow as the shared orders dashboard, but every record here is scoped to
+                    <span className="font-bold text-slate-200"> {currentMerchant?.storeName || currentMerchant?.name || "your merchant account"}</span>.
+                  </p>
+                </div>
+
+                <button
+                  onClick={goToCreate}
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-slate-900 transition-all hover:-translate-y-0.5 hover:bg-slate-100"
+                >
+                  <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+                  Create New Order
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Visible Orders</p>
+                      <p className="mt-2 text-2xl font-black text-white">{totalOrders}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-sky-500/10 p-3 text-sky-300">
+                      <Package className="h-4 w-4" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Queue Value</p>
+                      <p className="mt-2 text-2xl font-black text-white">{totalRevenue.toLocaleString()} EGP</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-emerald-500/10 p-3 text-emerald-300">
+                      <DollarSign className="h-4 w-4" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Covered Cities</p>
+                      <p className="mt-2 text-2xl font-black text-white">{uniqueCities}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-amber-500/10 p-3 text-amber-300">
+                      <MapPin className="h-4 w-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* 1 & 2. Header & Status Section */}
       <div className="bg-white rounded-xl lg:rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -63,12 +146,13 @@ export default function OrdersPage() {
               <div className="p-2 bg-primary/10 rounded-lg lg:rounded-xl">
                 <LayoutGrid className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
               </div>
-              <h1 className="text-lg lg:text-2xl font-bold text-gray-900 tracking-tight">Orders Dashboard</h1>
+              <h1 className="text-lg lg:text-2xl font-bold text-gray-900 tracking-tight">{pageTitle}</h1>
             </div>
             <p className="text-[11px] lg:text-sm text-gray-500 font-medium flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="hidden xs:inline text-gray-400">Manage and track</span> 
-              <span className="text-gray-900 font-bold">{totalOrders}</span> orders
+              <span className="hidden xs:inline text-gray-400">{isMerchant ? "Showing only merchant-scoped data" : "Manage and track"}</span>
+              <span className="text-gray-900 font-bold">{isMerchant ? pageDescription : totalOrders}</span>
+              {!isMerchant && <span>orders</span>}
             </p>
           </div>
 
@@ -85,7 +169,9 @@ export default function OrdersPage() {
         <div className="p-4 lg:p-5 bg-gray-50/40 border-t border-gray-100">
           <div className="flex items-center gap-2 mb-3 lg:mb-4">
             <ListFilter className="w-3.5 h-3.5 text-gray-400" />
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Filter by Status</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              {isMerchant ? "Filter your orders by status" : "Filter by Status"}
+            </span>
             <div className="h-[1px] flex-1 bg-gray-200/50"></div>
           </div>
           
@@ -180,12 +266,8 @@ export default function OrdersPage() {
         ) : isEmpty ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 lg:p-16 text-center">
             <EmptyState
-              title="No Results Found"
-              description={
-                hasFilters
-                  ? "We couldn't find any orders matching your filters. Try clearing them."
-                  : `There are no orders currently marked as "${currentLabel}".`
-              }
+              title={emptyStateTitle}
+              description={emptyStateDescription}
             />
           </div>
         ) : isError ? (
@@ -203,7 +285,7 @@ export default function OrdersPage() {
                 isMerchant={isMerchant}
                 isDelivery={isDelivery}
                 selectedStatus={selectedStatus}
-                onView={goToDetails}
+                onView={(id) => goToDetails(id, selectedStatus)}
                 onDelete={(id) => { setSelectedOrderId(id); setIsDeleteOpen(true); }}
                 onChangeStatus={(id) => { setSelectedOrderId(id); setIsStatusOpen(true); }}
                 onAssignDelivery={(id) => { setSelectedOrderId(id); setIsAssignOpen(true); }}

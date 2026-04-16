@@ -1,13 +1,14 @@
 // useOrders.ts
 // Handles all order operations based on user role
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   useGetOrdersQuery,
   useGetMerchantOrdersQuery,
   useGetDeliveryOrdersQuery,
+  useGetMerchantsQuery,
   useDeleteOrderMutation,
   useChangeOrderStatusMutation,
   useAssignDeliveryMutation,
@@ -15,8 +16,9 @@ import {
 import { useAppSelector } from "@/store/hooks";
 import { ROLES } from "@/constants/roles";
 import { ORDER_STATUSES } from "@/constants/orderStatuses";
-import type { OrderFilters } from "@/types/order.types";
+import type { OrderFilters, OrdersResponse } from "@/types/order.types";
 import { ROUTES } from "@/constants/routes";
+import type { Merchant } from "@/types/merchant.types";
 
 export const useOrders = () => {
   const router = useRouter();
@@ -38,6 +40,27 @@ export const useOrders = () => {
   const isMerchant = user?.role?.toLowerCase() === ROLES.MERCHANT.toLowerCase();
   const isDelivery = user?.role?.toLowerCase() === ROLES.DELIVERY.toLowerCase();
 
+  const { data: merchantsRes, isLoading: isLoadingMerchants } = useGetMerchantsQuery(
+    { pageSize: 1000 },
+    { skip: !isMerchant }
+  );
+
+  const merchants = useMemo<Merchant[]>(
+    () => merchantsRes?.data?.merchants || [],
+    [merchantsRes]
+  );
+
+  const currentMerchant = useMemo(
+    () =>
+      merchants.find(
+        (merchant) =>
+          merchant.email?.toLowerCase() === user?.email?.toLowerCase()
+      ) ?? null,
+    [merchants, user?.email]
+  );
+
+  const merchantId = currentMerchant?.id ?? 0;
+
   const {
     data: allOrdersData,
     isLoading: isLoadingAll,
@@ -51,9 +74,14 @@ export const useOrders = () => {
     data: merchantOrdersData,
     isLoading: isLoadingMerchant,
     isError: isErrorMerchant,
+    error: merchantOrdersError,
   } = useGetMerchantOrdersQuery(
-    { merchantId: Number(user?.id), status: selectedStatus, filters },
-    { skip: !isMerchant }
+    {
+      merchantId,
+      status: selectedStatus,
+      filters,
+    },
+    { skip: !isMerchant || !merchantId }
   );
 
   const {
@@ -66,14 +94,25 @@ export const useOrders = () => {
   );
 
   // ==================== Get correct data ====================
+  const normalizedMerchantOrdersData = useMemo<OrdersResponse | undefined>(() => {
+    if (merchantOrdersData) return merchantOrdersData;
+    if (merchantOrdersError && typeof merchantOrdersError === "object" && "data" in merchantOrdersError) {
+      return (merchantOrdersError as { data?: OrdersResponse }).data;
+    }
+    return undefined;
+  }, [merchantOrdersData, merchantOrdersError]);
+
   const ordersData = isMerchant
-    ? merchantOrdersData
+    ? normalizedMerchantOrdersData
     : isDelivery
     ? deliveryOrdersData
     : allOrdersData;
 
-  const isLoading = isLoadingAll || isLoadingMerchant || isLoadingDelivery;
-  const isError = isErrorAll || isErrorMerchant || isErrorDelivery;
+  const isLoading = isLoadingAll || isLoadingMerchant || isLoadingDelivery || isLoadingMerchants;
+  const hasMerchantFallbackData = Boolean(normalizedMerchantOrdersData);
+  const isError = isMerchant
+    ? Boolean(!hasMerchantFallbackData && isErrorMerchant)
+    : isErrorAll || isErrorDelivery;
 
   // ==================== Delete ====================
   const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
@@ -156,6 +195,8 @@ export const useOrders = () => {
     isEmployee,
     isMerchant,
     isDelivery,
+    currentMerchant,
+    hasMerchantFallbackData,
 
     // Status Filter
     selectedStatus,
@@ -187,6 +228,11 @@ export const useOrders = () => {
 
     // Navigation
     goToCreate: () => router.push(ROUTES.ORDER_CREATE),
-    goToDetails: (id: number) => router.push(ROUTES.ORDER_DETAILS(id)),
+    goToDetails: (id: number, status?: string) =>
+      router.push(
+        status
+          ? `${ROUTES.ORDER_DETAILS(id)}?status=${encodeURIComponent(status)}`
+          : ROUTES.ORDER_DETAILS(id)
+      ),
   };
 };

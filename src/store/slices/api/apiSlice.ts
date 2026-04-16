@@ -683,12 +683,31 @@ getProducts: builder.query<Product[], void>({
   }),
   providesTags: ["Orders"],
 }),
+
+getProductById: builder.query<Product, number>({
+  query: (id) => ({
+    url: ENDPOINTS.PRODUCT.GET_BY_ID(id),
+  }),
+  providesTags: ["Orders"],
+  transformResponse: (response: Product | ApiResponse<Product> | { data?: Product }) => {
+    if (response && typeof response === "object" && "isSuccess" in response) {
+      return response.data;
+    }
+
+    if (response && typeof response === "object" && "data" in response && response.data) {
+      return response.data;
+    }
+
+    return response as Product;
+  },
+}),
 })
 });
 
 export const {
   useAddProductMutation,
   useGetProductsQuery,
+  useGetProductByIdQuery,
   useLoginMutation,
   useForgotPasswordMutation,
   useVerifyOTPMutation,
