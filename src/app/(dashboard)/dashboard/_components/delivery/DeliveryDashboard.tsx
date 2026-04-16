@@ -11,6 +11,7 @@ import {
   Phone,
 } from "lucide-react";
 import { toast } from "sonner";
+import {StatCard} from "../shared/StatCard"
 
 import {
   useGetDeliveryOrdersQuery,
@@ -34,7 +35,8 @@ function parseClientData(clientData: string): {
     phone2: parts[2]?.trim() || "",
   };
 }
-
+const deliveredToday = 0;
+const rejectedToday = 0;
 function formatCurrency(value: number): string {
   return `${value.toLocaleString()} EGP`;
 }
@@ -72,15 +74,15 @@ function TaskCard({
   const client = parseClientData(order.clientData);
 
   return (
-    <div className="bg-slate-900/60 rounded-2xl border border-slate-800 p-5 hover:border-slate-700 transition-all">
+    <div className="bg-slate-900/60 rounded-2xl border border-slate-800 p-5 hover:border-slate-700 transition-all themed-surface">
       <div className="flex items-start justify-between mb-4">
         <div>
           <span className="text-sm font-bold text-white">
             {order.serialNumber}
           </span>
-          <span className="text-xs text-slate-500 ml-2">
+          {/* <span className="text-xs text-slate-500 ml-2">
             {formatDate(order.createdDate)}
-          </span>
+          </span> */}
         </div>
         <span className="text-lg font-black text-emerald-400">
           {formatCurrency(order.orderCost)}
@@ -175,17 +177,6 @@ export function DeliveryDashboard() {
       { skip: !deliveryId }
     );
 
-  useEffect(() => {
-    console.group("DELIVERY DASHBOARD DEBUG");
-    console.log("Delivery user:", user);
-    console.log("Deliveries API response:", deliveriesRes);
-    console.log("Matched delivery entity:", currentDelivery);
-    console.log("Delivery ID used in query:", deliveryId);
-    console.log("Delivery orders response:", ordersData);
-    console.log("Delivery orders error:", ordersError);
-    console.groupEnd();
-  }, [user, deliveriesRes, currentDelivery, deliveryId, ordersData, ordersError]);
-
   const handleDeliver = async (orderId: number) => {
     if (!user?.id) return;
     try {
@@ -241,47 +232,32 @@ export function DeliveryDashboard() {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800 hover:scale-[1.02] transition-transform">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 rounded-xl bg-amber-500/10">
-              <Package className="w-6 h-6 text-amber-500" />
-            </div>
-          </div>
-          <h3 className="text-3xl font-black text-white">{totalTasks}</h3>
-          <p className="text-sm font-medium text-slate-400 mt-1">
-            Today&apos;s Tasks
-          </p>
-        </div>
+        <StatCard
+  label="Today's Tasks"
+  value={totalTasks}
+  icon={Package}
+  color="amber"
+/>
 
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800 hover:scale-[1.02] transition-transform">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 rounded-xl bg-emerald-500/10">
-              <CheckCircle2 className="w-6 h-6 text-emerald-500" />
-            </div>
-          </div>
-          <h3 className="text-3xl font-black text-white">--</h3>
-          <p className="text-sm font-medium text-slate-400 mt-1">
-            Delivered Today
-          </p>
-        </div>
+<StatCard
+  label="Delivered Today"
+  value={deliveredToday ?? "--"}
+  icon={CheckCircle2}
+  color="emerald"
+/>
 
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800 hover:scale-[1.02] transition-transform">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 rounded-xl bg-rose-500/10">
-              <XCircle className="w-6 h-6 text-rose-500" />
-            </div>
-          </div>
-          <h3 className="text-3xl font-black text-white">--</h3>
-          <p className="text-sm font-medium text-slate-400 mt-1">
-            Rejected Today
-          </p>
-        </div>
+<StatCard
+  label="Rejected Today"
+  value={rejectedToday ?? "--"}
+  icon={XCircle}
+  color="rose"
+/>
       </div>
 
-      <div className="bg-slate-900/60 p-8 rounded-3xl border border-slate-800">
+      <div className="bg-slate-900/60 p-8 rounded-3xl border border-slate-800 themed-surface">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-bold text-white">Assigned Orders</h3>
+            <h3 className="text-xl font-bold text-slate-400">Assigned Orders</h3>
             <p className="text-sm text-slate-400">
               Orders waiting for delivery
             </p>
@@ -321,10 +297,10 @@ export function DeliveryDashboard() {
         )}
       </div>
 
-      <div className="bg-slate-900/60 p-8 rounded-3xl border border-slate-800">
-        <h3 className="text-xl font-bold text-white mb-6">Quick Tips</h3>
+      <div className="bg-slate-900/60 p-8 rounded-3xl border border-slate-800 themed-surface">
+        <h3 className="text-xl font-bold  mb-6">Quick Tips</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-start gap-4 p-4 bg-slate-800/50 rounded-xl">
+          <div className="flex items-start gap-4 p-4 bg-slate-800/50 rounded-xl themed-surface">
             <div className="p-2 bg-emerald-500/10 rounded-lg">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
             </div>
@@ -335,7 +311,7 @@ export function DeliveryDashboard() {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-4 p-4 bg-slate-800/50 rounded-xl">
+          <div className="flex items-start gap-4 p-4 bg-slate-800/50 rounded-xl themed-surface">
             <div className="p-2 bg-rose-500/10 rounded-lg">
               <XCircle className="w-5 h-5 text-rose-400" />
             </div>
