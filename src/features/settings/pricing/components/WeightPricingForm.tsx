@@ -23,37 +23,44 @@ export default function WeightPricingForm() {
   });
 
   return (
-    <form onSubmit={onSubmit(handleSubmit)} className="space-y-4">
-
+    <form onSubmit={onSubmit(handleSubmit)} className="space-y-6">
       {/* Default Weight */}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-slate-700">
           Default Weight (kg)
         </label>
-        <input
-          {...register("defaultWeight")}
-          type="number"
-          placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-        />
+        <div className="relative">
+          <input
+            {...register("defaultWeight")}
+            type="number"
+            placeholder="0.00"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-100"
+          />
+        </div>
         {errors.defaultWeight && (
-          <p className="text-xs text-red-500">{errors.defaultWeight.message}</p>
+          <p className="text-xs font-medium text-red-500">
+            {errors.defaultWeight.message}
+          </p>
         )}
       </div>
 
       {/* Additional Kg Price */}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-slate-700">
           Additional KG Price (EGP)
         </label>
-        <input
-          {...register("additionalKgPrice")}
-          type="number"
-          placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500"
-        />
+        <div className="relative">
+          <input
+            {...register("additionalKgPrice")}
+            type="number"
+            placeholder="0.00"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-100"
+          />
+        </div>
         {errors.additionalKgPrice && (
-          <p className="text-xs text-red-500">{errors.additionalKgPrice.message}</p>
+          <p className="text-xs font-medium text-red-500">
+            {errors.additionalKgPrice.message}
+          </p>
         )}
       </div>
 
@@ -61,11 +68,14 @@ export default function WeightPricingForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="inline-flex w-full items-center justify-center rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isLoading ? "Saving..." : isExisting ? "Update Pricing" : "Save Pricing"}
+        {isLoading
+          ? "Saving..."
+          : isExisting
+          ? "Update Pricing"
+          : "Save Pricing"}
       </button>
-
     </form>
   );
 }

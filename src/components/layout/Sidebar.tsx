@@ -177,9 +177,7 @@ const employeeMenu: MenuSection[] = [
         href: null,
         children: [
           { label: "All Orders", icon: Package, href: ROUTES.ORDERS },
-          { label: "New Orders", icon: Package, href: `${ROUTES.ORDERS}?status=New` },
-          { label: "In Distribution", icon: Package, href: `${ROUTES.ORDERS}?status=DeliveredToAgent` },
-          { label: "In Delivery", icon: Truck, href: `${ROUTES.ORDERS}?status=DeliveredToDelivery` },
+                    { label: "Add Orders" ,icon: Package, href: `${ROUTES.ORDER_CREATE}` },
 
         ],
       },
@@ -249,8 +247,8 @@ const merchantMenu: MenuSection[] = [
         href: null,
         children: [
           { label: "Orders Report", icon: BarChart2, href: ROUTES.REPORTS },
-          { label: "Revenue Report", icon: Wallet, href: ROUTES.REPORTS },
-          { label: "Rejected Orders", icon: Package, href: ROUTES.REPORTS },
+          // { label: "Revenue Report", icon: Wallet, href: ROUTES.REPORTS },
+          // { label: "Rejected Orders", icon: Package, href: ROUTES.REPORTS },
         ],
       },
     ],

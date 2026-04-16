@@ -39,62 +39,99 @@ export default function BranchesPage() {
   } = useBranches();
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header */}
-      <PageHeader
-      className=" text-white"
-        title="Branches"
-        description={`branches total ${totalBranches}`}
-        actionLabel="Add Branch"
-        actionIcon={Plus}
-        onAction={openCreate}
-      />
+      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm">
+        <PageHeader
+          className="text-white"
+          title="Branches"
+          description={`branches total ${totalBranches}`}
+          actionLabel="Add Branch"
+          actionIcon={Plus}
+          onAction={openCreate}
+        />
+      </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold text-slate-900">
+                Branches Directory
+              </h2>
+              <p className="text-sm text-slate-500">
+                View, create, update, and manage branch records.
+              </p>
+            </div>
+            <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+              Total: {totalBranches}
+            </div>
+          </div>
+        </div>
+
         {isLoading ? (
-          <Loader />
+          <div className="p-8">
+            <Loader />
+          </div>
         ) : isError ? (
-          <ErrorMessage />
+          <div className="p-8">
+            <ErrorMessage />
+          </div>
         ) : branches.length === 0 ? (
-          <EmptyState
-            title="No branches found"
-            description="Start by adding your first branch."
-          />
+          <div className="p-8">
+            <EmptyState
+              title="No branches found"
+              description="Start by adding your first branch."
+            />
+          </div>
         ) : (
           <>
-            <BranchTable
-              branches={branches}
-              onEdit={openEdit}
-              onDelete={openDelete}
-            />
-            <Pagination
-              currentPage={page}
-              totalCount={totalBranches}
-              pageSize={10}
-              onPageChange={setPage}
-            />
+            <div className="px-2 pb-2 pt-2">
+              <BranchTable
+                branches={branches}
+                onEdit={openEdit}
+                onDelete={openDelete}
+              />
+            </div>
+
+            <div className="border-t border-slate-100 bg-slate-50/70 px-4 py-4">
+              <Pagination
+                currentPage={page}
+                totalCount={totalBranches}
+                pageSize={10}
+                onPageChange={setPage}
+              />
+            </div>
           </>
         )}
       </div>
 
       {/* Form Modal */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
             onClick={() => setIsFormOpen(false)}
           />
-          <div className="relative bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
-              {selectedBranch ? "Edit Branch" : "Add Branch"}
-            </h2>
-            <BranchForm
-              selectedBranch={selectedBranch}
-              isLoading={isCreating || isUpdating}
-              onSubmit={selectedBranch ? handleUpdate : handleCreate}
-              onCancel={() => setIsFormOpen(false)}
-            />
+          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/20 bg-white shadow-2xl">
+            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">
+                {selectedBranch ? "Edit Branch" : "Add Branch"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Fill in the required information and save your changes.
+              </p>
+            </div>
+
+            <div className="p-6">
+              <BranchForm
+                selectedBranch={selectedBranch}
+                isLoading={isCreating || isUpdating}
+                onSubmit={selectedBranch ? handleUpdate : handleCreate}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
           </div>
         </div>
       )}

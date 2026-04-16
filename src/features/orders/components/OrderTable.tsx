@@ -91,6 +91,7 @@ export default function OrderTable({
                   <div className="flex items-center gap-2">
                     {/* View - all roles */}
                     <button
+                      type="button"
                       onClick={() => onView(order.id)}
                       className="p-1.5 rounded-lg bg-green-50 text-green-500 hover:bg-green-100 transition-colors"
                       title="View Details"
@@ -101,6 +102,7 @@ export default function OrderTable({
                     {/* Change Status - Admin, Employee, Delivery */}
                     {(isAdmin || isEmployee || isDelivery) && (
                       <button
+                        type="button"
                         onClick={() => onChangeStatus(order.id)}
                         className="p-1.5 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
                         title="Change Status"
@@ -112,6 +114,7 @@ export default function OrderTable({
                     {/* Assign Delivery - Admin, Employee */}
                     {(isAdmin || isEmployee) && (
                       <button
+                        type="button"
                         onClick={() => onAssignDelivery(order.id)}
                         className="p-1.5 rounded-lg bg-purple-50 text-purple-500 hover:bg-purple-100 transition-colors"
                         title="Assign Delivery"
@@ -123,6 +126,7 @@ export default function OrderTable({
                     {/* Delete - Admin, Employee, Merchant */}
                     {(isAdmin || isEmployee || isMerchant) && (
                       <button
+                        type="button"
                         onClick={() => onDelete(order.id)}
                         className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
                         title="Delete"

@@ -41,6 +41,21 @@ export default function OrdersPage() {
     isAssigning, goToCreate, goToDetails,
   } = useOrders();
 
+  const closeDeleteDialog = () => {
+    setIsDeleteOpen(false);
+    setSelectedOrderId(null);
+  };
+
+  const closeStatusDialog = () => {
+    setIsStatusOpen(false);
+    setSelectedOrderId(null);
+  };
+
+  const closeAssignDialog = () => {
+    setIsAssignOpen(false);
+    setSelectedOrderId(null);
+  };
+
   const handleStatusChange = (status: string) => {
     setSelectedStatus(status);
     handleFilterChange("page", 1);
@@ -312,21 +327,21 @@ export default function OrdersPage() {
         description="Are you sure? This action will permanently remove the order from the database."
         isLoading={isDeleting}
         onConfirm={handleDelete}
-        onCancel={() => setIsDeleteOpen(false)}
+        onCancel={closeDeleteDialog}
       />
 
       <RejectOrderModal
         isOpen={isStatusOpen}
         isLoading={isChangingStatus}
         onChangeStatus={handleChangeStatus}
-        onClose={() => setIsStatusOpen(false)}
+        onClose={closeStatusDialog}
       />
 
       <AssignDeliveryModal
         isOpen={isAssignOpen}
         isLoading={isAssigning}
         onAssign={handleAssignDelivery}
-        onClose={() => setIsAssignOpen(false)}
+        onClose={closeAssignDialog}
       />
     </div>
   );

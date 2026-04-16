@@ -9,35 +9,57 @@ interface PermissionTableProps {
 
 export default function PermissionTable({ permissions }: PermissionTableProps) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">#</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Permission Name</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Status</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {permissions.map((permission, index) => (
-            <tr key={permission.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-4 py-3 text-sm text-gray-500">{index + 1}</td>
-              <td className="px-4 py-3 text-sm font-medium text-gray-900">{permission.name}</td>
-              <td className="px-4 py-3">
-                {permission.isDeleted ? (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                    Inactive
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                    Active
-                  </span>
-                )}
-              </td>
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[520px]">
+          <thead>
+            <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                #
+              </th>
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Permission Name
+              </th>
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Status
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="divide-y divide-slate-100">
+            {permissions.map((permission, index) => (
+              <tr
+                key={permission.id}
+                className="transition-all duration-200 hover:bg-slate-50/80"
+              >
+                <td className="px-6 py-4">
+                  <span className="inline-flex min-w-[2rem] items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-600">
+                    {index + 1}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4">
+                  <div className="text-sm font-semibold text-slate-900">
+                    {permission.name}
+                  </div>
+                </td>
+
+                <td className="px-6 py-4">
+                  {permission.isDeleted ? (
+                    <span className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">
+                      Inactive
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                      Active
+                    </span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

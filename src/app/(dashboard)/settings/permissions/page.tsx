@@ -16,24 +16,47 @@ export default function PermissionsPage() {
   const activePermissions = permissions?.filter((p) => !p.isDeleted) ?? [];
 
   return (
-    <div>
-      <PageHeader
-        title="Permissions"
-        description="View all system permissions"
-      />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm">
+        <PageHeader
+          title="Permissions"
+          description="View all system permissions"
+        />
+      </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      {/* Content */}
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-slate-900">
+              Permissions List
+            </h2>
+            <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+              Total: {activePermissions.length}
+            </div>
+          </div>
+        </div>
+
         {isLoading ? (
-          <Loader />
+          <div className="p-8">
+            <Loader />
+          </div>
         ) : isError ? (
-          <ErrorMessage />
+          <div className="p-8">
+            <ErrorMessage />
+          </div>
         ) : activePermissions.length === 0 ? (
-          <EmptyState
-            title="No permissions found"
-            description="There are no permissions in the system."
-          />
+          <div className="p-8">
+            <EmptyState
+              title="No permissions found"
+              description="There are no permissions in the system."
+            />
+          </div>
         ) : (
-          <PermissionTable permissions={activePermissions} />
+          <div className="px-2 py-2">
+            <PermissionTable permissions={activePermissions} />
+          </div>
         )}
       </div>
     </div>

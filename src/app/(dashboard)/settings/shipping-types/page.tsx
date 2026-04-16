@@ -1,12 +1,4 @@
 // settings/shipping-types/page.tsx
-// Redirect to settings/governments
-
-// import { redirect } from "next/navigation";
-
-// export default function ShippingTypesPage() {
-//   redirect("/settings/governments");
-// }
-// shipping-types/page.tsx
 // Shipping types management page - list, create, edit and delete shipping types
 
 "use client";
@@ -42,54 +34,92 @@ export default function ShippingTypesPage() {
     isDeleting,
   } = useShippingTypes();
 
+  const safeShippingTypes = shippingTypes || [];
+
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header */}
-      <PageHeader
-        title="Shipping Types"
-        description={`shipping types total ${shippingTypes.length} `}
-        actionLabel="Add Shipping Type"
-        actionIcon={Plus}
-        onAction={openCreate}
-      />
+      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-6 shadow-sm">
+        <PageHeader
+          title="Shipping Types"
+          description={`shipping types total ${safeShippingTypes.length}`}
+          actionLabel="Add Shipping Type"
+          actionIcon={Plus}
+          onAction={openCreate}
+        />
+      </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-slate-900">
+                Shipping Types Directory
+              </h2>
+              <p className="text-sm text-slate-500">
+                View, create, update, and manage shipping types.
+              </p>
+            </div>
+            <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+              Total: {safeShippingTypes.length}
+            </div>
+          </div>
+        </div>
+
         {isLoading ? (
-          <Loader />
+          <div className="p-8">
+            <Loader />
+          </div>
         ) : isError ? (
-          <ErrorMessage />
-        ) : shippingTypes.length === 0 ? (
-          <EmptyState
-            title="No shipping types found"
-            description="Start by adding your first shipping type."
-          />
+          <div className="p-8">
+            <ErrorMessage />
+          </div>
+        ) : safeShippingTypes.length === 0 ? (
+          <div className="p-8">
+            <EmptyState
+              title="No shipping types found"
+              description="Start by adding your first shipping type."
+            />
+          </div>
         ) : (
-          <ShippingTypeTable
-            shippingTypes={shippingTypes}
-            onEdit={openEdit}
-            onDelete={openDelete}
-          />
+          <div className="px-2 py-2">
+            <ShippingTypeTable
+              shippingTypes={safeShippingTypes}
+              onEdit={openEdit}
+              onDelete={openDelete}
+            />
+          </div>
         )}
       </div>
 
       {/* Form Modal */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
             onClick={() => setIsFormOpen(false)}
           />
-          <div className="relative bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
-              {selectedShippingType ? "Edit Shipping Type" : "Add Shipping Type"}
-            </h2>
-            <ShippingTypeForm
-              selectedShippingType={selectedShippingType}
-              isLoading={isCreating || isUpdating}
-              onSubmit={selectedShippingType ? handleUpdate : handleCreate}
-              onCancel={() => setIsFormOpen(false)}
-            />
+          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/20 bg-white shadow-2xl">
+            <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-slate-50 px-6 py-5">
+              <h2 className="text-xl font-bold text-slate-900">
+                {selectedShippingType ? "Edit Shipping Type" : "Add Shipping Type"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Fill in the required information and save your changes.
+              </p>
+            </div>
+
+            <div className="p-6">
+              <ShippingTypeForm
+                selectedShippingType={selectedShippingType}
+                isLoading={isCreating || isUpdating}
+                onSubmit={
+                  selectedShippingType ? handleUpdate : handleCreate
+                }
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
           </div>
         </div>
       )}

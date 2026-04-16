@@ -16,44 +16,81 @@ export default function ShippingTypeTable({
   onDelete,
 }: ShippingTypeTableProps) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">#</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Type</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Description</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Cost</th>
-            <th className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider px-4 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {shippingTypes.map((shippingType) => (
-            <tr key={shippingType.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-4 py-3 text-sm text-gray-500">{shippingType.id}</td>
-              <td className="px-4 py-3 text-sm font-medium text-gray-900">{shippingType.type}</td>
-              <td className="px-4 py-3 text-sm text-gray-600">{shippingType.description || "—"}</td>
-              <td className="px-4 py-3 text-sm text-gray-600">{shippingType.cost} EGP</td>
-              <td className="px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => onEdit(shippingType)}
-                    className="p-1.5 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(shippingType)}
-                    className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </td>
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[720px]">
+          <thead>
+            <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                #
+              </th>
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Type
+              </th>
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Description
+              </th>
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Cost
+              </th>
+              <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="divide-y divide-slate-100 bg-white">
+            {shippingTypes.map((shippingType) => (
+              <tr
+                key={shippingType.id}
+                className="transition-all duration-200 hover:bg-slate-50/80"
+              >
+                <td className="px-6 py-4">
+                  <span className="inline-flex min-w-[2.25rem] items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600">
+                    {shippingType.id}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4">
+                  <div className="text-sm font-semibold text-slate-900">
+                    {shippingType.type}
+                  </div>
+                </td>
+
+                <td className="px-6 py-4">
+                  <div className="max-w-[320px] truncate text-sm text-slate-600">
+                    {shippingType.description || "—"}
+                  </div>
+                </td>
+
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
+                    {shippingType.cost} EGP
+                  </span>
+                </td>
+
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onEdit(shippingType)}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+
+                    <button
+                      onClick={() => onDelete(shippingType)}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
