@@ -472,6 +472,8 @@ const baseToastStyle = {
       <div className="p-5 border-t border-gray-200 dark:border-white/5 mt-auto bg-gray-50 dark:bg-[#0F172A]/50 backdrop-blur-md">
         <button
           onClick={handleLogout}
+          onKeyDown={(e) => e.key === "Enter" && handleLogout()}
+          aria-label="Logout"
           className="flex items-center justify-center gap-3 w-full py-4 rounded-xl text-xs font-black text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all border border-gray-200 dark:border-white/5 hover:border-red-200 dark:hover:border-red-500/20 uppercase tracking-widest"
         >
           <LogOut className="w-4 h-4" />

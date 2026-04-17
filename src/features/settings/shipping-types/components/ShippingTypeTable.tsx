@@ -73,6 +73,7 @@ export default function ShippingTypeTable({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => onEdit(shippingType)}
+                      aria-label={`Edit shipping type ${shippingType.type}`}
                       className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                     >
                       <Pencil className="h-4 w-4" />
@@ -80,6 +81,7 @@ export default function ShippingTypeTable({
 
                     <button
                       onClick={() => onDelete(shippingType)}
+                      aria-label={`Delete shipping type ${shippingType.type}`}
                       className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 className="h-4 w-4" />

@@ -59,24 +59,27 @@ export default function ResetPasswordForm() {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">New Password</label>
+        <label htmlFor="newPassword" className="text-sm font-medium text-gray-700">New Password</label>
         <div className="relative">
           <input
+            id="newPassword"
             {...register("newPassword")}
             type={showPassword ? "text" : "password"}
             placeholder="Enter new password"
+            aria-describedby={errors.newPassword ? "new-password-error" : undefined}
             className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
           />
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
         {errors.newPassword && (
-          <p className="text-xs text-red-500 mt-1">{errors.newPassword.message}</p>
+          <p id="new-password-error" className="text-xs text-red-500 mt-1" role="alert">{errors.newPassword.message}</p>
         )}
       </div>
 
@@ -97,24 +100,27 @@ export default function ResetPasswordForm() {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">Confirm Password</label>
+        <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">Confirm Password</label>
         <div className="relative">
           <input
+            id="confirmPassword"
             {...register("confirmPassword")}
             type={showConfirm ? "text" : "password"}
             placeholder="Confirm new password"
+            aria-describedby={errors.confirmPassword ? "confirm-password-error" : undefined}
             className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
           />
           <button
             type="button"
             onClick={() => setShowConfirm((prev) => !prev)}
+            aria-label={showConfirm ? "Hide password" : "Show password"}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
           >
             {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
         {errors.confirmPassword && (
-          <p className="text-xs text-red-500 mt-1">{errors.confirmPassword.message}</p>
+          <p id="confirm-password-error" className="text-xs text-red-500 mt-1" role="alert">{errors.confirmPassword.message}</p>
         )}
       </div>
 

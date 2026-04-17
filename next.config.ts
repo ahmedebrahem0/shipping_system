@@ -13,7 +13,6 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // الكود ده هيخلي أي طلب بيبدأ بـ /api يروح للسيرفر بتاعك من غير مشكلة Mixed Content
   async rewrites() {
     return [
       {
@@ -25,6 +24,22 @@ const nextConfig: NextConfig = {
         destination: `${backendUrl}/:path*`,
       },
     ];
+  },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5050",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
+        pathname: "/**",
+      },
+    ],
   },
 
   reactStrictMode: true,

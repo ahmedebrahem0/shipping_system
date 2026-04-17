@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Camera, Mail, Phone, MapPin, Calendar, Shield, X } from "lucide-react";
 import { toast } from "sonner";
 import { useProfile } from "@/features/profile/hooks/useProfile";
@@ -81,9 +82,22 @@ export default function ProfilePage() {
                         <div className="w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
                       </div>
                     ) : previewUrl ? (
-                      <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      <Image 
+                        src={previewUrl} 
+                        alt="Preview" 
+                        fill 
+                        unoptimized 
+                        className="object-cover" 
+                        sizes="128px" 
+                      />
                     ) : currentImageUrl ? (
-                      <img src={currentImageUrl} alt={userName} className="w-full h-full object-cover" />
+                      <Image 
+                        src={currentImageUrl} 
+                        alt={userName} 
+                        fill 
+                        className="object-cover" 
+                        sizes="128px" 
+                      />
                     ) : (
                       <span className="text-6xl font-black text-slate-800 dark:text-white">
                         {userName.charAt(0).toUpperCase()}
@@ -135,9 +149,9 @@ export default function ProfilePage() {
             {previewUrl && (
               <div className="mt-8 flex items-center justify-between rounded-3xl border border-sky-500/20 bg-sky-500/10 p-4 animate-in slide-in-from-top-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-sky-500/30">
-                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
+<div className="w-12 h-12 rounded-xl overflow-hidden border border-sky-500/30 relative">
+                      <Image src={previewUrl} alt="Preview" fill className="object-cover" sizes="48px" />
+                    </div>
                   <div>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">New Profile Picture</p>
                     <p className="text-xs font-medium text-sky-600 dark:text-sky-400">Changes are ready to be saved</p>

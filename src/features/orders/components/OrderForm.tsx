@@ -364,7 +364,9 @@ export default function  OrderForm({ isLoading, onSubmit, onCancel }: OrderFormP
             <h3 className="text-lg font-bold tracking-tight text-gray-300">Order Items</h3>
           </div>
           <button type="button" onClick={() => setProducts([...products, { name: "", quantity: 1, itemWeight: 0.1 }])}
-            className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
+            aria-label="Add new product"
+            className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+          >
             <Plus size={14} /> Add Product
           </button>
         </div>
@@ -374,7 +376,7 @@ export default function  OrderForm({ isLoading, onSubmit, onCancel }: OrderFormP
               <input value={p.name} onChange={(e) => { const n = [...products]; n[index].name = e.target.value; setProducts(n); }} placeholder="Product Name" className="bg-transparent border-b border-white/20 outline-none flex-[4] text-sm py-1 focus:border-primary" />
               <input type="number" value={p.quantity} onChange={(e) => { const n = [...products]; n[index].quantity = Number(e.target.value); setProducts(n); }} className="bg-transparent border-b border-white/20 outline-none flex-1 text-sm py-1 text-center" placeholder="Qty" />
               <input type="number" step="0.1" value={p.itemWeight} onChange={(e) => { const n = [...products]; n[index].itemWeight = Number(e.target.value); setProducts(n); }} className="bg-transparent border-b border-white/20 outline-none flex-1 text-sm py-1 text-center" placeholder="Wt" />
-              <button type="button" onClick={() => setProducts(products.filter((_, i) => i !== index))} disabled={products.length === 1} className="p-2 text-red-400 hover:text-red-300 disabled:opacity-0 transition-opacity"><Trash2 size={18} /></button>
+              <button type="button" onClick={() => setProducts(products.filter((_, i) => i !== index))} disabled={products.length === 1} aria-label={`Remove product ${index + 1}`} className="p-2 text-red-400 hover:text-red-300 disabled:opacity-0 transition-opacity"><Trash2 size={18} /></button>
             </div>
           ))}
         </div>

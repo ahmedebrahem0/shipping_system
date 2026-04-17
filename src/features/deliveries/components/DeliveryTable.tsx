@@ -47,18 +47,21 @@ export default function DeliveryTable({
                 <div className="flex items-center gap-2">
                   <Link
                     href={ROUTES.DELIVERY_DETAILS(delivery.id)}
+                    aria-label={`View details for ${delivery.name}`}
                     className="p-1.5 rounded-lg bg-green-50 text-green-500 hover:bg-green-100 transition-colors"
                   >
                     <Eye className="w-4 h-4" />
                   </Link>
                   <Link
                     href={`${ROUTES.DELIVERY_DETAILS(delivery.id)}?edit=true`}
+                    aria-label={`Edit ${delivery.name}`}
                     className="p-1.5 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
                   >
                     <Pencil className="w-4 h-4" />
                   </Link>
                   <button
                     onClick={() => onDelete(delivery)}
+                    aria-label={`Delete ${delivery.name}`}
                     className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />

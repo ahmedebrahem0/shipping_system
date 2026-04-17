@@ -1,16 +1,26 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { useAppSelector } from "@/store/hooks";
 import { ROUTES } from "@/constants/routes";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
-// import { AdminDashboard } from "./_components/admin/AdminDashboard";
-import { MerchantDashboard } from "./_components/merchant/MerchantDashboard";
-import { DeliveryDashboard } from "./_components/delivery/DeliveryDashboard";
-import { AdminDashboard } from "./_components/admin/AdminDashboard";
-// import AdminDashboard from "./_components/admin/AdminDashboard";
+const MerchantDashboard = dynamic(
+  () => import("./_components/merchant/MerchantDashboard").then((mod) => mod.MerchantDashboard),
+  { loading: () => <div className="animate-pulse h-96 bg-slate-100 rounded-2xl" /> }
+);
+
+const DeliveryDashboard = dynamic(
+  () => import("./_components/delivery/DeliveryDashboard").then((mod) => mod.DeliveryDashboard),
+  { loading: () => <div className="animate-pulse h-96 bg-slate-100 rounded-2xl" /> }
+);
+
+const AdminDashboard = dynamic(
+  () => import("./_components/admin/AdminDashboard").then((mod) => mod.AdminDashboard),
+  { loading: () => <div className="animate-pulse h-96 bg-slate-100 rounded-2xl" /> }
+);
 
 function getGreeting(): string {
   const hour = new Date().getHours();

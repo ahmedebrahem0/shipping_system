@@ -51,18 +51,21 @@ export default function MerchantTable({
                 <div className="flex items-center gap-2">
                   <Link
                     href={ROUTES.MERCHANT_DETAILS(merchant.id)}
+                    aria-label={`View details for ${merchant.name}`}
                     className="p-1.5 rounded-lg bg-green-50 text-green-500 hover:bg-green-100 transition-colors"
                   >
                     <Eye className="w-4 h-4" />
                   </Link>
                   <Link
                     href={`${ROUTES.MERCHANT_DETAILS(merchant.id)}?edit=true`}
+                    aria-label={`Edit ${merchant.name}`}
                     className="p-1.5 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
                   >
                     <Pencil className="w-4 h-4" />
                   </Link>
                   <button
                     onClick={() => onDelete(merchant)}
+                    aria-label={`Delete ${merchant.name}`}
                     className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />

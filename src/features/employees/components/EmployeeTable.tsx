@@ -53,12 +53,14 @@ export default function EmployeeTable({
                 <div className="flex items-center gap-2">
                   <Link
                     href={`${ROUTES.EMPLOYEES}/${employee.id}?edit=true`}
+                    aria-label={`Edit employee ${employee.name}`}
                     className="p-1.5 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
                   >
                     <Pencil className="w-4 h-4" />
                   </Link>
                   <button
                     onClick={() => onDelete(employee)}
+                    aria-label={`Delete employee ${employee.name}`}
                     className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />

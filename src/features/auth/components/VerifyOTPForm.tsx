@@ -121,7 +121,7 @@ export default function VerifyOTPForm() {
         </p>
       </div>
 
-      <div className="flex justify-center gap-2" onPaste={handlePaste}>
+      <div className="flex justify-center gap-2" onPaste={handlePaste} role="group" aria-label="OTP code input">
         {otpDigits.map((digit, index) => (
           <input
             key={index}
@@ -132,13 +132,15 @@ export default function VerifyOTPForm() {
             value={digit}
             onChange={(e) => handleInputChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
+            aria-label={`Digit ${index + 1} of 6`}
+            aria-describedby={errors.otp ? "otp-error" : undefined}
             className="w-12 h-14 text-center text-xl font-bold border-2 border-gray-300 rounded-lg outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all"
             style={{ caretColor: "transparent" }}
           />
         ))}
       </div>
       {errors.otp && (
-        <p className="text-center text-xs text-red-500">{errors.otp.message}</p>
+        <p id="otp-error" className="text-center text-xs text-red-500" role="alert">{errors.otp.message}</p>
       )}
 
       <button

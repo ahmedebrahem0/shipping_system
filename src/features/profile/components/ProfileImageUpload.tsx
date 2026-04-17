@@ -117,6 +117,7 @@ export default function ProfileImageUpload() {
           {!previewUrl && !isUploading && (
             <button
               onClick={handleClick}
+              aria-label="Change profile picture"
               className="absolute bottom-0 right-0 w-10 h-10 bg-[primary] rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors shadow-lg"
             >
               <Camera className="w-5 h-5 text-white" />
@@ -131,6 +132,7 @@ export default function ProfileImageUpload() {
           accept="image/*"
           className="hidden"
           onChange={handleFileChange}
+          aria-label="Upload profile picture"
         />
 
         {/* Preview Actions */}
@@ -138,6 +140,7 @@ export default function ProfileImageUpload() {
           <div className="flex gap-3">
             <button
               onClick={handleUpload}
+              aria-label="Confirm upload"
               className="flex items-center gap-2 px-4 py-2 bg-[primary] text-white rounded-lg hover:bg-primary-600 transition-colors"
             >
               <Upload className="w-4 h-4" />
@@ -145,6 +148,7 @@ export default function ProfileImageUpload() {
             </button>
             <button
               onClick={handleCancel}
+              aria-label="Cancel upload"
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <X className="w-4 h-4" />

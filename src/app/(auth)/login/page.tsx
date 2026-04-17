@@ -1,7 +1,7 @@
 // login/page.tsx
 
-import LoginForm from "@/features/auth/components/LoginForm";
 import { Package, Truck, Users } from "lucide-react";
+import LoginForm from "@/features/auth/components/LoginForm";
 
 export default function LoginPage() {
   const features = [

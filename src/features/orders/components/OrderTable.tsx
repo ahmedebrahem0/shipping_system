@@ -93,6 +93,7 @@ export default function OrderTable({
                     <button
                       type="button"
                       onClick={() => onView(order.id)}
+                      aria-label={`View order #${order.serialNumber}`}
                       className="p-1.5 rounded-lg bg-green-50 text-green-500 hover:bg-green-100 transition-colors"
                       title="View Details"
                     >
@@ -104,6 +105,7 @@ export default function OrderTable({
                       <button
                         type="button"
                         onClick={() => onChangeStatus(order.id)}
+                        aria-label={`Change status for order #${order.serialNumber}`}
                         className="p-1.5 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
                         title="Change Status"
                       >
@@ -116,6 +118,7 @@ export default function OrderTable({
                       <button
                         type="button"
                         onClick={() => onAssignDelivery(order.id)}
+                        aria-label={`Assign delivery for order #${order.serialNumber}`}
                         className="p-1.5 rounded-lg bg-purple-50 text-purple-500 hover:bg-purple-100 transition-colors"
                         title="Assign Delivery"
                       >
@@ -128,6 +131,7 @@ export default function OrderTable({
                       <button
                         type="button"
                         onClick={() => onDelete(order.id)}
+                        aria-label={`Delete order #${order.serialNumber}`}
                         className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
                         title="Delete"
                       >

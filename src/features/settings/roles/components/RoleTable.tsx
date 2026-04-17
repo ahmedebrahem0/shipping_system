@@ -64,6 +64,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => onEdit(role)}
+                        aria-label={`Edit role ${role.name}`}
                         className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                       >
                         <Pencil className="h-4 w-4" />
@@ -71,6 +72,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
 
                       <button
                         onClick={() => onDelete(role)}
+                        aria-label={`Delete role ${role.name}`}
                         className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                       >
                         <Trash2 className="h-4 w-4" />

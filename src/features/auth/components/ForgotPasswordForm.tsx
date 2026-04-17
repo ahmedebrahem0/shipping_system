@@ -35,15 +35,17 @@ export default function ForgotPasswordForm() {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-700">Email Address</label>
+        <label htmlFor="email" className="text-sm font-medium text-gray-700">Email Address</label>
         <input
+          id="email"
           {...register("email")}
           type="email"
           placeholder="Enter your email"
+          aria-describedby={errors.email ? "email-error" : undefined}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
         />
         {errors.email && (
-          <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
+          <p id="email-error" className="text-xs text-red-500 mt-1" role="alert">{errors.email.message}</p>
         )}
       </div>
 

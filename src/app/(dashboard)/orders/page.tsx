@@ -1,10 +1,12 @@
 "use client";
 
-import { Plus, Search, Calendar, Filter, Hash, LayoutGrid, ListFilter, ShieldCheck, Package, MapPin, DollarSign } from "lucide-react";
+import dynamic from "next/dynamic";
+import { 
+  Plus, Search, Calendar, Filter, Hash, LayoutGrid, ListFilter, 
+  ShieldCheck, Package, MapPin, DollarSign 
+} from "lucide-react";
 import { useOrders } from "@/features/orders/hooks/useOrders";
 import OrderTable from "@/features/orders/components/OrderTable";
-import AssignDeliveryModal from "@/features/orders/components/AssignDeliveryModal";
-import RejectOrderModal from "@/features/orders/components/RejectOrderModal";
 import Loader from "@/components/common/Loader";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorMessage from "@/components/common/ErrorMessage";
@@ -12,6 +14,16 @@ import ConfirmDialog from "@/components/common/ConfirmDialog";
 import Pagination from "@/components/common/Pagination";
 import { ORDER_STATUSES, ORDER_STATUS_LABELS } from "@/constants/orderStatuses";
 import { cn } from "@/lib/utils/cn";
+
+const AssignDeliveryModal = dynamic(
+  () => import("@/features/orders/components/AssignDeliveryModal"),
+  { ssr: false, loading: () => <div className="hidden" /> }
+);
+
+const RejectOrderModal = dynamic(
+  () => import("@/features/orders/components/RejectOrderModal"),
+  { ssr: false, loading: () => <div className="hidden" /> }
+);
 
 const STATUS_TABS = [
   ORDER_STATUSES.NEW,

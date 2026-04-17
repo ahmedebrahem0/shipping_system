@@ -62,6 +62,7 @@ const baseToastStyle = {
         
         <button
           onClick={() => router.push(ROUTES.PROFILE)}
+          aria-label="Go to profile"
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-all"
         >
           <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center">
