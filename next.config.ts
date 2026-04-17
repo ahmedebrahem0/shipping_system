@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5050";
+
 const nextConfig: NextConfig = {
   async redirects() {
     return [
@@ -16,7 +18,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://shippingiti.runasp.net/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
+      },
+      {
+        source: "/backend/:path*",
+        destination: `${backendUrl}/:path*`,
       },
     ];
   },

@@ -49,11 +49,12 @@ const baseToastStyle = {
 
       {/* Left - Sidebar Toggle */}
       <button
-        onClick={() => dispatch(toggleSidebar())}
-        className="p-2 rounded-lg  transition-colors bg-primary"
-      >
-        <Menu className="w-5 h-5  bg-primary text-white" />
-      </button>
+  onClick={() => dispatch(toggleSidebar())}
+  aria-label="Toggle sidebar"
+  className="p-2 rounded-lg transition-colors bg-primary"
+>
+  <Menu className="w-5 h-5 text-white" />
+</button>
 
       {/* Right - Theme Toggle + User Info + Logout */}
       <div className="flex items-center gap-2">
@@ -69,12 +70,13 @@ const baseToastStyle = {
           <span className="text-sm font-medium text-gray-700 dark:text-slate-200">{user?.name}</span>
         </button>
 
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950 bg-red-50 dark:bg-red-950/50 rounded-lg transition-all"
-        >
-          <LogOut className="w-4 h-4" />
-        </button>
+       <button
+  onClick={handleLogout}
+  aria-label="Logout"
+  className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950 bg-red-50 dark:bg-red-950/50 rounded-lg transition-all"
+>
+  <LogOut className="w-4 h-4" />
+</button>
       </div>
 
     </header>

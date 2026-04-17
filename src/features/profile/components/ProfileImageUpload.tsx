@@ -11,14 +11,8 @@ import {
   useUploadProfileImageMutation,
 } from "@/store/slices/api/apiSlice";
 import { useAppSelector } from "@/store/hooks";
-import { BASE_URL } from "@/constants/api-endpoints";
 import Loader from "@/components/common/Loader";
-
-const getImageUrl = (path: string) => {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  return `${BASE_URL}${path}`;
-};
+import { getAssetUrl } from "@/lib/api/asset-url";
 
 export default function ProfileImageUpload() {
   const user = useAppSelector((state) => state.auth.user);
@@ -32,7 +26,7 @@ export default function ProfileImageUpload() {
   const [uploadProfileImage, { isLoading: isUploading }] =
     useUploadProfileImageMutation();
 
-  const currentImageUrl = getImageUrl(profileData?.data?.profileImagePath ?? "");
+  const currentImageUrl = getAssetUrl(profileData?.data?.profileImagePath ?? "");
   const userName = profileData?.data?.userName ?? user?.name ?? "User";
 
   const handleClick = () => {

@@ -783,7 +783,7 @@ console.log("iam admin")
       <div>
         <h3 className="text-white text-lg font-black tracking-tight">
           Delivery Coverage
-        </h3>
+        </h3> 
         <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
           Branches, areas, and commission model
         </p>

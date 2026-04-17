@@ -7,13 +7,7 @@ import { Camera, Mail, Phone, MapPin, Calendar, Shield } from "lucide-react";
 import { useProfile } from "@/features/profile/hooks/useProfile";
 import Loader from "@/components/common/Loader";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import { BASE_URL } from "@/constants/api-endpoints";
-
-const getImageUrl = (path: string) => {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  return `${BASE_URL}${path}`;
-};
+import { getAssetUrl } from "@/lib/api/asset-url";
 
 export default function ProfileForm() {
   const {
@@ -30,7 +24,7 @@ export default function ProfileForm() {
   if (isLoading) return <Loader />;
   if (isError || !profile) return <ErrorMessage />;
 
-  const imageUrl = getImageUrl(profile.profileImagePath);
+  const imageUrl = getAssetUrl(profile.profileImagePath);
 
   return (
     <div className="space-y-6">
