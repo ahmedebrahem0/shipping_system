@@ -232,7 +232,7 @@ export default function OrdersPage() {
             <div className="h-[1px] flex-1 bg-gray-200/50"></div>
           </div>
           
-          {/* Mobile: Horizontal Scroll | Desktop: Adaptive Grid */}
+
           <div className="flex overflow-x-auto lg:grid lg:grid-cols-4 xl:grid-cols-6 gap-2 pb-2 lg:pb-0 no-scrollbar select-none">
             {STATUS_TABS.map((status) => {
               const isActive = selectedStatus === status;
