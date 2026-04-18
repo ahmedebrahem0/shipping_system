@@ -354,9 +354,9 @@ const branches = useMemo<Branch[]>(
         <div className="xl:col-span-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-[#0a1120]">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-black tracking-tight italic text-slate-900 dark:text-white">
+              <h2 className="text-lg font-black tracking-tight italic text-slate-900 dark:text-white">
                 Performance Flow
-              </h3>
+              </h2>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-100">
                 Weekly order activity from live data
               </p>
@@ -424,9 +424,9 @@ const branches = useMemo<Branch[]>(
             </div>
 
             <div className="mt-8">
-              <h2 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white">
+              <p className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white">
                 {orders.length ? "98.2%" : "0%"}
-              </h2>
+              </p>
               <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-white">
                 Operational Success Rate
               </p>
@@ -503,9 +503,9 @@ const branches = useMemo<Branch[]>(
   <div className="2xl:col-span-7 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
     <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
       <div>
-        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
+        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
           Latest Orders
-        </h3>
+        </h2>
         <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Recent shipping activity
         </p>
@@ -572,9 +572,9 @@ const branches = useMemo<Branch[]>(
   <div className="2xl:col-span-5 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
+        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
           Orders by City
-        </h3>
+        </h2>
         <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Top active destinations
         </p>
@@ -638,9 +638,9 @@ const branches = useMemo<Branch[]>(
   <div className="xl:col-span-4 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
           Top Merchants
-        </h3>
+        </h2>
         <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Ranked by revenue
         </p>
@@ -708,9 +708,9 @@ const branches = useMemo<Branch[]>(
   <div className="xl:col-span-4 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
           Merchant Health
-        </h3>
+        </h2>
         <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Rejection and pickup indicators
         </p>
@@ -782,9 +782,9 @@ const branches = useMemo<Branch[]>(
   <div className="xl:col-span-4 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
           Delivery Coverage
-        </h3> 
+        </h2> 
         <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Branches, areas, and commission model
         </p>
