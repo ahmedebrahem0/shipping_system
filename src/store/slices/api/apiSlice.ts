@@ -30,7 +30,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "",
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
 
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;

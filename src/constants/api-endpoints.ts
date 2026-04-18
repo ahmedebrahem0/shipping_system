@@ -1,146 +1,145 @@
-export const API_BASE_PATH = "/api";
-export const ASSET_PROXY_BASE_PATH = "/backend";
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const ENDPOINTS = {
 
   AUTH: {
-    LOGIN: `${API_BASE_PATH}/Account`,
-    FORGOT_PASSWORD: `${API_BASE_PATH}/Account/forgot-password-otp`,
-    VERIFY_OTP: `${API_BASE_PATH}/Account/verify-forgot-password-otp`,
-    RESET_PASSWORD: `${API_BASE_PATH}/Account/reset-password-session`,
+    LOGIN: `${BASE_URL}/api/Account`,
+    FORGOT_PASSWORD: `${BASE_URL}/api/Account/forgot-password-otp`,
+    VERIFY_OTP: `${BASE_URL}/api/Account/verify-forgot-password-otp`,
+    RESET_PASSWORD: `${BASE_URL}/api/Account/reset-password-session`,
   },
 
   ORDERS: {
-    GET_ALL: (status: string) => status ? `${API_BASE_PATH}/Order/${status}/all` : `${API_BASE_PATH}/Order/all`,
+    GET_ALL: (status: string) => status ? `${BASE_URL}/api/Order/${status}/all` : `${BASE_URL}/api/Order/all`,
 
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Order/${id}`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Order/${id}`,
 
     GET_BY_MERCHANT: (merchantId: number, status: string) =>
       status
-        ? `${API_BASE_PATH}/Order/Merchant/${merchantId}/${status}/all`
-        : `${API_BASE_PATH}/Order/Merchant/${merchantId}/all`,
+        ? `${BASE_URL}/api/Order/Merchant/${merchantId}/${status}/all`
+        : `${BASE_URL}/api/Order/Merchant/${merchantId}/all`,
 
-    GET_BY_DELIVERY: (deliveryId: number, status: string) => status ? `${API_BASE_PATH}/Order/Delivery/${deliveryId}/${status}/all` : `${API_BASE_PATH}/Order/Delivery/${deliveryId}/all`,
+    GET_BY_DELIVERY: (deliveryId: number, status: string) => status ? `${BASE_URL}/api/Order/Delivery/${deliveryId}/${status}/all` : `${BASE_URL}/api/Order/Delivery/${deliveryId}/all`,
 
-    CREATE: `${API_BASE_PATH}/Order`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Order/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/Order/${id}`,
-    CHANGE_STATUS: (orderId: number, userId: string, status: string) => `${API_BASE_PATH}/Order/${orderId}/${userId}/${status}`,
-    ASSIGN_DELIVERY: (orderId: number, deliveryId: number) => `${API_BASE_PATH}/Order/${orderId}/${deliveryId}`,
+    CREATE: `${BASE_URL}/api/Order`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Order/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/Order/${id}`,
+    CHANGE_STATUS: (orderId: number, userId: string, status: string) => `${BASE_URL}/api/Order/${orderId}/${userId}/${status}`,
+    ASSIGN_DELIVERY: (orderId: number, deliveryId: number) => `${BASE_URL}/api/Order/${orderId}/${deliveryId}`,
   },
 
   MERCHANTS: {
-    GET_ALL: `${API_BASE_PATH}/Merchant/all`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Merchant/${id}`,
-    CREATE: `${API_BASE_PATH}/Merchant`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Merchant/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/Merchant/${id}`,
+    GET_ALL: `${BASE_URL}/api/Merchant/all`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Merchant/${id}`,
+    CREATE: `${BASE_URL}/api/Merchant`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Merchant/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/Merchant/${id}`,
   },
 
   DELIVERIES: {
-    GET_ALL: `${API_BASE_PATH}/Delivery/all`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Delivery/${id}`,
-    GET_BY_BRANCH: (branchId: number) => `${API_BASE_PATH}/Delivery/Branch/${branchId}`,
-    CREATE: `${API_BASE_PATH}/Delivery`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Delivery/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/Delivery/${id}`,
-    GET_GOVERNMENTS_BY_BRANCH: (branchId: number) => `${API_BASE_PATH}/Delivery/GovernmentByBranch/${branchId}`,
+    GET_ALL: `${BASE_URL}/api/Delivery/all`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Delivery/${id}`,
+    GET_BY_BRANCH: (branchId: number) => `${BASE_URL}/api/Delivery/Branch/${branchId}`,
+    CREATE: `${BASE_URL}/api/Delivery`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Delivery/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/Delivery/${id}`,
+    GET_GOVERNMENTS_BY_BRANCH: (branchId: number) => `${BASE_URL}/api/Delivery/GovernmentByBranch/${branchId}`,
   },
 
   BRANCHES: {
-    GET_ALL: `${API_BASE_PATH}/Branch/all`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Branch/${id}`,
-    CREATE: `${API_BASE_PATH}/Branch`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Branch/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/Branch/${id}`,
+    GET_ALL: `${BASE_URL}/api/Branch/all`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Branch/${id}`,
+    CREATE: `${BASE_URL}/api/Branch`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Branch/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/Branch/${id}`,
   },
 
   GOVERNMENTS: {
-    GET_ALL: `${API_BASE_PATH}/Government/all`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Government/${id}`,
-    GET_BY_BRANCH: (branchId: number) => `${API_BASE_PATH}/Government/Branch/${branchId}`,
-    CREATE: `${API_BASE_PATH}/Government`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Government/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/Government/${id}`,
+    GET_ALL: `${BASE_URL}/api/Government/all`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Government/${id}`,
+    GET_BY_BRANCH: (branchId: number) => `${BASE_URL}/api/Government/Branch/${branchId}`,
+    CREATE: `${BASE_URL}/api/Government`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Government/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/Government/${id}`,
   },
 
   CITIES: {
-    GET_ALL: `${API_BASE_PATH}/City/all`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/City/${id}`,
-    CREATE: `${API_BASE_PATH}/City`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/City/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/City/${id}`,
+    GET_ALL: `${BASE_URL}/api/City/all`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/City/${id}`,
+    CREATE: `${BASE_URL}/api/City`,
+    UPDATE: (id: number) => `${BASE_URL}/api/City/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/City/${id}`,
   },
   
 
   EMPLOYEES: {
-    GET_ALL: `${API_BASE_PATH}/Employee`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Employee/${id}`,
-    GET_BY_ROLE: `${API_BASE_PATH}/Employee/GetEmployeesByRole`,
-    SEARCH_BY_NAME: `${API_BASE_PATH}/Employee/SearchByName`,
-    CREATE: `${API_BASE_PATH}/Employee`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Employee/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/Employee/${id}`,
+    GET_ALL: `${BASE_URL}/api/Employee`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Employee/${id}`,
+    GET_BY_ROLE: `${BASE_URL}/api/Employee/GetEmployeesByRole`,
+    SEARCH_BY_NAME: `${BASE_URL}/api/Employee/SearchByName`,
+    CREATE: `${BASE_URL}/api/Employee`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Employee/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/Employee/${id}`,
   },
 
   SETTINGS: {
-    GET: `${API_BASE_PATH}/Setting`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/Setting/${id}`,
+    GET: `${BASE_URL}/api/Setting`,
+    UPDATE: (id: number) => `${BASE_URL}/api/Setting/${id}`,
   },
 
   SHIPPING_TYPES: {
-    GET_ALL: `${API_BASE_PATH}/ShippingType/All`,
-    CREATE: `${API_BASE_PATH}/ShippingType`,
-    UPDATE: (id: number) => `${API_BASE_PATH}/ShippingType/${id}`,
-    DELETE: (id: number) => `${API_BASE_PATH}/ShippingType/${id}`,
+    GET_ALL: `${BASE_URL}/api/ShippingType/All`,
+    CREATE: `${BASE_URL}/api/ShippingType`,
+    UPDATE: (id: number) => `${BASE_URL}/api/ShippingType/${id}`,
+    DELETE: (id: number) => `${BASE_URL}/api/ShippingType/${id}`,
   },
 
   WEIGHT_PRICING: {
-    CREATE: `${API_BASE_PATH}/WeightPricing`,
-    UPDATE: `${API_BASE_PATH}/WeightPricing`,
+    CREATE: `${BASE_URL}/api/WeightPricing`,
+    UPDATE: `${BASE_URL}/api/WeightPricing`,
   },
 
   REPORTS: {
-    GET: `${API_BASE_PATH}/OrderReport`,
+    GET: `${BASE_URL}/api/OrderReport`,
   },
 
   PROFILE: {
-    GET: (id: string) => `${API_BASE_PATH}/Profile/${id}`,
-    UPLOAD_IMAGE: (id: string) => `${API_BASE_PATH}/Profile/${id}/upload-profile-image`,
+    GET: (id: string) => `${BASE_URL}/api/Profile/${id}`,
+    UPLOAD_IMAGE: (id: string) => `${BASE_URL}/api/Profile/${id}/upload-profile-image`,
   },
 
   DASHBOARD: {
-    GET_STATS: `${API_BASE_PATH}/Dashboard`,
+    GET_STATS: `${BASE_URL}/api/Dashboard`,
   },
 
 // ====================== Roles & Permissions ======================
   ROLE: {
-   GET_ALL: `${API_BASE_PATH}/Role`,
-  GET_BY_ID: (id: string) => `${API_BASE_PATH}/Role/${id}`, 
-  SEARCH: `${API_BASE_PATH}/Role/search`,                    
-  CREATE: `${API_BASE_PATH}/Role`,
-  UPDATE: (id: string) => `${API_BASE_PATH}/Role/${id}`,
-  DELETE: (id: string) => `${API_BASE_PATH}/Role/${id}`,
-  ASSIGN: `${API_BASE_PATH}/Role/AssignRole`, 
+   GET_ALL: `${BASE_URL}/api/Role`,
+  GET_BY_ID: (id: string) => `${BASE_URL}/api/Role/${id}`, 
+  SEARCH: `${BASE_URL}/api/Role/search`,                    
+  CREATE: `${BASE_URL}/api/Role`,
+  UPDATE: (id: string) => `${BASE_URL}/api/Role/${id}`,
+  DELETE: (id: string) => `${BASE_URL}/api/Role/${id}`,
+  ASSIGN: `${BASE_URL}/api/Role/AssignRole`, 
   },
 
   PERMISSIONS: {
-    GET_ALL: `${API_BASE_PATH}/Permissions/all`,
+    GET_ALL: `${BASE_URL}/api/Permissions/all`,
   },
 
   ROLE_PERMISSION: {
-    GET_ALL: `${API_BASE_PATH}/RolePermission/All`,
+    GET_ALL: `${BASE_URL}/api/RolePermission/All`,
     CREATE: (roleId: string, permissionId: number) => 
-      `${API_BASE_PATH}/RolePermission/${roleId}/${permissionId}`,
+      `${BASE_URL}/api/RolePermission/${roleId}/${permissionId}`,
     UPDATE: (roleId: string, permissionId: number) => 
-      `${API_BASE_PATH}/RolePermission/${roleId}/${permissionId}`,
+      `${BASE_URL}/api/RolePermission/${roleId}/${permissionId}`,
   },
 
   PRODUCT: {
-    GET_ALL: `${API_BASE_PATH}/Product`,
-    GET_BY_ID: (id: number) => `${API_BASE_PATH}/Product/${id}`,
-    UPDATE:(id: number) => `${API_BASE_PATH}/Product/${id}`,
-  CREATE: `${API_BASE_PATH}/Product`,
+    GET_ALL: `${BASE_URL}/api/Product`,
+    GET_BY_ID: (id: number) => `${BASE_URL}/api/Product/${id}`,
+    UPDATE:(id: number) => `${BASE_URL}/api/Product/${id}`,
+  CREATE: `${BASE_URL}/api/Product`,
 
 },
 

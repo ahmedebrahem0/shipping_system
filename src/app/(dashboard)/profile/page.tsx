@@ -5,11 +5,17 @@ import Image from "next/image";
 import { Camera, Mail, Phone, MapPin, Calendar, Shield, X } from "lucide-react";
 import { toast } from "sonner";
 import { useProfile } from "@/features/profile/hooks/useProfile";
+import { BASE_URL } from "@/constants/api-endpoints";
 import PageHeader from "@/components/common/PageHeader";
 import Loader from "@/components/common/Loader";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { cn } from "@/lib/utils/cn";
-import { getAssetUrl } from "@/lib/api/asset-url";
+
+const getImageUrl = (path: string) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${BASE_URL}${path}`;
+};
 
 export default function ProfilePage() {
   const {
@@ -54,7 +60,7 @@ export default function ProfilePage() {
   if (isLoading) return <Loader />;
   if (isError || !profile) return <ErrorMessage />;
 
-  const currentImageUrl = getAssetUrl(profile.profileImagePath);
+  const currentImageUrl = getImageUrl(profile.profileImagePath);
   const userName = profile.userName || user?.name || "User";
 
   return (

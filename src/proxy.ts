@@ -34,13 +34,17 @@ export function proxy(request: NextRequest) {
   }
 
   // Redirect authenticated users from public routes (like /login) to dashboard
-  if (isPublicRoute && isAuthenticated && pathname === "/login") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+if (
+  isPublicRoute &&
+  isAuthenticated &&
+  pathname !== "/dashboard"
+) {
+  return NextResponse.redirect(new URL("/dashboard", request.url));
+}
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
