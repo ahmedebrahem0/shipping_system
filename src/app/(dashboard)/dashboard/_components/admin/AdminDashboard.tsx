@@ -14,7 +14,6 @@ import {
   Globe,
   Server,
   Database,
-  DollarSign,
   MapPin,
   ShoppingBag,
   CircleDollarSign,
@@ -289,19 +288,22 @@ const branches = useMemo<Branch[]>(
         label: "Global Reach",
         val: `${coverageCount} Areas`,
         icon: Globe,
-        color: "text-sky-400",
+        color: "text-sky-300",
+        badgeClass: "bg-sky-700 text-white",
       },
       {
         label: "Server Load",
         val: orders.length > 0 ? "Operational" : "Idle",
         icon: Server,
-        color: "text-emerald-400",
+        color: "text-emerald-300",
+        badgeClass: "bg-emerald-700 text-white",
       },
       {
         label: "Database",
         val: "Synced",
         icon: Database,
-        color: "text-violet-400",
+        color: "text-violet-300",
+        badgeClass: "bg-violet-700 text-white",
       },
     ],
     [coverageCount, orders.length]
@@ -313,9 +315,8 @@ const branches = useMemo<Branch[]>(
   if (isLoading) {
     return <DashboardSkeleton variant="stats" count={4} />;
   }
-console.log("iam admin")
   return (
-    <div className="min-h-screen bg-[#0e1227] p-5 lg:p-6 space-y-6 animate-in fade-in duration-500 themed-surface">
+    <div className="min-h-screen space-y-6 bg-slate-50 p-5 animate-in fade-in duration-500 dark:bg-[#0e1227] lg:p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           label="Orders"
@@ -350,13 +351,13 @@ console.log("iam admin")
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        <div className="xl:col-span-8 bg-[#0a1120] rounded-[2rem] p-6 border border-white/5 shadow-xl themed-surface">
+        <div className="xl:col-span-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-[#0a1120]">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-black text-white tracking-tight italic">
+              <h3 className="text-lg font-black tracking-tight italic text-slate-900 dark:text-white">
                 Performance Flow
               </h3>
-              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-100">
                 Weekly order activity from live data
               </p>
             </div>
@@ -374,29 +375,29 @@ console.log("iam admin")
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="#ffffff08"
+                  stroke="rgba(148,163,184,0.18)"
                   vertical={false}
                 />
                 <XAxis
                   dataKey="name"
-                  stroke="#475569"
+                  stroke="#64748b"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                 />
                 <YAxis
-                  stroke="#475569"
+                  stroke="#64748b"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#0f172a",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    backgroundColor: "#ffffff",
+                    border: "1px solid rgba(148,163,184,0.25)",
                     borderRadius: "16px",
                     fontSize: "12px",
-                    color: "#fff",
+                    color: "#0f172a",
                   }}
                 />
                 <Area
@@ -411,57 +412,57 @@ console.log("iam admin")
           </div>
         </div>
 
-        <div className="xl:col-span-4 bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 rounded-[2rem] p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden group ">
+        <div className="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] bg-gradient-to-br from-sky-100 via-white to-blue-100 p-6 shadow-2xl dark:from-blue-700 dark:via-indigo-800 dark:to-slate-900 xl:col-span-4">
           <div className="relative z-10">
             <div className="flex justify-between items-start">
-              <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md">
-                <TrendingUp className="text-white w-5 h-5" />
+              <div className="rounded-xl bg-white/80 p-3 backdrop-blur-md dark:bg-white/10">
+                <TrendingUp className="h-5 w-5 text-sky-700 dark:text-white" />
               </div>
-              <span className="text-white/50 text-[10px] font-black uppercase tracking-widest">
+              <span className="text-xs font-black uppercase tracking-widest text-sky-900 dark:text-white/80">
                 Efficiency
               </span>
             </div>
 
             <div className="mt-8">
-              <h2 className="text-4xl font-black text-white tracking-tighter">
+              <h2 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white">
                 {orders.length ? "98.2%" : "0%"}
               </h2>
-              <p className="text-white/70 text-[10px] font-bold uppercase mt-1 tracking-widest">
+              <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-white">
                 Operational Success Rate
               </p>
             </div>
 
             <div className="mt-8 space-y-3">
-              <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center justify-between rounded-2xl bg-white/85 px-4 py-3 backdrop-blur dark:bg-white/10">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-white">
                   Avg Order Value
                 </span>
-                <span className="text-white font-black">
+                <span className="font-black text-slate-900 dark:text-white">
                   {formatCurrency(avgOrderValue)}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center justify-between rounded-2xl bg-white/85 px-4 py-3 backdrop-blur dark:bg-white/10">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-white">
                   Avg Pickup Cost
                 </span>
-                <span className="text-white font-black">
+                <span className="font-black text-slate-900 dark:text-white">
                   {formatCurrency(avgPickupCost)}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                <span className="text-white/70 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center justify-between rounded-2xl bg-white/85 px-4 py-3 backdrop-blur dark:bg-white/10">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-white">
                   Delivery Margin
                 </span>
-                <span className="text-white font-black">
+                <span className="font-black text-slate-900 dark:text-white">
                   {avgCompanyPercentage.toFixed(0)}%
                 </span>
               </div>
             </div>
           </div>
 
-          <button className="relative z-10 w-full py-4 bg-white text-blue-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+          <button className="relative z-10 flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-700 py-4 text-xs font-black uppercase tracking-widest text-white transition-colors hover:bg-sky-800 dark:bg-white dark:text-blue-900 dark:hover:bg-blue-50">
             Generate Report <ArrowUpRight className="w-4 h-4" />
           </button>
 
@@ -473,20 +474,20 @@ console.log("iam admin")
         {systemStatus.map((item, i) => (
           <div
             key={i}
-            className="bg-[#0a1120] p-5 rounded-[1.5rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all  themed-surface"
+            className="flex items-center justify-between rounded-[1.5rem] border border-slate-200 bg-white p-5 transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-[#0a1120] dark:hover:bg-[#11182a]"
           >
             <div className="flex items-center gap-3">
-              <div className={cn("p-2 rounded-lg bg-white/5", item.color)}>
+              <div className={cn("rounded-lg bg-slate-100 p-2 dark:bg-white/5", item.color)}>
                 <item.icon className="w-4 h-4" />
               </div>
-              <span className="text-slate-400 text-[11px] font-bold uppercase tracking-tight">
+              <span className="text-xs font-bold uppercase tracking-tight text-slate-700 dark:text-slate-50">
                 {item.label}
               </span>
             </div>
             <span
               className={cn(
-                "text-[10px] font-black uppercase tracking-widest",
-                item.color
+                "rounded-full px-2.5 py-1 text-xs font-black uppercase tracking-widest",
+                item.badgeClass
               )}
             >
               {item.val}
@@ -499,59 +500,59 @@ console.log("iam admin")
 
       <div className="grid grid-cols-1 2xl:grid-cols-12 gap-6">
   {/* Latest Orders */}
-  <div className="2xl:col-span-7 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.35)] themed-surface">
-    <div className="flex items-center justify-between border-b border-white/10 px-6 py-5 themed-surface">
+  <div className="2xl:col-span-7 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-[linear-gradient(180deg,#0f172a_0%,#0a1120_100%)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
       <div>
-        <h3 className="text-slate-400 text-lg font-black tracking-tight">
+        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
           Latest Orders
         </h3>
-        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+        <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Recent shipping activity
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-400 shadow-inner shadow-sky-500/10  themed-surface">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-200 bg-sky-100 text-sky-700 shadow-inner shadow-sky-200/60 dark:border-sky-700 dark:bg-sky-800 dark:text-sky-100 dark:shadow-sky-950/30">
         <ShoppingBag className="h-5 w-5" />
       </div>
     </div>
 
-    <div className="divide-y divide-white/5  themed-surface">
+    <div className="divide-y divide-slate-200 dark:divide-slate-800">
       {latestOrders.length ? (
         latestOrders.map((order, index) => (
           <div
             key={order.id}
-            className="group grid grid-cols-1 gap-4 px-6 py-4 transition-all duration-300 hover:bg-white/[0.03] md:grid-cols-[auto_1fr_auto]"
+            className="group grid grid-cols-1 gap-4 px-6 py-4 transition-all duration-300 hover:bg-slate-50 dark:hover:bg-[#11182a] md:grid-cols-[auto_1fr_auto]"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-sky-400 shadow-inner shadow-white/5  themed-surface">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 text-sky-700 shadow-inner shadow-sky-200/60 dark:border-slate-700 dark:bg-slate-800 dark:text-sky-100 dark:shadow-slate-950/30">
               <Package className="h-5 w-5" />
             </div>
 
             <div className="min-w-0 space-y-1">
               <div className="flex items-center gap-2">
-                <p className="truncate text-sm font-black text-white">
+                <p className="truncate text-sm font-black text-slate-900 dark:text-white">
                   #{order.serialNumber}
                 </p>
-                <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-400  themed-surface">
+                <span className="rounded-full border border-slate-300 bg-slate-100 px-2 py-0.5 text-xs font-bold uppercase tracking-widest text-slate-700 dark:border-slate-500/50 dark:bg-slate-700 dark:text-white">
                   #{index + 1}
                 </span>
               </div>
 
-              <p className="truncate text-sm font-medium text-slate-300">
+              <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-100">
                 {getClientName(order.clientData)}
               </p>
 
-              <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-100">
                 <span>{order.governrate}</span>
-                <span className="text-slate-700">•</span>
+                <span className="text-slate-400 dark:text-slate-100">•</span>
                 <span>{order.city}</span>
               </div>
             </div>
 
             <div className="flex flex-col items-start justify-center gap-1 md:items-end">
-              <p className="text-sm font-black text-emerald-400">
+              <p className="text-sm font-black text-emerald-700 dark:text-emerald-200">
                 {formatCurrency(order.orderCost)}
               </p>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-xs text-slate-600 dark:text-slate-100">
                 {order.createdDate}
               </p>
             </div>
@@ -559,7 +560,7 @@ console.log("iam admin")
         ))
       ) : (
         <div className="px-6 py-14 text-center">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-100">
             No recent orders available
           </p>
         </div>
@@ -568,23 +569,23 @@ console.log("iam admin")
   </div>
 
   {/* Orders by City */}
-  <div className="2xl:col-span-5 rounded-[2rem] border border-white/10 p-6  themed-surface">
+  <div className="2xl:col-span-5 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-slate-400 text-lg font-black tracking-tight">
+        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
           Orders by City
         </h3>
-        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+        <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Top active destinations
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10  themed-surface">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-violet-200 bg-violet-100 text-violet-700 shadow-inner shadow-violet-200/60 dark:border-violet-700 dark:bg-violet-800 dark:text-violet-100 dark:shadow-violet-950/30">
         <MapPin className="h-5 w-5" />
       </div>
     </div>
 
-    <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.02] p-4  themed-surface">
+    <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -634,18 +635,18 @@ console.log("iam admin")
 
 <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
   {/* Top Merchants */}
-  <div className="xl:col-span-4 rounded-[2rem] border border-white/10  p-6 ">
+  <div className="xl:col-span-4 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-white text-lg font-black tracking-tight">
+        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
           Top Merchants
         </h3>
-        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+        <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Ranked by revenue
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-400 shadow-inner shadow-amber-500/10">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-200 bg-amber-100 text-amber-700 shadow-inner shadow-amber-200/60 dark:border-amber-700 dark:bg-amber-800 dark:text-amber-100 dark:shadow-amber-950/30">
         <Building2 className="h-5 w-5" />
       </div>
     </div>
@@ -655,28 +656,28 @@ console.log("iam admin")
         topMerchants.map((merchant, index) => (
           <div
             key={`${merchant.name}-${index}`}
-            className="group rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05] hover:border-white/10  themed-surface"
+            className="group rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 transition-all duration-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
           >
             <div className="mb-3 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500/10 text-[10px] font-black text-amber-400">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-700 px-1 text-xs font-black text-white">
                     {index + 1}
                   </span>
-                  <p className="truncate text-sm font-black text-white">
+                  <p className="truncate text-sm font-black text-slate-900 dark:text-white">
                     {merchant.name}
                   </p>
                 </div>
-                <p className="mt-1 truncate pl-9 text-[11px] text-slate-500">
+                <p className="mt-1 truncate pl-9 text-xs text-slate-600 dark:text-slate-100">
                   {merchant.storeName}
                 </p>
               </div>
 
               <div className="text-right">
-                <p className="text-sm font-black text-emerald-400">
+                <p className="text-sm font-black text-emerald-700 dark:text-emerald-200">
                   {formatCurrency(merchant.revenue)}
                 </p>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-xs text-slate-600 dark:text-slate-100">
                   {merchant.orders} orders
                 </p>
               </div>
@@ -698,40 +699,40 @@ console.log("iam admin")
           </div>
         ))
       ) : (
-        <div className="text-sm text-slate-500">No merchant data available</div>
+        <div className="text-sm text-slate-600 dark:text-slate-100">No merchant data available</div>
       )}
     </div>
   </div>
 
   {/* Merchant Health */}
-  <div className="xl:col-span-4 rounded-[2rem] border border-white/10  p-6 ">
+  <div className="xl:col-span-4 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-white text-lg font-black tracking-tight">
+        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
           Merchant Health
         </h3>
-        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+        <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Rejection and pickup indicators
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-rose-400/20 bg-rose-500/10 text-rose-400 shadow-inner shadow-rose-500/10">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-rose-200 bg-rose-100 text-rose-700 shadow-inner shadow-rose-200/60 dark:border-rose-700 dark:bg-rose-800 dark:text-rose-100 dark:shadow-rose-950/30">
         <AlertTriangle className="h-5 w-5" />
       </div>
     </div>
 
-    <div className="space-y-3  themed-surface">
+    <div className="space-y-3">
       {merchantHealth.length ? (
         merchantHealth.map((merchant, index) => (
           <div
             key={`${merchant.name}-${index}`}
-            className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4"
+            className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900"
           >
             <div className="mb-3 flex items-center justify-between gap-3">
-              <p className="truncate text-sm font-black text-white">
+              <p className="truncate text-sm font-black text-slate-900 dark:text-white">
                 {merchant.name}
               </p>
-              <span className="rounded-full bg-rose-500/10 px-2.5 py-1 text-[10px] font-black text-rose-400">
+              <span className="rounded-full bg-rose-700 px-2.5 py-1 text-xs font-black text-white">
                 {merchant.rejectedRate.toFixed(0)}%
               </span>
             </div>
@@ -743,34 +744,34 @@ console.log("iam admin")
               />
             </div>
 
-            <div className="mt-3 flex items-center justify-between text-[11px]">
-              <span className="text-slate-500">Pickup Cost</span>
-              <span className="font-bold text-slate-300">
+            <div className="mt-3 flex items-center justify-between text-xs">
+              <span className="text-slate-700 dark:text-slate-100">Pickup Cost</span>
+              <span className="font-bold text-slate-900 dark:text-slate-100">
                 {formatCurrency(merchant.pickupCost)}
               </span>
             </div>
           </div>
         ))
       ) : (
-        <div className="text-sm text-slate-500">No health metrics available</div>
+        <div className="text-sm text-slate-600 dark:text-slate-100">No health metrics available</div>
       )}
     </div>
 
     <div className="mt-5 grid grid-cols-2 gap-3">
-      <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+      <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-600 dark:text-slate-100">
           Avg Reject
         </p>
-        <p className="mt-2 text-2xl font-black text-white">
+        <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">
           {avgRejectedRate.toFixed(0)}%
         </p>
       </div>
 
-      <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+      <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-600 dark:text-slate-100">
           Avg Pickup
         </p>
-        <p className="mt-2 text-2xl font-black text-white">
+        <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">
           {formatCurrency(avgPickupCost)}
         </p>
       </div>
@@ -778,18 +779,18 @@ console.log("iam admin")
   </div>
 
   {/* Delivery Coverage */}
-  <div className="xl:col-span-4 rounded-[2rem] border border-white/10  p-6 ">
+  <div className="xl:col-span-4 rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-[#0a1120]">
     <div className="mb-5 flex items-center justify-between">
       <div>
-        <h3 className="text-white text-lg font-black tracking-tight">
+        <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
           Delivery Coverage
         </h3> 
-        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+        <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-slate-600 dark:text-slate-100">
           Branches, areas, and commission model
         </p>
       </div>
 
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-400 shadow-inner shadow-sky-500/10">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-200 bg-sky-100 text-sky-700 shadow-inner shadow-sky-200/60 dark:border-sky-700 dark:bg-sky-800 dark:text-sky-100 dark:shadow-sky-950/30">
         <Truck className="h-5 w-5" />
       </div>
     </div>
@@ -799,41 +800,41 @@ console.log("iam admin")
         deliveryCoverage.map((delivery) => (
           <div
             key={delivery.id}
-            className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-4 transition-all duration-300 hover:bg-white/[0.05] themed-surface"
+            className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 transition-all duration-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-black text-white">
+                <p className="truncate text-sm font-black text-slate-900 dark:text-white">
                   {delivery.name}
                 </p>
-                <p className="mt-1 truncate text-[11px] text-slate-500">
+                <p className="mt-1 truncate text-xs text-slate-600 dark:text-slate-100">
                   {delivery.branchName}
                 </p>
               </div>
 
-              <span className="rounded-full border border-sky-400/10 bg-sky-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-sky-400">
+              <span className="rounded-full border border-sky-500/40 bg-sky-700 px-2.5 py-1 text-xs font-black uppercase tracking-widest text-white">
                 {delivery.discountType}
               </span>
             </div>
 
-            <div className="mt-3 rounded-xl bg-white/[0.03] px-3 py-2">
-              <p className="line-clamp-2 text-[11px] leading-relaxed text-slate-400">
+            <div className="mt-3 rounded-xl bg-slate-100 px-3 py-2 dark:bg-slate-800">
+              <p className="line-clamp-2 text-xs leading-relaxed text-slate-700 dark:text-slate-100">
                 {delivery.governments}
               </p>
             </div>
 
             <div className="mt-3 flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-600 dark:text-slate-100">
                 Company %
               </span>
-              <span className="text-sm font-black text-white">
+              <span className="text-sm font-black text-slate-900 dark:text-white">
                 {delivery.companyPercentage}%
               </span>
             </div>
           </div>
         ))
       ) : (
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-slate-600 dark:text-slate-100">
           No delivery coverage data available
         </div>
       )}

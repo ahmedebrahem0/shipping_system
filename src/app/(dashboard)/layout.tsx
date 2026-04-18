@@ -62,7 +62,7 @@ export default function DashboardLayout({
         </main>
 
         {/* Footer */}
-        <footer className="py-6 px-8 text-center text-xs text-gray-400 font-medium border-t border-gray-100 bg-white/50">
+        <footer className="py-6 px-8 text-center text-xs text-gray-600 font-medium border-t border-gray-100 bg-white/50">
           &copy; {new Date().getFullYear()} SHIPPRO Logistics System. All rights reserved.
         </footer>
       </div>

@@ -35,7 +35,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
       <h1 className="text-3xl font-black text-slate-900  tracking-tight">
         {title} <span className="text-sky-400 text-4xl">.</span>
       </h1>
-      <p className="text-slate-400 font-medium">{subtitle}</p>
+      <p className="text-slate-600 font-medium">{subtitle}</p>
     </div>
   );
 }
@@ -71,7 +71,7 @@ export default function DashboardPage() {
           subtitle="System overview and logistics real-time analytics."
         />
         <div className="flex items-center gap-3">
-          <Link href={ROUTES.ORDER_CREATE} className="flex items-center gap-2 bg-sky-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-sky-500/20 hover:bg-sky-600 transition-all active:scale-95">
+          <Link href={ROUTES.ORDER_CREATE} className="flex items-center gap-2 bg-sky-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-sky-900/20 hover:bg-sky-800 transition-all active:scale-95">
             <Plus className="w-5 h-5" /> New Shipment
           </Link>
         </div>
