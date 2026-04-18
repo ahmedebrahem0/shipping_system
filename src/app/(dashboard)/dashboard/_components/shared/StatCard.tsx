@@ -63,9 +63,9 @@ export function StatCard({
         </div>
 
         <div className="space-y-1">
-          <h3 className="text-4xl font-black tracking-tighter text-white drop-shadow-md">
+          <p className="text-4xl font-black tracking-tighter text-white drop-shadow-md">
             {value}
-          </h3>
+          </p>
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/80">
             {label}
           </p>

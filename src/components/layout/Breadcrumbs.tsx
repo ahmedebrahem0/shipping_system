@@ -19,8 +19,12 @@ export default function Breadcrumbs() {
     }));
 
   return (
-    <nav className="flex items-center gap-1 text-sm text-gray-500">
-      <Link href="/dashboard" className="hover:text-primary-500 transition-colors">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-sm text-gray-500">
+      <Link
+        href="/dashboard"
+        aria-label="Go to dashboard"
+        className="hover:text-primary-500 transition-colors"
+      >
         <Home className="w-4 h-4" />
       </Link>
 
